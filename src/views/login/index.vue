@@ -1,0 +1,104 @@
+<template>
+  <div class="mod-login">
+    <div class="mod-logo">
+      <img src="~@/assets/images/logo.png">
+    </div>
+    <div class="mod-form">
+      <van-form @submit="onSubmit">
+        <van-field
+          v-model="username"
+          name="用户名"
+          label="用户名"
+          placeholder="用户名/邮箱/手机号"
+          :rules="[{ required: true, message: '请填写用户名' }]"
+        />
+        <van-field
+          style="margin:10px 0"
+          v-model="password"
+          type="password"
+          name="密码"
+          label="密码"
+          placeholder="密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+        />
+        <div style="width:150px;">
+          <van-checkbox v-model="checked" shape="square">记住密码</van-checkbox>
+        </div>
+        <div style="margin: 16px;">
+          <van-button round block type="default" native-type="submit">
+            立即提交
+          </van-button>
+        </div>
+      </van-form>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue';
+import { Form, field, button, checkbox } from 'vant';
+Vue.use(Form);
+Vue.use(field);
+Vue.use(button);
+Vue.use(checkbox);
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      checked: true
+    }
+  },
+  created() {
+    // this.login()
+  },
+  methods: {
+    onSubmit(values) {
+      console.log('submit', values);
+    },
+    // get请求
+    getlist() {
+      this.$http.get('/api/list',
+        {
+          params: {
+            name: 'loading',
+            age: '12'
+          }
+        }
+      ).then(res => {
+        console.log(res)
+      })
+    },
+    // post请求
+    login() {
+      this.$http.post('/api/login', {
+        name: 'test',
+        age: '33'
+      }).then(res => {
+        console.log(res)
+      })
+    }
+  }
+}
+</script>
+<style lang="less">
+.mod-login{
+  width: 100%;
+  height: 100vh;
+  background-image: url("~@/assets/images/login.png");
+  background-size: 100% 100%;
+  .mod-logo{
+    width: 100%;
+    padding-top: 90px;
+    img{
+      width: 100px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+  .mod-form{
+    width: 80%;
+    margin: 40px auto
+  }
+}
+</style>

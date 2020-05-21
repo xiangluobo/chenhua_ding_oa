@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="telephone=no,email=no" name="format-detection" />
+    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <title>oa</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but vue-demo doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <!--手机调试-->
+    <% if (VUE_APP_ERUDA === 'true') { %>
+      <script src="//cdn.bootcss.com/eruda/1.5.2/eruda.min.js"></script>
+      <script> window.eruda.init(); </script>
+    <% } %>
+  </body>
+
+</html>
