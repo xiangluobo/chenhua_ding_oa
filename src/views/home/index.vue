@@ -1,11 +1,88 @@
 <template>
-  <section class="hello">
-    <div class="app-name" ></div>
+  <section class="mod-home">
+    <div class="banner">
+      <img src="">
+    </div>
+    <div class="notice">
+      <div class="left"><span class="en">公告</span><span class="ctn">公告公告公告公告公告公告</span></div>
+      <div class="right">更多<span class="iconfont recommend">&#xe76d;</span></div>
+    </div>
+    <div class="content">
+      <div class="process">
+        <dl>
+          <dt>1</dt>
+          <dd>代办审批</dd>
+        </dl>
+        <dl>
+          <dt>1</dt>
+          <dd>代办审批</dd>
+        </dl>
+        <dl>
+          <dt>1</dt>
+          <dd>代办审批</dd>
+        </dl>
+        <dl>
+          <dt>1</dt>
+          <dd>代办审批</dd>
+        </dl>
+      </div>
+      <div class="common">
+        <h3>常用</h3>
+        <div class="units">
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/richeng.png"><span class="dot"></span></div>
+            <div class="illustration">日程</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/ribao.png"><span class="dot"></span></div>
+            <div class="illustration">日报</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/renwu.png"><span class="dot"></span></div>
+            <div class="illustration">任务</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/kaoqing.png"><span class="dot"></span></div>
+            <div class="illustration">考勤</div>
+          </div>
+        </div>
+      </div>
+      <div class="common">
+        <h3>流程管理</h3>
+        <div class="units">
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/fukuanshenqing.png"><span class="dot"></span></div>
+            <div class="illustration">付款申请</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/feiyongbaoxiao.png"><span class="dot"></span></div>
+            <div class="illustration">费用报销</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/jiageyouhui.png"><span class="dot"></span></div>
+            <div class="illustration">价格优惠</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/renchoutuikuan.png"><span class="dot"></span></div>
+            <div class="illustration">认筹退款</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/dinjingtuikuan.png"><span class="dot"></span></div>
+            <div class="illustration">定金退款</div>
+          </div>
+          <div class="unit">
+            <div class="circle"><img src="~@/assets/images/tongyongshenpi.png"><span class="dot"></span></div>
+            <div class="illustration">通用审批</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="app-name" ></div>
     <div class="text-overflow"></div>
     <h1>
       <div> hello world </div>
       <span class="iconfont recommend">&#xe7e6;</span>
-    </h1>
+    </h1> -->
   </section>
 </template>
 
