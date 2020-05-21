@@ -6,23 +6,23 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-const Hello = () => import(/* webpackChunkName: "hello" */ '@/views/hello');
+const home = () => import(/* webpackChunkName: "home" */ '@/views/home');
 const login = () => import(/* webpackChunkName: "login" */ '@/views/login');
 
 Vue.use(Router);
 
 const routes = [
   {
-    path: '/login',
-    name: 'hello',
-    component: Hello,
+    path: '/',
+    name: 'index',
+    component: home,
     meta: {
       title: '首页',
       requireAuth: false // 登录权限
     }
   },
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: login,
     meta: {

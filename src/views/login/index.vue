@@ -8,23 +8,24 @@
         <van-field
           v-model="username"
           name="用户名"
-          label="用户名"
+          label=""
+          left-icon="manager"
           placeholder="用户名/邮箱/手机号"
-          :rules="[{ required: true, message: '请填写用户名' }]"
+          :rules="[{ required: true, message: '用户名/邮箱/手机号' }]"
         />
         <van-field
-          style="margin:10px 0"
+          style="margin:20px 0 10px"
           v-model="password"
           type="password"
           name="密码"
-          label="密码"
+          left-icon="lock"
           placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
         />
         <div style="width:150px;">
-          <van-checkbox v-model="checked" shape="square">记住密码</van-checkbox>
+          <van-checkbox v-model="checked" checked-color="rgb(182, 154, 106)" shape="square">记住密码</van-checkbox>
         </div>
-        <div style="margin: 16px;">
+        <div style="margin: 30px 20px;">
           <van-button round block type="default" native-type="submit">
             立即提交
           </van-button>
@@ -98,7 +99,26 @@ export default {
   }
   .mod-form{
     width: 80%;
-    margin: 40px auto
+    margin: 40px auto;
+    .van-cell{
+      border-radius: 3px;
+      padding: 10px;
+      background: rgb(239, 232, 223);
+      .van-icon{
+        margin-right: 10px;
+        position: relative;
+        top: -1px;
+        font-size: 20px;
+        color: rgb(182, 154, 106);
+      }
+    }
+    .van-checkbox__label{
+      color: rgb(239, 232, 223)
+    }
+    .van-button--default{
+      background: rgb(239, 232, 223);
+      color: rgb(182, 154, 106);
+    }
   }
 }
 </style>
