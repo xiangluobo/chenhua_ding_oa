@@ -1,7 +1,7 @@
 <template>
   <section class="mod-home">
     <div class="banner">
-      <img src="">
+      <img src="~@/assets/images/banner.png">
     </div>
     <div class="notice">
       <div class="left"><span class="en">公告</span><span class="ctn">公告公告公告公告公告公告</span></div>
@@ -76,6 +76,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="mod-add">
+      <img src="~@/assets/images/add.png">
     </div>
     <!-- <div class="app-name" ></div>
     <div class="text-overflow"></div>
