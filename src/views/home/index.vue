@@ -77,22 +77,73 @@
         </div>
       </div>
     </div>
-    <div class="mod-add">
+    <div class="mod-add" @click="addNewModule">
       <img src="~@/assets/images/add.png">
     </div>
-    <!-- <div class="app-name" ></div>
-    <div class="text-overflow"></div>
-    <h1>
-      <div> hello world </div>
-      <span class="iconfont recommend">&#xe7e6;</span>
-    </h1> -->
+    <!-- <span class="iconfont recommend">&#xe7e6;</span> -->
+
+    <van-popup v-model="show" position="bottom" closeable close-icon="close" :style="{ height: '100%' }" >
+      <dl class="mod-create">
+        <dt>快速创建</dt>
+        <dd>
+          <van-grid :gutter="5" :border="false" :column-num="4">
+            <van-grid-item>
+              <van-image src="~@/assets/images/kaoqing.png" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-2.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+          </van-grid>
+          <van-grid :gutter="5" :border="false" :column-num="4">
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-1.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-2.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+            <van-grid-item>
+              <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
+              <div class="text">付款申请</div>
+            </van-grid-item>
+          </van-grid>
+        </dd>
+      </dl>
+    </van-popup>
   </section>
 </template>
 
-<script type="text/babel">
+<script>
+import Vue from 'vue'
+import { Popup, Grid, GridItem, Image } from 'vant'
+Vue.use(Popup)
+Vue.use(Grid)
+Vue.use(GridItem)
+Vue.use(Image)
 export default {
   data() {
     return {
+      show: false
+    }
+  },
+  methods: {
+    addNewModule() {
+      this.show = true
     }
   },
   created() {
