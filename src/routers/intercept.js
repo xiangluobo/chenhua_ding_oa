@@ -9,15 +9,15 @@ import router from './index';
 router.beforeEach((to, from, next) => {
   // 登录权限
   if (to.meta.requireAuth) { // 判断是否校验登录权限
-    if (!window.myVue.userName) { // 判断是否登录，根据实际业务处理
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath // 未登录，跳转到登录页，登录后跳转回当前页。
-        }
-      })
-      return;
-    }
+    // if (!window.myVue.userName) { // 判断是否登录，根据实际业务处理
+    //   next({
+    //     path: '/login',
+    //     query: {
+    //       redirect: to.fullPath // 未登录，跳转到登录页，登录后跳转回当前页。
+    //     }
+    //   })
+    //   return;
+    // }
   }
   next()
 })

@@ -8,6 +8,7 @@ import Router from 'vue-router';
 
 const home = () => import(/* webpackChunkName: "home" */ '@/views/home');
 const login = () => import(/* webpackChunkName: "login" */ '@/views/login');
+const process = () => import(/* webpackChunkName: "process" */ '@/views/process');
 
 Vue.use(Router);
 
@@ -18,7 +19,16 @@ const routes = [
     component: home,
     meta: {
       title: '首页',
-      requireAuth: false // 登录权限
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/process',
+    name: 'process',
+    component: process,
+    meta: {
+      title: '流程列表',
+      requireAuth: true // 登录权限
     }
   },
   {
