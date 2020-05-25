@@ -1,0 +1,86 @@
+
+.mod-expense {
+  width: 100%;
+  .van-cell:not(:last-child)::after{
+    left: 0;
+    border-bottom: none
+  }
+  .van-field__label{
+    text-align: left
+  }
+  .application{
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+    .person{
+      float: left;
+      width: 90px;
+      text-align: left;
+    }
+    .role{
+      float: left;
+      width: 200px;
+      text-align: left;
+    }
+  }
+  .mod-expsense-detail{
+    width: 100%;
+    dt{
+      width: 100%;
+      padding: 25px 15px;
+      box-sizing: border-box;
+      overflow: hidden;
+      .name{
+        float: left;
+        width: 90px;
+        text-align: left;
+      }
+      .add{
+        float: right;
+        width: 90px;
+        text-align: left;
+      }
+    }
+    dd{
+      width: 100%;
+      .mod-report{
+        width: 100%;
+        .report{
+          width: 100%;
+          border-bottom: 1px solid #eee;
+          overflow: hidden;
+          padding: 8px 0;
+          .van-radio{
+            width: 50px;
+            float: left;
+            .van-icon{
+              margin: 10px auto
+            }
+          }
+          .van-field{
+            float: left;
+            width: 100px;
+            font-size: 12px;
+          }
+          .project{
+            float: left;
+            width: 100px;
+            margin-left: 50px
+          }
+          .summary{
+            float: left;
+            width: 100px;
+          }
+          .money{
+            float: left;
+            width: 100px;
+          }
+        }
+      }
+    }
+  }
+  .van-field__control{
+    text-align: center
+  }
+}

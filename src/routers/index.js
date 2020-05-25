@@ -10,6 +10,7 @@ const home = () => import(/* webpackChunkName: "home" */ '@/views/home');
 const login = () => import(/* webpackChunkName: "login" */ '@/views/login');
 const process = () => import(/* webpackChunkName: "process" */ '@/views/process');
 const processDetail = () => import(/* webpackChunkName: "processDetail" */ '@/views/processDetail');
+const expense = () => import(/* webpackChunkName: "expense" */ '@/views/expense');
 
 Vue.use(Router);
 
@@ -38,6 +39,15 @@ const routes = [
     component: processDetail,
     meta: {
       title: '流程详情',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/expense',
+    name: 'expense',
+    component: expense,
+    meta: {
+      title: '费用报销申请',
       requireAuth: true // 登录权限
     }
   },
