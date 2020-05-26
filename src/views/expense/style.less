@@ -8,11 +8,15 @@
   .van-field__label{
     text-align: left
   }
+  .mod-field{
+    border-top: 1px solid #eee;
+  }
   .application{
     width: 100%;
     padding: 15px;
     box-sizing: border-box;
     overflow: hidden;
+    background: rgba(238, 238, 238, 0.7);
     .person{
       float: left;
       width: 90px;
@@ -28,18 +32,21 @@
     width: 100%;
     dt{
       width: 100%;
-      padding: 25px 15px;
+      padding: 10px 15px;
       box-sizing: border-box;
       overflow: hidden;
+      background: #eee;
       .name{
         float: left;
         width: 90px;
+        height: 30px;
+        line-height: 30px;
         text-align: left;
       }
       .add{
         float: right;
-        width: 90px;
-        text-align: left;
+        width: 150px;
+        text-align: right;
       }
     }
     dd{
@@ -50,18 +57,26 @@
           width: 100%;
           border-bottom: 1px solid #eee;
           overflow: hidden;
-          padding: 8px 0;
-          .van-radio{
+          padding: 2px 0;
+          &:first-child{
+            padding: 15px 0;
+          }
+          .van-checkbox{
             width: 50px;
+            height: 45px;
             float: left;
-            .van-icon{
-              margin: 10px auto
+            .van-checkbox__icon{
+              margin: 0 auto
             }
           }
           .van-field{
             float: left;
             width: 100px;
             font-size: 12px;
+            padding: 10px 8px;
+            .van-field__control{
+              text-align: center;
+            }
           }
           .project{
             float: left;
@@ -81,6 +96,6 @@
     }
   }
   .van-field__control{
-    text-align: center
+    text-align: left
   }
 }
