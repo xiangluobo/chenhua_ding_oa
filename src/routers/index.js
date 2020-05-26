@@ -13,6 +13,7 @@ const processDetail = () => import(/* webpackChunkName: "processDetail" */ '@/vi
 const expense = () => import(/* webpackChunkName: "expense" */ '@/views/expense')
 const paymentApplication = () => import(/* webpackChunkName: "paymentApplication" */ '@/views/paymentApplication')
 const mine = () => import(/* webpackChunkName: "mine" */ '@/views/mine')
+const modify = () => import(/* webpackChunkName: "modify" */ '@/views/modify')
 
 Vue.use(Router);
 
@@ -68,6 +69,15 @@ const routes = [
     component: mine,
     meta: {
       title: '我的',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/modify',
+    name: 'modify',
+    component: modify,
+    meta: {
+      title: '修改密码',
       requireAuth: true // 登录权限
     }
   },
