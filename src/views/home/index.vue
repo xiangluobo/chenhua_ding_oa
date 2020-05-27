@@ -127,6 +127,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { Popup, Grid, GridItem, Swipe, SwipeItem, Lazyload } from 'vant'
 Vue.use(Popup)
 Vue.use(Grid)
@@ -144,15 +145,29 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters(['userInfo', 'token'])
+  },
   methods: {
     addNewModule() {
       this.show = true
+    },
+    // get请求
+    getUserAppPermission() {
+      this.$http.get('/sys/permission/getUserAppPermissionByToken', {
+        params: {
+          token: this.token
+        }
+      }).then(res => {
+        console.log(res, 88)
+      })
     }
   },
   created() {
+    this.getUserAppPermission()
     console.log(process.env.VUE_APP_ERUDA, '====', process.env.VUE_APP_TEXT)
   }
-};
+}
 </script>
 
 <style lang="less" rel="stylesheet/less" >

@@ -4,20 +4,21 @@
  */
 
 import router from './index';
-
+import store from '../stores'
 // 路由导航守卫
 router.beforeEach((to, from, next) => {
-  // 登录权限
-  if (to.meta.requireAuth) { // 判断是否校验登录权限
-    // if (!window.myVue.userName) { // 判断是否登录，根据实际业务处理
-    //   next({
-    //     path: '/login',
-    //     query: {
-    //       redirect: to.fullPath // 未登录，跳转到登录页，登录后跳转回当前页。
-    //     }
-    //   })
-    //   return;
-    // }
+  // 检测路由配置中是否有requireAuth这个meta属性
+  if (to.matched.some(record => record.meta.requireAuth)) {
+    console.log(111)
+    // 判断是否已登录
+    if (store.getters.token) {
+      console.log(store.getters.token, 2222)
+      next()
+    } else {
+      // 未登录则跳转到登录界面
+      next('/login')
+    }
+  } else {
+    next()
   }
-  next()
 })

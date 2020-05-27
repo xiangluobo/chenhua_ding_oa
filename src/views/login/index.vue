@@ -25,6 +25,7 @@
         <div style="width:150px;">
           <van-checkbox v-model="checked" checked-color="rgb(182, 154, 106)" shape="square">记住密码</van-checkbox>
         </div>
+        {{ userInfo }}
         <div style="margin: 30px 20px;">
           <van-button round block type="default" native-type="submit">
             立即提交
@@ -37,6 +38,7 @@
 
 <script>
 import Vue from 'vue';
+import { mapActions } from 'vuex'
 import { Form, field, button, checkbox } from 'vant';
 Vue.use(Form);
 Vue.use(field);
@@ -54,29 +56,21 @@ export default {
     // this.login()
   },
   methods: {
+    ...mapActions(['setUserInfo', 'setToken']),
     onSubmit(values) {
-      console.log('submit', values);
-    },
-    // get请求
-    getlist() {
-      this.$http.get('/api/list',
-        {
-          params: {
-            name: 'loading',
-            age: '12'
-          }
-        }
-      ).then(res => {
-        console.log(res)
-      })
+      console.log('submit', values)
+      this.login()
     },
     // post请求
     login() {
-      this.$http.post('/api/login', {
-        name: 'test',
-        age: '33'
+      this.$http.post('/sys/mLogin', {
+        username: this.username,
+        password: this.password
       }).then(res => {
-        console.log(res)
+        let result = res.result
+        this.setUserInfo(result.userInfo)
+        this.setToken(result.token)
+        this.$router.push('/')
       })
     }
   }

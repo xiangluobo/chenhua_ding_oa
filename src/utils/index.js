@@ -42,3 +42,16 @@ export function throttle(func, wait, options = {}) {
   }
   return _throttle;
 }
+
+export function saveStore(key, val) {
+  window.sessionStorage.setItem(key, val)
+  return val
+}
+
+export function getStore(key, val) {
+  window.sessionStorage.getItem(key)
+}
+
+export function removeStore(key, val) {
+  window.sessionStorage.removeItem(key, null)
+}
