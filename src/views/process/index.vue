@@ -10,7 +10,7 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <div class="mod-unit" v-for="(item, index) in list" :key="index">
+      <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
         <div class="name">{{item.applyUser_dictText }}</div>
         <div class="ctn">
           <h3>{{ item.projectCode_dictText }}</h3>
@@ -120,6 +120,9 @@ export default {
           this.finished = true
         }
       })
+    },
+    goToDetail(item) {
+      
     }
   },
   created() {
