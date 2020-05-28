@@ -25,7 +25,6 @@
         <div style="width:150px;">
           <van-checkbox v-model="checked" checked-color="rgb(182, 154, 106)" shape="square">记住密码</van-checkbox>
         </div>
-        {{ userInfo }}
         <div style="margin: 30px 20px;">
           <van-button round block type="default" native-type="submit">
             立即提交

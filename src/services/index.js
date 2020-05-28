@@ -17,7 +17,6 @@ instance.interceptors.request.use(async config => {
     let token = store.state.token ? store.state.token : window.sessionStorage.getItem('token')
     config.headers['X-Access-Token'] = token
   }
-  console.log(config, 888)
   return config
 })
 instance.interceptors.response.use(res => {

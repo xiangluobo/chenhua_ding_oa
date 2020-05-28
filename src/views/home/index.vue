@@ -55,7 +55,11 @@
       <div class="common">
         <h3>流程管理</h3>
         <div class="units">
-          <div class="unit">
+          <div class="unit" @click="goToProcess(item)" v-for="(item, index) in list" :key='index'>
+            <div class="circle"><img :src="require(`../../assets/images/${item.appMenuIcon}`)"><span class="dot"></span></div>
+            <div class="illustration">{{item.appMenuName}}</div>
+          </div>
+          <!-- <div class="unit">
             <div class="circle"><img src="~@/assets/images/fukuanshenqing.png"><span class="dot"></span></div>
             <div class="illustration">付款申请</div>
           </div>
@@ -78,7 +82,7 @@
           <div class="unit">
             <div class="circle"><img src="~@/assets/images/tongyongshenpi.png"><span class="dot"></span></div>
             <div class="illustration">通用审批</div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -142,13 +146,17 @@ export default {
       images: [
         'https://img.yzcdn.cn/vant/apple-1.jpg',
         'https://img.yzcdn.cn/vant/apple-2.jpg'
-      ]
+      ],
+      list: []
     }
   },
   computed: {
-    ...mapGetters(['userInfo', 'token'])
+    ...mapGetters(['token'])
   },
   methods: {
+    goToProcess(item) {
+      this.$router.push(item.appMenuRouter)
+    },
     addNewModule() {
       this.show = true
     },
@@ -159,7 +167,8 @@ export default {
           token: this.token
         }
       }).then(res => {
-        console.log(res, 88)
+        this.list = res.result.filter(v => v.parentId)
+        console.log(this.list)
       })
     }
   },
