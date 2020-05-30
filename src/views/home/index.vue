@@ -9,7 +9,7 @@
       <!-- <img src="~@/assets/images/banner.png"> -->
     </div>
     <div class="notice">
-      <div class="left"><span class="en">公告</span><span class="ctn" v-html="records[0].titile"></span></div>
+      <div class="left"><span class="en">公告</span><span v-if="records[0]" class="ctn" v-html="records[0].titile"></span></div>
       <div class="right">更多<span class="iconfont recommend">&#xe76d;</span></div>
     </div>
     <div class="content">
@@ -71,34 +71,10 @@
       <dl class="mod-create">
         <dt>快速创建</dt>
         <dd>
-          <van-grid :gutter="5" :border="false" :column-num="4">
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-          </van-grid>
-          <van-grid :gutter="5" :border="false" :column-num="4">
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-            <van-grid-item>
-              <img src="~@/assets/images/fukuanshenqing.png" />
-              <div class="text">付款申请</div>
-            </van-grid-item>
-          </van-grid>
+          <div @click="toApplication(item)" class="block" v-for="(item, index) in list" :key="`block-${index}`">
+            <img :src="require(`../../assets/images/${item.appMenuIcon}`)" />
+            <div class="text">{{item.appMenuName}}</div>
+          </div>
         </dd>
       </dl>
     </van-popup>
@@ -132,7 +108,18 @@ export default {
   },
   methods: {
     goToProcess(item) {
+      if (item.appMenuRouter.indexOf(";")>-1) {
+        this.$router.push(item.appMenuRouter.split(";")[0])
+        return
+      }
       this.$router.push(item.appMenuRouter)
+    },
+    toApplication(item) {
+      console.log(item, 89)
+      let router = item.appMenuRouter
+      if (router.indexOf(";")>-1) {
+        this.$router.push(router.split(";")[1])
+      }
     },
     addNewModule() {
       this.show = true
