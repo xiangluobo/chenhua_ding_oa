@@ -108,17 +108,16 @@ export default {
   },
   methods: {
     goToProcess(item) {
-      if (item.appMenuRouter.indexOf(";")>-1) {
-        this.$router.push(item.appMenuRouter.split(";")[0])
+      if (item.appMenuRouter.indexOf(';') > -1) {
+        this.$router.push(item.appMenuRouter.split(';')[0])
         return
       }
       this.$router.push(item.appMenuRouter)
     },
     toApplication(item) {
-      console.log(item, 89)
       let router = item.appMenuRouter
-      if (router.indexOf(";")>-1) {
-        this.$router.push(router.split(";")[1])
+      if (router.indexOf(';') > -1) {
+        this.$router.push(router.split(';')[1])
       }
     },
     addNewModule() {
