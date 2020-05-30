@@ -1,6 +1,9 @@
 import axios from 'axios'
 import store from '../stores'
 import router from '../routers'
+import Vue from 'vue';
+import { Toast } from 'vant'
+Vue.use(Toast)
 let instance = null
 
 instance = axios.create({
@@ -22,10 +25,10 @@ instance.interceptors.request.use(async config => {
 instance.interceptors.response.use(res => {
   return res.data
 }, ({ response }) => {
+  Toast.fail(response.data.message)
   if (response.data.message === 'Token失效，请重新登录') {
     console.log('Token失效，请重新登录')
     router.push('/login')
-    return
   }
   return Promise.reject(response.data)
 })

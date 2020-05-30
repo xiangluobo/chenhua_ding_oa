@@ -122,7 +122,7 @@ export default {
       })
     },
     goToDetail(item) {
-      
+      this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
     }
   },
   created() {

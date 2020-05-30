@@ -9,7 +9,7 @@
       <!-- <img src="~@/assets/images/banner.png"> -->
     </div>
     <div class="notice">
-      <div class="left"><span class="en">公告</span><span class="ctn">公告公告公告公告公告公告</span></div>
+      <div class="left"><span class="en">公告</span><span class="ctn" v-html="records[0].titile"></span></div>
       <div class="right">更多<span class="iconfont recommend">&#xe76d;</span></div>
     </div>
     <div class="content">
@@ -59,30 +59,6 @@
             <div class="circle"><img :src="require(`../../assets/images/${item.appMenuIcon}`)"><span class="dot"></span></div>
             <div class="illustration">{{item.appMenuName}}</div>
           </div>
-          <!-- <div class="unit">
-            <div class="circle"><img src="~@/assets/images/fukuanshenqing.png"><span class="dot"></span></div>
-            <div class="illustration">付款申请</div>
-          </div>
-          <div class="unit">
-            <div class="circle"><img src="~@/assets/images/feiyongbaoxiao.png"><span class="dot"></span></div>
-            <div class="illustration">费用报销</div>
-          </div>
-          <div class="unit">
-            <div class="circle"><img src="~@/assets/images/jiageyouhui.png"><span class="dot"></span></div>
-            <div class="illustration">价格优惠</div>
-          </div>
-          <div class="unit">
-            <div class="circle"><img src="~@/assets/images/renchoutuikuan.png"><span class="dot"></span></div>
-            <div class="illustration">认筹退款</div>
-          </div>
-          <div class="unit">
-            <div class="circle"><img src="~@/assets/images/dinjingtuikuan.png"><span class="dot"></span></div>
-            <div class="illustration">定金退款</div>
-          </div>
-          <div class="unit">
-            <div class="circle"><img src="~@/assets/images/tongyongshenpi.png"><span class="dot"></span></div>
-            <div class="illustration">通用审批</div>
-          </div> -->
         </div>
       </div>
     </div>
@@ -147,7 +123,8 @@ export default {
         'https://img.yzcdn.cn/vant/apple-1.jpg',
         'https://img.yzcdn.cn/vant/apple-2.jpg'
       ],
-      list: []
+      list: [],
+      records: []
     }
   },
   computed: {
@@ -159,6 +136,18 @@ export default {
     },
     addNewModule() {
       this.show = true
+    },
+    getMyAnnouncementSend() {
+      this.$http.get('/sys/sysAnnouncementSend/getMyAnnouncementSend', {
+        params: {
+          msgCategory: 1,
+          pageSize: 10,
+          pageNo: 1
+        }
+      }).then(res => {
+        this.records = res.result.records
+        console.log(res, 888)
+      })
     },
     // get请求
     getUserAppPermission() {
@@ -174,6 +163,7 @@ export default {
   },
   created() {
     this.getUserAppPermission()
+    this.getMyAnnouncementSend()
     console.log(process.env.VUE_APP_ERUDA, '====', process.env.VUE_APP_TEXT)
   }
 }
