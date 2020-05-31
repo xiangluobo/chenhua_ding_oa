@@ -9,7 +9,10 @@
       <!-- <img src="~@/assets/images/banner.png"> -->
     </div>
     <div class="notice">
-      <div class="left"><span class="en">公告</span><span v-if="announcement[0]" class="ctn" v-html="announcement[0].titile"></span></div>
+      <div class="left">
+        <span class="en">公告</span>
+        <van-notice-bar v-if="announcement[0]" class="ctn" :text="announcement[0].titile"/>
+      </div>
       <div class="right" @click="goToAnnouncement">更多<span class="iconfont recommend">&#xe76d;</span></div>
     </div>
     <div class="content">
@@ -84,13 +87,14 @@
 <script>
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Popup, Grid, GridItem, Swipe, SwipeItem, Lazyload } from 'vant'
+import { Popup, Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar } from 'vant'
 Vue.use(Popup)
 Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Lazyload)
+Vue.use(NoticeBar)
 export default {
   data() {
     return {
