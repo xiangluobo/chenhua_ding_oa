@@ -5,7 +5,8 @@
 
 const state = {
   userInfo: sessionStorage.getItem('userInfo') || null,
-  token: sessionStorage.getItem('token') || {}
+  token: sessionStorage.getItem('token') || {},
+  announcement: []
 }
 
 export default state

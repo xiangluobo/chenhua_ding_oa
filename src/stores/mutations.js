@@ -16,6 +16,9 @@ const mutations = {
   },
   [types.REMOVE_TOKEN](state) {
     state.token = ''
+  },
+  [types.ANNOUNCEMENT](state, announcement) {
+    state.announcement = announcement
   }
 }
 

@@ -23,3 +23,15 @@ export const removeToken = function({ commit }) {
   removeStore('token')
   commit(types.REMOVE_TOKEN, null)
 }
+
+export const setAnnouncement = function({ commit }) {
+  window.myVue.$http.get('/sys/sysAnnouncementSend/getMyAnnouncementSend', {
+    params: {
+      msgCategory: 1,
+      pageSize: 10,
+      pageNo: 1
+    }
+  }).then(res => {
+    commit(types.ANNOUNCEMENT, res.result.records)
+  })
+}

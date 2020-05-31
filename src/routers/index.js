@@ -14,6 +14,8 @@ const expense = () => import(/* webpackChunkName: "expense" */ '@/views/expense'
 const paymentApplication = () => import(/* webpackChunkName: "paymentApplication" */ '@/views/paymentApplication')
 const mine = () => import(/* webpackChunkName: "mine" */ '@/views/mine')
 const modify = () => import(/* webpackChunkName: "modify" */ '@/views/modify')
+const announcement = () => import(/* webpackChunkName: "announcement" */ '@/views/announcement')
+const announcementDetail = () => import(/* webpackChunkName: "announcementDetail" */ '@/views/announcementDetail')
 
 Vue.use(Router);
 
@@ -78,6 +80,24 @@ const routes = [
     component: modify,
     meta: {
       title: '修改密码',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/announcement',
+    name: 'announcement',
+    component: announcement,
+    meta: {
+      title: '公告',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/announcementDetail',
+    name: 'announcementDetail',
+    component: announcementDetail,
+    meta: {
+      title: '公告详情',
       requireAuth: true // 登录权限
     }
   },

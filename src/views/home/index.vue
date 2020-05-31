@@ -9,8 +9,8 @@
       <!-- <img src="~@/assets/images/banner.png"> -->
     </div>
     <div class="notice">
-      <div class="left"><span class="en">公告</span><span v-if="records[0]" class="ctn" v-html="records[0].titile"></span></div>
-      <div class="right">更多<span class="iconfont recommend">&#xe76d;</span></div>
+      <div class="left"><span class="en">公告</span><span v-if="announcement[0]" class="ctn" v-html="announcement[0].titile"></span></div>
+      <div class="right" @click="goToAnnouncement">更多<span class="iconfont recommend">&#xe76d;</span></div>
     </div>
     <div class="content">
       <div class="process">
@@ -83,7 +83,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { Popup, Grid, GridItem, Swipe, SwipeItem, Lazyload } from 'vant'
 Vue.use(Popup)
 Vue.use(Grid)
@@ -104,9 +104,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'announcement'])
   },
   methods: {
+    ...mapActions(['setAnnouncement']),
     goToProcess(item) {
       if (item.appMenuRouter.indexOf(';') > -1) {
         this.$router.push(item.appMenuRouter.split(';')[0])
@@ -123,18 +124,6 @@ export default {
     addNewModule() {
       this.show = true
     },
-    getMyAnnouncementSend() {
-      this.$http.get('/sys/sysAnnouncementSend/getMyAnnouncementSend', {
-        params: {
-          msgCategory: 1,
-          pageSize: 10,
-          pageNo: 1
-        }
-      }).then(res => {
-        this.records = res.result.records
-        console.log(res, 888)
-      })
-    },
     // get请求
     getUserAppPermission() {
       this.$http.get('/sys/permission/getUserAppPermissionByToken', {
@@ -143,14 +132,16 @@ export default {
         }
       }).then(res => {
         this.list = res.result.filter(v => v.parentId)
-        console.log(this.list)
+        console.log(this.list, '流程权限')
       })
+    },
+    goToAnnouncement() {
+      this.$router.push('/announcement')
     }
   },
   created() {
     this.getUserAppPermission()
-    this.getMyAnnouncementSend()
-    console.log(process.env.VUE_APP_ERUDA, '====', process.env.VUE_APP_TEXT)
+    this.setAnnouncement()
   }
 }
 </script>
