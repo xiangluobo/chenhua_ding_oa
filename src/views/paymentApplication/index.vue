@@ -10,24 +10,13 @@
         clickable
         class="mod-field"
         name="picker"
-        :value="value"
+        :value="departName"
         label="所在项目部"
         :rules="[{ required: true, message: '请输入正确内容' }]"
         right-icon="arrow"
         placeholder="请选择项目部"
         @click="showPicker = true"
       />
-      <div class="mod-select">
-        <div class="mod-label">人员选择</div>
-        <el-select v-model="value3" filterable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </div>
       <van-field
         v-model="value"
         name="validator"
@@ -76,13 +65,25 @@
         placeholder="无需填写自动计算"
         :rules="[{ validator, message: '请输入正确内容' }]"
       />
-      <van-field
+      <!-- <van-field
         v-model="value"
         name="validator"
         label="付款方式"
         class="mod-field"
         placeholder="无需填写自动计算"
         :rules="[{ validator, message: '请输入正确内容' }]"
+      /> -->
+      <van-field
+        readonly
+        clickable
+        class="mod-field"
+        name="picker"
+        :value="payType"
+        label="付款方式"
+        :rules="[{ required: true, message: '请选择付款方式' }]"
+        right-icon="arrow"
+        placeholder="付款方式"
+        @click="showPayType = true"
       />
       <van-field
         v-model="value"
@@ -102,7 +103,7 @@
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
-          <van-uploader :before-read="beforeRead" v-model="uploader" />
+          <van-uploader :after-read="afterRead" v-model="uploader" />
         </template>
       </van-field>
       <div style="margin: 16px;">
@@ -114,9 +115,18 @@
     <van-popup v-model="showPicker" position="bottom">
       <van-picker
         show-toolbar
+        value-key="departName"
         :columns="columns"
         @confirm="onConfirm"
         @cancel="showPicker = false"
+      />
+    </van-popup>
+    <van-popup v-model="showPayType" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="payTypeColumns"
+        @confirm="onConfirmPayType"
+        @cancel="showPayType = false"
       />
     </van-popup>
   </section>
@@ -140,11 +150,16 @@ export default {
   data() {
     return {
       checked: false,
-      value: '',
-      value2: '',
-      uploader: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
-      columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+      departName: '',
+      id: '',
+      payType: '',
+      payTypeVal: '',
       showPicker: false,
+      showPayType: false,
+      columns: [],
+      payTypeColumns: [],
+      value: '',
+      uploader: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
       list: [
         {
           checked: false,
@@ -153,35 +168,35 @@ export default {
           money: ''
         }
       ],
-      loading: false,
-      value1: [],
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value3: ''
+      loading: false
     }
   },
   created() {
+    this.getMyProjectList()
+    this.getPayType()
   },
   methods: {
+    getMyProjectList() {
+      this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
+        this.columns = res.result
+      })
+    },
+    getPayType() {
+      this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
+        this.payTypeColumns = res.result
+      })
+    },
     validator(val) {
       return /1\d{10}/.test(val)
     },
-    onConfirm(value) {
-      this.value = value;
+    onConfirmPayType(item) {
+      this.payType = item.text
+      this.payTypeVal = item.value;
+      this.showPayType = false;
+    },
+    onConfirm(item) {
+      this.id = item.id
+      this.departName = item.departName;
       this.showPicker = false;
     },
     onSubmit() {
@@ -196,12 +211,21 @@ export default {
       // }
       // this.loading = true
     },
-    beforeRead(file) {
-      console.log(file)
-      if (file.type !== 'image/jpeg') {
-        return false;
-      }
-      return true;
+    afterRead(file) {
+      file.status = 'uploading'
+      file.message = '上传中...'
+      let formData = new FormData()
+      formData.append('file', file.file)
+      formData.append('biz', 'ggpay')
+      this.$http.post('/sys/common/upload', formData).then(res => {
+        file.status = 'success'
+        file.message = '上传成功'
+        // let imgPath = res.message
+      }).catch(err => {
+        console.log(err)
+        file.status = 'failed'
+        file.message = '上传失败'
+      })
     }
   }
 };
