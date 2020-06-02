@@ -45,7 +45,7 @@ export function throttle(func, wait, options = {}) {
 
 export function saveStore(key, val) {
   window.sessionStorage.setItem(key, val)
-  return val
+  return JSON.parse(val)
 }
 
 export function getStore(key, val) {

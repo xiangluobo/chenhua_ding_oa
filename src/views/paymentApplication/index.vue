@@ -2,7 +2,7 @@
   <section class="mod-expense">
     <div class="application">
       <div class="person">申请人</div>
-      <div class="role">管理员</div>
+      <div class="role">{{userInfo.realname}}</div>
     </div>
     <van-form @submit="onSubmit">
       <van-field
@@ -11,95 +11,79 @@
         class="mod-field"
         name="picker"
         :value="departName"
-        label="所在项目部"
+        label="*所在项目部"
         :rules="[{ required: true, message: '请输入正确内容' }]"
         right-icon="arrow"
         placeholder="请选择项目部"
         @click="showPicker = true"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="付款金额"
+        v-model="payAmount"
+        label="*付款金额"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入付款金额"
+        :rules="[{ required: true, message: '请输入付款金额' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="累计付款"
+        v-model="payAmountTotal"
+        label="*累计付款"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入累计付款"
+        :rules="[{ required: true, message: '请输入累计付款' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="合同金额"
+        v-model="contractAmount"
+        label="*合同金额"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入合同金额"
+        :rules="[{ required: true, message: '请输入合同金额' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="收款人全称"
+        v-model="payeeName"
+        label="*收款人全称"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入收款人全称"
+        :rules="[{ required: true, message: '请输入收款人全称' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="收款人账户"
+        v-model="payeeAccount"
+        label="*收款人账户"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入收款人账户"
+        :rules="[{ required: true, message: '请输入收款人账户' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="开户行地址"
+        v-model="payeeBank"
+        label="*开户行地址"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入开户行地址"
+        :rules="[{ required: true, message: '请输入开户行地址' }]"
       />
-      <!-- <van-field
-        v-model="value"
-        name="validator"
-        label="付款方式"
-        class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
-      /> -->
       <van-field
         readonly
         clickable
         class="mod-field"
         name="picker"
-        :value="payType"
-        label="付款方式"
+        :value="payTypeVal"
+        label="*付款方式"
         :rules="[{ required: true, message: '请选择付款方式' }]"
         right-icon="arrow"
-        placeholder="付款方式"
+        placeholder="请选择付款方式"
         @click="showPayType = true"
       />
       <van-field
-        v-model="value"
-        name="validator"
-        label="付款说明"
+        v-model="payDesc"
+        label="*付款说明"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入付款说明"
+        :rules="[{ required: true, message: '请输入付款说明' }]"
       />
       <van-field
-        v-model="value"
-        name="validator"
+        v-model="otherRequire"
         label="其它说明要求"
         class="mod-field"
-        placeholder="无需填写自动计算"
-        :rules="[{ validator, message: '请输入正确内容' }]"
+        placeholder="请输入其它说明要求"
+        :rules="[{ required: true, message: '请输入其它说明要求' }]"
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
@@ -107,7 +91,7 @@
         </template>
       </van-field>
       <div style="margin: 16px;">
-        <van-button square block type="info" color="#000" @click="onSubmit">
+        <van-button square block type="info" color="#000" native-type="submit">
           提交
         </van-button>
       </div>
@@ -134,6 +118,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
 import { Select, Option } from 'element-ui';
 Vue.use(Popup)
@@ -149,31 +134,33 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      checked: false,
+      projectCode: '',
       departName: '',
-      id: '',
+      payAmount: '', // 付款金额
+      payAmountTotal: '', // 累计付款
+      contractAmount: '', // 合同金额
+      payeeName: '', // 收款人全称
+      payeeAccount: '',
+      payeeBank: '',
       payType: '',
       payTypeVal: '',
+      payDesc: '',
+      otherRequire: '',
       showPicker: false,
       showPayType: false,
       columns: [],
       payTypeColumns: [],
-      value: '',
-      uploader: [{ url: 'https://img.yzcdn.cn/vant/leaf.jpg' }],
-      list: [
-        {
-          checked: false,
-          project: '',
-          summary: '',
-          money: ''
-        }
-      ],
+      uploader: [],
+      relatedFile: [],
       loading: false
     }
   },
   created() {
     this.getMyProjectList()
     this.getPayType()
+  },
+  computed: {
+    ...mapGetters(['userInfo'])
   },
   methods: {
     getMyProjectList() {
@@ -190,26 +177,33 @@ export default {
       return /1\d{10}/.test(val)
     },
     onConfirmPayType(item) {
-      this.payType = item.text
-      this.payTypeVal = item.value;
+      this.payType = item.value
+      this.payTypeVal = item.text;
       this.showPayType = false;
     },
     onConfirm(item) {
-      this.id = item.id
       this.departName = item.departName;
+      this.projectCode = item.id;
       this.showPicker = false;
     },
     onSubmit() {
-      // this.loading = false
-      // if (!this.value) {
-      //   Toast.fail('请选择项目部')
-      //   return false
-      // }
-      // if (this.list.some(v => !v.project || !v.summary || !v.money)) {
-      //   Toast.fail('报销明细填写有问题，请仔细检查')
-      //   return false
-      // }
-      // this.loading = true
+      this.$http.post('/ggpay/flowGgPay/add', {
+        projectCode: this.projectCode,
+        departName: this.departName,
+        payAmount: this.payAmount, // 付款金额
+        payAmountTotal: this.payAmountTotal, // 累计付款
+        contractAmount: this.contractAmount, // 合同金额
+        payeeName: this.payeeName, // 收款人全称
+        payeeAccount: this.payeeAccount,
+        payeeBank: this.payeeBank,
+        payType: this.payType,
+        payTypeVal: this.payTypeVal,
+        payDesc: this.payDesc,
+        otherRequire: this.otherRequire,
+        relatedFile: this.relatedFile.join(';')
+      }).then(res => {
+        console.log(res, 333)
+      })
     },
     afterRead(file) {
       file.status = 'uploading'
@@ -220,7 +214,7 @@ export default {
       this.$http.post('/sys/common/upload', formData).then(res => {
         file.status = 'success'
         file.message = '上传成功'
-        // let imgPath = res.message
+        this.relatedFile.push(res.message)
       }).catch(err => {
         console.log(err)
         file.status = 'failed'

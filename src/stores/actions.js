@@ -4,10 +4,11 @@
  */
 
 import * as types from './mutation-types'
-import { saveStore, removeStore } from '../utils'
+import { removeStore } from '../utils'
 
 export const setUserInfo = function ({ commit }, obj) {
-  commit(types.SET_USERINFO, saveStore('userInfo', JSON.stringify(obj)))
+  window.sessionStorage.setItem('userInfo', JSON.stringify(obj))
+  commit(types.SET_USERINFO, obj)
 }
 
 export const signOut = function({ commit }) {
@@ -16,7 +17,8 @@ export const signOut = function({ commit }) {
 }
 
 export const setToken = function ({ commit }, token) {
-  commit(types.SET_TOKEN, saveStore('token', token))
+  window.sessionStorage.setItem('token', token)
+  commit(types.SET_TOKEN, token)
 }
 
 export const removeToken = function({ commit }) {

@@ -4,7 +4,7 @@
  */
 
 const state = {
-  userInfo: sessionStorage.getItem('userInfo') || null,
+  userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || null,
   token: sessionStorage.getItem('token') || {},
   announcement: []
 }
