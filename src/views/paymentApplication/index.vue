@@ -12,7 +12,7 @@
         name="picker"
         :value="departName"
         label="*所在项目部"
-        :rules="[{ required: true, message: '请输入正确内容' }]"
+        :rules="[{ required: true, message: '请选择项目部' }]"
         right-icon="arrow"
         placeholder="请选择项目部"
         @click="showPicker = true"
@@ -172,9 +172,6 @@ export default {
       this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
         this.payTypeColumns = res.result
       })
-    },
-    validator(val) {
-      return /1\d{10}/.test(val)
     },
     onConfirmPayType(item) {
       this.payType = item.value

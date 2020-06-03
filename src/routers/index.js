@@ -16,6 +16,9 @@ const mine = () => import(/* webpackChunkName: "mine" */ '@/views/mine')
 const modify = () => import(/* webpackChunkName: "modify" */ '@/views/modify')
 const announcement = () => import(/* webpackChunkName: "announcement" */ '@/views/announcement')
 const announcementDetail = () => import(/* webpackChunkName: "announcementDetail" */ '@/views/announcementDetail')
+const priceDiscount = () => import(/* webpackChunkName: "priceDiscount" */ '@/views/priceDiscount')
+const pledgeRefund = () => import(/* webpackChunkName: "pledgeRefund" */ '@/views/pledgeRefund')
+const depositRefund = () => import(/* webpackChunkName: "depositRefund" */ '@/views/depositRefund')
 
 Vue.use(Router);
 
@@ -98,6 +101,33 @@ const routes = [
     component: announcementDetail,
     meta: {
       title: '公告详情',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/priceDiscount',
+    name: 'priceDiscount',
+    component: priceDiscount,
+    meta: {
+      title: '价格优惠申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/pledgeRefund',
+    name: 'pledgeRefund',
+    component: pledgeRefund,
+    meta: {
+      title: '认筹退款申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/depositRefund',
+    name: 'depositRefund',
+    component: depositRefund,
+    meta: {
+      title: '定金/房款退款申请',
       requireAuth: true // 登录权限
     }
   },
