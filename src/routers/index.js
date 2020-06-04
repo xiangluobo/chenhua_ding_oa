@@ -19,7 +19,10 @@ const announcementDetail = () => import(/* webpackChunkName: "announcementDetail
 const priceDiscount = () => import(/* webpackChunkName: "priceDiscount" */ '@/views/priceDiscount')
 const pledgeRefund = () => import(/* webpackChunkName: "pledgeRefund" */ '@/views/pledgeRefund')
 const depositRefund = () => import(/* webpackChunkName: "depositRefund" */ '@/views/depositRefund')
-
+const marketingPayment = () => import(/* webpackChunkName: "marketingPayment" */ '@/views/marketingPayment')
+const propertySalary = () => import(/* webpackChunkName: "propertySalary" */ '@/views/propertySalary')
+const marketingSalary = () => import(/* webpackChunkName: "marketingSalary" */ '@/views/marketingSalary')
+const approvedProcess = () => import(/* webpackChunkName: "approvedProcess" */ '@/views/approvedProcess')
 Vue.use(Router);
 
 const routes = [
@@ -128,6 +131,42 @@ const routes = [
     component: depositRefund,
     meta: {
       title: '定金/房款退款申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/marketingPayment',
+    name: 'marketingPayment',
+    component: marketingPayment,
+    meta: {
+      title: '营销付款申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/propertySalary',
+    name: 'propertySalary',
+    component: propertySalary,
+    meta: {
+      title: '房产工资发放申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/marketingSalary',
+    name: 'marketingSalary',
+    component: marketingSalary,
+    meta: {
+      title: '营销工资发放申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/approvedProcess',
+    name: 'approvedProcess',
+    component: approvedProcess,
+    meta: {
+      title: '通用审批流程申请',
       requireAuth: true // 登录权限
     }
   },
