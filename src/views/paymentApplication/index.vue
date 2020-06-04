@@ -134,7 +134,7 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       payAmount: '', // 付款金额
       payAmountTotal: '', // 累计付款
@@ -180,12 +180,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.projectCode = item.id;
+      this.orgCode = item.orgCode;
       this.showPicker = false;
     },
     onSubmit() {
       this.$http.post('/ggpay/flowGgPay/add', {
-        projectCode: this.projectCode,
+        projectCode: this.orgCode,
         departName: this.departName,
         payAmount: this.payAmount, // 付款金额
         payAmountTotal: this.payAmountTotal, // 累计付款
@@ -197,7 +197,7 @@ export default {
         payTypeVal: this.payTypeVal,
         payDesc: this.payDesc,
         otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(';')
+        relatedFile: this.relatedFile.join(',')
       }).then(res => {
         console.log(res, 333)
       })

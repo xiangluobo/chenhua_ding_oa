@@ -88,7 +88,7 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       title: '',
       handler: '',
@@ -146,7 +146,7 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.projectCode = item.id;
+      this.orgCode = item.orgCode;
       this.showPicker = false;
     },
     onSubmit() {
@@ -155,8 +155,8 @@ export default {
           title: this.title,
           handler: this.handler,
           content: this.content,
-          projectCode: this.projectCode,
-          relatedFile: this.relatedFile.join(';')
+          projectCode: this.orgCode,
+          relatedFile: this.relatedFile.join(',')
         })
         .then(res => {
           console.log(res, 333);

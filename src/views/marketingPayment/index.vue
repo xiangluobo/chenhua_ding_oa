@@ -129,7 +129,7 @@ Vue.use(Toast)
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       payAmount: '',
       payAmountTotal: '',
@@ -174,7 +174,7 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.projectCode = item.id
+      this.orgCode = item.orgCode
       this.showPicker = false
     },
     afterRead(file) {
@@ -195,7 +195,7 @@ export default {
     },
     onSubmit() {
       this.$http.post('/yxpay/flowYxPay/add', {
-        projectCode: this.projectCode,
+        projectCode: this.orgCode,
         payAmount: this.payAmount,
         payAmountTotal: this.payAmountTotal,
         contractAmount: this.contractAmount,
@@ -205,7 +205,7 @@ export default {
         payType: this.payType,
         payDesc: this.payDesc,
         otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(';')
+        relatedFile: this.relatedFile.join(',')
       }).then(res => {
         console.log(res, 333)
       })

@@ -143,7 +143,7 @@ Vue.use(Toast)
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       custName: '',
       identityNo: '',
@@ -177,12 +177,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.projectCode = item.id
+      this.orgCode = item.orgCode
       this.showPicker = false
     },
     onSubmit() {
       this.$http.post('/djfk/flowDjfkRefund/add', {
-        projectCode: this.projectCode,
+        projectCode: this.orgCode,
         custName: this.custName,
         identityNo: this.identityNo,
         telephone: this.telephone,

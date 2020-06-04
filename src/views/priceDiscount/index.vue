@@ -116,7 +116,7 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       houseNo: '',
       handler: '',
@@ -160,12 +160,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.projectCode = item.id
+      this.orgCode = item.orgCode
       this.showPicker = false
     },
     onSubmit() {
       this.$http.post('/discount/flowPriceDiscount/add', {
-        projectCode: this.projectCode,
+        projectCode: this.orgCode,
         houseNo: this.houseNo,
         handler: this.handler,
         houseArea: this.houseArea,

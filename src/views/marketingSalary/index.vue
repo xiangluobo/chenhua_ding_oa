@@ -92,7 +92,7 @@ Vue.use(Toast);
 export default {
   data() {
     return {
-      projectCode: '',
+      orgCode: '',
       departName: '',
       salaryTime: '',
       salaryPersonCount: '',
@@ -164,17 +164,17 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.projectCode = item.id;
+      this.orgCode = item.orgCode;
       this.showPicker = false;
     },
     onSubmit() {
       this.$http
         .post('/yxsalary/flowYxSalary/add', {
-          projectCode: this.projectCode,
+          projectCode: this.orgCode,
           salaryTime: this.salaryTime,
           salaryPersonCount: this.salaryPersonCount,
           salaryAmount: this.salaryAmount,
-          relatedFile: this.relatedFile.join(';')
+          relatedFile: this.relatedFile.join(',')
         })
         .then(res => {
           console.log(res, 333);
