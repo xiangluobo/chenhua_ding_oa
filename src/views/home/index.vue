@@ -70,7 +70,7 @@
     </div>
     <!-- <span class="iconfont recommend">&#xe7e6;</span> -->
 
-    <van-popup v-model="show" position="bottom" closeable close-icon="close" :style="{ height: '100%' }" >
+    <!-- <van-popup v-model="show" position="bottom" closeable close-icon="close" :style="{ height: '100%' }" >
       <dl class="mod-create">
         <dt>快速创建</dt>
         <dd>
@@ -80,15 +80,14 @@
           </div>
         </dd>
       </dl>
-    </van-popup>
+    </van-popup> -->
   </section>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Popup, Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar } from 'vant'
-Vue.use(Popup)
+import { Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar } from 'vant'
 Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(Swipe)
@@ -98,7 +97,6 @@ Vue.use(NoticeBar)
 export default {
   data() {
     return {
-      show: false,
       images: [
         'https://img.yzcdn.cn/vant/apple-1.jpg',
         'https://img.yzcdn.cn/vant/apple-2.jpg'
@@ -119,14 +117,8 @@ export default {
       }
       this.$router.push(item.appMenuRouter)
     },
-    toApplication(item) {
-      let router = item.appMenuRouter
-      if (router.indexOf(';') > -1) {
-        this.$router.push(router.split(';')[1])
-      }
-    },
     addNewModule() {
-      this.show = true
+      this.$router.push('/create')
     },
     // get请求
     getUserAppPermission() {

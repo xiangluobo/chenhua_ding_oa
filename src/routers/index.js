@@ -23,6 +23,9 @@ const marketingPayment = () => import(/* webpackChunkName: "marketingPayment" */
 const propertySalary = () => import(/* webpackChunkName: "propertySalary" */ '@/views/propertySalary')
 const marketingSalary = () => import(/* webpackChunkName: "marketingSalary" */ '@/views/marketingSalary')
 const approvedProcess = () => import(/* webpackChunkName: "approvedProcess" */ '@/views/approvedProcess')
+const marketingExpense = () => import(/* webpackChunkName: "marketingExpense" */ '@/views/marketingExpense')
+const create = () => import(/* webpackChunkName: "create" */ '@/views/create')
+
 Vue.use(Router);
 
 const routes = [
@@ -45,6 +48,15 @@ const routes = [
     }
   },
   {
+    path: '/create',
+    name: 'create',
+    component: create,
+    meta: {
+      title: '快速创建',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
     path: '/processDetail',
     name: 'processDetail',
     component: processDetail,
@@ -59,6 +71,15 @@ const routes = [
     component: expense,
     meta: {
       title: '费用报销申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/marketingExpense',
+    name: 'marketingExpense',
+    component: marketingExpense,
+    meta: {
+      title: '营销费用报销申请',
       requireAuth: true // 登录权限
     }
   },

@@ -46,7 +46,7 @@
             <div class="summary">摘要</div>
             <div class="money">报销金额</div>
           </div>
-          <div class="report" v-for="(item, index) in flowGgExpenseItemsList" :key="index">
+          <div class="report" v-for="(item, index) in flowYxExpenseItemsList" :key="index">
             <van-checkbox @change="onChange(item.checked)" v-model="item.checked"></van-checkbox>
             <el-select v-model="item.expenseType" filterable placeholder="请输入报销项目">
               <el-option
@@ -104,7 +104,7 @@ export default {
       columns: [],
       options: [],
       showPicker: false,
-      flowGgExpenseItemsList: [
+      flowYxExpenseItemsList: [
         {
           checked: false,
           expenseType: '',
@@ -118,7 +118,7 @@ export default {
     ...mapGetters(['userInfo']),
     expenseTotal() {
       let val = 0
-      this.flowGgExpenseItemsList.forEach(v => {
+      this.flowYxExpenseItemsList.forEach(v => {
         val += Number(v.expenseAmount) || 0
       })
       return val
@@ -149,7 +149,7 @@ export default {
         Toast.fail('请选择项目部')
         return false
       }
-      if (this.flowGgExpenseItemsList.some(v => !v.expenseType || !v.expenseRemark || !v.expenseAmount)) {
+      if (this.flowYxExpenseItemsList.some(v => !v.expenseType || !v.expenseRemark || !v.expenseAmount)) {
         Toast.fail('报销明细填写有问题，请仔细检查')
         return false
       }
@@ -158,7 +158,7 @@ export default {
           expenseTotal: this.expenseTotal,
           projectCode: this.orgCode,
           relatedFile: this.relatedFile.join(','),
-          flowGgExpenseItemsList: this.flowGgExpenseItemsList
+          flowYxExpenseItemsList: this.flowYxExpenseItemsList
         })
         .then(res => {
           console.log(res, 333);
@@ -171,14 +171,14 @@ export default {
         expenseRemark: '',
         expenseAmount: ''
       }
-      this.flowGgExpenseItemsList.push(newObj)
+      this.flowYxExpenseItemsList.push(newObj)
     },
     onDelete() {
-      this.flowGgExpenseItemsList = this.flowGgExpenseItemsList.filter(v => !v.checked) || []
+      this.flowYxExpenseItemsList = this.flowYxExpenseItemsList.filter(v => !v.checked) || []
     },
     onChange (checked, index) {
       // this.list[index].checked = checked
-      console.log(checked, this.flowGgExpenseItemsList)
+      console.log(checked, this.flowYxExpenseItemsList)
     },
     afterRead(file) {
       file.status = 'uploading';
