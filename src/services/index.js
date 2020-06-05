@@ -16,6 +16,9 @@ instance.interceptors.request.use(async config => {
   // if (config.method === 'post') {
   //   config.data = Qs.stringify(config.data)
   // }
+  if (config.url.indexOf('/flow/dealMyTodoBussi') > -1) {
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+  }
   if (config.url.indexOf('mLogin') === -1) {
     let token = store.state.token ? store.state.token : window.sessionStorage.getItem('token')
     config.headers['X-Access-Token'] = token

@@ -25,6 +25,7 @@ const marketingSalary = () => import(/* webpackChunkName: "marketingSalary" */ '
 const approvedProcess = () => import(/* webpackChunkName: "approvedProcess" */ '@/views/approvedProcess')
 const marketingExpense = () => import(/* webpackChunkName: "marketingExpense" */ '@/views/marketingExpense')
 const create = () => import(/* webpackChunkName: "create" */ '@/views/create')
+const approvalProcess = () => import(/* webpackChunkName: "approvalProcess" */ '@/views/approvalProcess')
 
 Vue.use(Router);
 
@@ -188,6 +189,15 @@ const routes = [
     component: approvedProcess,
     meta: {
       title: '通用审批流程申请',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/approvalProcess',
+    name: 'approvalProcess',
+    component: approvalProcess,
+    meta: {
+      title: '代办审批流程列表',
       requireAuth: true // 登录权限
     }
   },

@@ -17,7 +17,7 @@
     </div>
     <div class="content">
       <div class="process">
-        <dl>
+        <dl @click="goToApproval">
           <dt>1</dt>
           <dd>代办审批</dd>
         </dl>
@@ -110,6 +110,9 @@ export default {
   },
   methods: {
     ...mapActions(['setAnnouncement']),
+    goToApproval() {
+      this.$router.push('/approvalProcess')
+    },
     goToProcess(item) {
       if (item.appMenuRouter.indexOf(';') > -1) {
         this.$router.push(item.appMenuRouter.split(';')[0])

@@ -34,7 +34,7 @@
     </dl>
     <van-popup v-model="show" position="bottom" :style="{ height: '38%', paddingTop: '10px'}">
       <van-field
-        v-model="message"
+        v-model="tips"
         rows="1"
         autosize
         label="审核意见"
@@ -62,8 +62,11 @@ export default {
   data() {
     return {
       show: false,
-      message: '',
       procInstId: 0,
+      Id: 0,
+      taskId: 0,
+      tips: '',
+      opt: 0,
       resourceName: '流程图.png',
       applicationList: [],
       auditList: [],
@@ -72,6 +75,8 @@ export default {
   },
   created() {
     this.procInstId = this.$route.query.procInstId
+    this.Id = this.$route.query.id
+    this.taskId = this.$route.query.taskId
     this.bpmState_dictText = this.$route.query.bpmState_dictText
     this.getProcess()
     this.getHistoryData()
@@ -111,8 +116,21 @@ export default {
     onAudit() {
       this.show = true
     },
-    onAgree() {},
-    onReject() {}
+    onAgree() {
+      this.opt = 1
+      this.onSubmit()
+    },
+    onReject() {
+      this.opt = 0
+      this.onSubmit()
+    },
+    onSubmit() {
+      this.$http
+        .post(`/flow/dealMyTodoBussi?opt=${this.opt}&procInstId=${this.procInstId}&id=${Number(this.Id)}&taskId=${this.taskId}&tips=${this.tips}`)
+        .then(res => {
+          console.log(res)
+        })
+    }
   }
 };
 </script>
