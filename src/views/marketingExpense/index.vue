@@ -154,7 +154,7 @@ export default {
         return false
       }
       this.$http
-        .post('/expense/flowGgExpense/add', {
+        .post('/yxexpense/flowYxExpense/add', {
           expenseTotal: this.expenseTotal,
           projectCode: this.orgCode,
           relatedFile: this.relatedFile.join(','),
