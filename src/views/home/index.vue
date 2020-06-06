@@ -125,11 +125,13 @@ export default {
     },
     // get请求
     getUserAppPermission() {
+      let loading = this.$loading()
       this.$http.get('/sys/permission/getUserAppPermissionByToken', {
         params: {
           token: this.token
         }
       }).then(res => {
+        loading.close()
         this.list = res.result.filter(v => v.parentId)
         console.log(this.list, '流程权限')
       })

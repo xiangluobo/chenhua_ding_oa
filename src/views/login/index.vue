@@ -61,10 +61,12 @@ export default {
     },
     // post请求
     login() {
+      let loading = this.$loading()
       this.$http.post('/sys/mLogin', {
         username: this.username,
         password: this.password
       }).then(res => {
+        loading.close()
         let result = res.result
         this.setUserInfo(result.userInfo)
         this.setToken(result.token)

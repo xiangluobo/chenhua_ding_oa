@@ -5,7 +5,7 @@
       <dd>报表</dd>
     </dl>
     <div class="chengyun"><img src="~@/assets/images/middle.png"></div>
-    <dl class="report sec">
+    <dl class="report sec" @click="goToMine">
       <dt><img src="~@/assets/images/mine.png"></dt>
       <dd>我的</dd>
     </dl>
@@ -14,7 +14,12 @@
 
 <script>
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  methods: {
+    goToMine() {
+      this.$router.push('/mine')
+    }
+  }
 }
 </script>
 

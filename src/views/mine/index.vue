@@ -3,20 +3,20 @@
     <div class="mine">
       <div class="avatar"><img src="~@/assets/images/avatar.png"></div>
       <dl class="ctn">
-        <dt>姓名</dt>
+        <dt>{{userInfo.realname}}</dt>
         <dd>部门 | 职位</dd>
       </dl>
     </div>
     <ul class="mod-application">
-      <li>
+      <li @click="goToProcess('getMyApplyBussiList')">
         <span>我的所有申请</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
-      <li>
+      <li @click="goToProcess('getMyDealBussiList')">
         <span>经我处理的申请</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
-      <li>
+      <li @click="goToProcess('getChaoToMyBussiList')">
         <span>抄送给我的申请</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
@@ -36,14 +36,22 @@
   </section>
 </template>
 
-<script type="text/babel">
+<script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   created() {
-    console.log(process.env.VUE_APP_ERUDA, '====', process.env.VUE_APP_TEXT)
+  },
+  methods: {
+    goToProcess(path) {
+      this.$router.push(`/myProcess?path=${path}`)
+    }
   }
 };
 </script>

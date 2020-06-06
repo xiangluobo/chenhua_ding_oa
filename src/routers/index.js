@@ -26,8 +26,9 @@ const approvedProcess = () => import(/* webpackChunkName: "approvedProcess" */ '
 const marketingExpense = () => import(/* webpackChunkName: "marketingExpense" */ '@/views/marketingExpense')
 const create = () => import(/* webpackChunkName: "create" */ '@/views/create')
 const approvalProcess = () => import(/* webpackChunkName: "approvalProcess" */ '@/views/approvalProcess')
+const myProcess = () => import(/* webpackChunkName: "myProcess" */ '@/views/myProcess')
 
-Vue.use(Router);
+Vue.use(Router)
 
 const routes = [
   {
@@ -45,6 +46,15 @@ const routes = [
     component: process,
     meta: {
       title: '流程列表',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/myProcess',
+    name: 'myProcess',
+    component: myProcess,
+    meta: {
+      title: '我的流程列表',
       requireAuth: true // 登录权限
     }
   },

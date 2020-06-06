@@ -9,10 +9,8 @@ import store from '../stores'
 router.beforeEach((to, from, next) => {
   // 检测路由配置中是否有requireAuth这个meta属性
   if (to.matched.some(record => record.meta.requireAuth)) {
-    console.log(111)
     // 判断是否已登录
     if (store.getters.token) {
-      console.log(store.getters.token, 2222)
       next()
     } else {
       // 未登录则跳转到登录界面

@@ -46,7 +46,7 @@
         <div class="btn" @touchstart="onReject">拒绝</div>
       </div>
     </van-popup>
-    <van-button @touchstart="onAudit" style="width:90%; margin-top:30px" type="primary" color="#000" size="normal">去审核</van-button>
+    <van-button v-if="taskId && Id" @touchstart="onAudit" style="width:90%; margin-top:30px" type="primary" color="#000" size="normal">去审核</van-button>
   </section>
 </template>
 

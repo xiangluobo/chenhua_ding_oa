@@ -33,7 +33,7 @@ Vue.use(List);
 export default {
   data() {
     return {
-      type: '',
+      path: '',
       currentNum: 0,
       tabs: [
         {
@@ -75,9 +75,8 @@ export default {
     },
     onLoad() {
       this.loading = true
-      this.$http.get('/flow/getMyApplyBussiList', {
+      this.$http.get(`/flow/${this.path}`, {
         params: {
-          flowType: this.type,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
@@ -97,7 +96,7 @@ export default {
     }
   },
   created() {
-    this.type = this.$route.query.type
+    this.path = this.$route.query.path
     this.onLoad()
   }
 };
