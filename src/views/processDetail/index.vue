@@ -5,7 +5,15 @@
       <dd>
         <div class="application" v-for="(item, index) in applicationList" :key="index">
           <div class="application-key">{{item.name}}</div>
-          <div class="application-val">{{item.value}}</div>
+          <div v-if="item.name !== '报销明细'" class="application-val">{{item.value}}</div>
+          <div v-else class="application-val">
+            <div v-for="(o, i) in item.value" :key="`Reimbursement${i}`">
+              <div class="line" v-for="(m, j) in o" :key="`mm${j}`">
+                <span class="key">{{m.key}}</span>
+                <span>{{m.val}}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </dd>
     </dl>
@@ -53,8 +61,6 @@
 <script>
 import Vue from 'vue'
 import { Button, Field, Popup } from 'vant'
-// import { Loading } from 'element-ui'
-// let loadingInstance1 = Loading.service({ fullscreen: true });
 Vue.use(Popup)
 Vue.use(Button)
 Vue.use(Field)
@@ -103,7 +109,24 @@ export default {
         this.applicationList = result.map(v => {
           let o = {}
           o.name = v[0]
-          o.value = v[1]
+          if (v[0] === '报销明细') {
+            let vv = JSON.parse(v[1])
+            let arr = vv.map(item => {
+              let keys = Object.keys(item)
+              let arr1 = []
+              for (let i=0; i<keys.length; i++) {
+                let key = keys[i]
+                let obj = {}
+                obj.key = key
+                obj.val = item[key]
+                arr1.push(obj)
+              }
+              return arr1
+            })
+            o.value = arr
+          } else {
+            o.value = v[1]
+          }
           return o
         })
       })
