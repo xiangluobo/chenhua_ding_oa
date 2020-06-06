@@ -52,12 +52,11 @@ export default {
     }
   },
   created() {
-    // this.login()
+    this.showFooter(false)
   },
   methods: {
-    ...mapActions(['setUserInfo', 'setToken']),
+    ...mapActions(['setUserInfo', 'setToken', 'showFooter']),
     onSubmit(values) {
-      console.log('submit', values)
       this.login()
     },
     // post请求
@@ -72,6 +71,9 @@ export default {
         this.$router.push('/')
       })
     }
+  },
+  beforeDestroy() {
+    this.showFooter(true)
   }
 }
 </script>

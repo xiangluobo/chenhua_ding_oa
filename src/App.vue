@@ -3,19 +3,24 @@
     <transition name="fade">
       <router-view />
     </transition>
-    <Footer />
+    <Footer v-if="showFooter"/>
   </div>
 </template>
 
 <script>
 import Footer from '@/components/footer.vue'
+import { mapGetters } from 'vuex'
 export default {
   name: 'App',
   components: {
     Footer
   },
+  computed: {
+    ...mapGetters(['showFooter'])
+  },
   data () {
     return {
+      show: true
     }
   }
 };

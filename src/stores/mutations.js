@@ -5,6 +5,9 @@
 import * as types from './mutation-types'
 
 const mutations = {
+  [types.SET_FOOTER](state, show) {
+    state.showFooter = show
+  },
   [types.SET_USERINFO](state, obj) {
     state.userInfo = obj
   },

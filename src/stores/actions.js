@@ -6,6 +6,10 @@
 import * as types from './mutation-types'
 import { removeStore } from '../utils'
 
+export const showFooter = function ({ commit }, isShowFooter) {
+  commit(types.SET_FOOTER, isShowFooter)
+}
+
 export const setUserInfo = function ({ commit }, obj) {
   window.sessionStorage.setItem('userInfo', JSON.stringify(obj))
   commit(types.SET_USERINFO, obj)

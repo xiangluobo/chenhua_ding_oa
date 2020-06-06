@@ -6,7 +6,8 @@
 const state = {
   userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || null,
   token: sessionStorage.getItem('token') || {},
-  announcement: []
+  announcement: [],
+  showFooter: true
 }
 
 export default state
