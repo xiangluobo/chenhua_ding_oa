@@ -4,7 +4,7 @@
       <div class="avatar"><img src="~@/assets/images/avatar.png"></div>
       <dl class="ctn">
         <dt>{{userInfo.realname}}</dt>
-        <dd>部门 | 职位</dd>
+        <dd>{{userInfo.userDepart}} | {{userInfo.userRole}}</dd>
       </dl>
     </div>
     <ul class="mod-application">

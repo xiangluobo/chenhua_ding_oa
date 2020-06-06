@@ -5,14 +5,20 @@
       <dd>
         <div class="application" v-for="(item, index) in applicationList" :key="index">
           <div class="application-key">{{item.name}}</div>
-          <div v-if="item.name !== '报销明细'" class="application-val">{{item.value}}</div>
-          <div v-else class="application-val">
+          <div v-if="item.name == '报销明细'" class="application-val">
             <div v-for="(o, i) in item.value" :key="`Reimbursement${i}`">
-              <div class="line" v-for="(m, j) in o" :key="`mm${j}`">
-                <span class="key">{{m.key}}</span>
-                <span>{{m.val}}</span>
+              <div class="line">
+                <span style="padding-right:5px" class="key">{{o[0]}} :</span>
+                <span style="padding-right:8px">{{o[1]}}</span>
+                <span>( {{o[2]}} )</span>
               </div>
             </div>
+          </div>
+          <div v-else-if="item.name == '相关文件'" class="application-val">
+            <img v-for="(image, k) in item.value" :key="k" :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">
+          </div>
+          <div v-else class="application-val">
+            {{item.value}}
           </div>
         </div>
       </dd>
@@ -112,20 +118,15 @@ export default {
           if (v[0] === '报销明细') {
             let vv = JSON.parse(v[1])
             let arr = vv.map(item => {
-              let keys = Object.keys(item)
-              let arr1 = []
-              for (let i=0; i<keys.length; i++) {
-                let key = keys[i]
-                let obj = {}
-                obj.key = key
-                obj.val = item[key]
-                arr1.push(obj)
-              }
-              return arr1
+              return [item.expenseTypeText, item.expenseAmount, item.expenseRemark]
             })
             o.value = arr
           } else {
-            o.value = v[1]
+            if (v[0] === '相关文件') {
+              o.value = v[1].split(',')
+            } else {
+              o.value = v[1]
+            }
           }
           return o
         })

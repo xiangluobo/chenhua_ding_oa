@@ -68,6 +68,8 @@ export default {
       }).then(res => {
         loading.close()
         let result = res.result
+        result.userInfo.userRole = result.userRole
+        result.userInfo.userDepart = result.userDepart
         this.setUserInfo(result.userInfo)
         this.setToken(result.token)
         this.$router.push('/')
