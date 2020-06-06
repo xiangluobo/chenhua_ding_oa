@@ -25,6 +25,7 @@
     "element-ui": "^2.13.2",
     "fastclick": "^1.0.6",
     "lib-flexible": "^0.3.2",
+    "nprogress": "^0.2.0",
     "vant": "^2.8.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",

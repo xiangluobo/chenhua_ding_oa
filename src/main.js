@@ -14,8 +14,8 @@ import 'lib-flexible';
 import './styles/main.less';
 import FastClick from 'fastclick';
 import { Loading } from 'element-ui'
-FastClick.attach(document.body);
 
+FastClick.attach(document.body);
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$http = request
 Vue.config.errorHandler = (err, vm, info) => {
