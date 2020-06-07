@@ -18,6 +18,7 @@ NProgress.configure({
 // 路由导航守卫
 router.beforeEach((to, from, next) => {
   NProgress.start()
+  document.title = to.meta.title
   // 检测路由配置中是否有requireAuth这个meta属性
   if (to.matched.some(record => record.meta.requireAuth)) {
     // 判断是否已登录

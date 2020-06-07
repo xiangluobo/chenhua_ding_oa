@@ -38,11 +38,12 @@
 <script>
 import Vue from 'vue';
 import { mapActions } from 'vuex'
-import { Form, field, button, checkbox } from 'vant';
-Vue.use(Form);
-Vue.use(field);
-Vue.use(button);
-Vue.use(checkbox);
+import { Form, field, button, checkbox, Toast } from 'vant';
+Vue.use(Form)
+Vue.use(field)
+Vue.use(button)
+Vue.use(checkbox)
+Vue.use(Toast)
 export default {
   data() {
     return {
@@ -67,12 +68,16 @@ export default {
         password: this.password
       }).then(res => {
         loading.close()
-        let result = res.result
-        result.userInfo.userRole = result.userRole
-        result.userInfo.userDepart = result.userDepart
-        this.setUserInfo(result.userInfo)
-        this.setToken(result.token)
-        this.$router.push('/')
+        if (res.success) {
+          let result = res.result
+          result.userInfo.userRole = result.userRole
+          result.userInfo.userDepart = result.userDepart
+          this.setUserInfo(result.userInfo)
+          this.setToken(result.token)
+          this.$router.push('/')
+        } else {
+          Toast.fail(res.message)
+        }
       })
     }
   },

@@ -173,7 +173,7 @@ export default {
         oriTotalPrice: this.oriTotalPrice,
         disTotalPrice: this.disTotalPrice,
         disSinglePrice: this.disSinglePrice,
-        disPrice: this.disPrice,
+        disPrice: Number(this.disPrice),
         description: this.description
       }).then(res => {
         if (res.success) {

@@ -36,7 +36,7 @@ const routes = [
     name: 'index',
     component: home,
     meta: {
-      title: '首页',
+      title: '辰华OA',
       requireAuth: true // 登录权限
     }
   },
@@ -216,7 +216,7 @@ const routes = [
     name: 'login',
     component: login,
     meta: {
-      title: '登录页'
+      title: '登录'
     }
   }
 ];
