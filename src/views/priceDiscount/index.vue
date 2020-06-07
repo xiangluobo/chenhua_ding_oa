@@ -176,7 +176,11 @@ export default {
         disPrice: this.disPrice,
         description: this.description
       }).then(res => {
-        console.log(res, 333)
+        if (res.success) {
+          this.$router.push('/')
+        } else {
+          Toast.fail(res.message)
+        }
       })
     }
   }

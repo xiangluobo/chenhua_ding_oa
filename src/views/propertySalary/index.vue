@@ -177,8 +177,12 @@ export default {
           relatedFile: this.relatedFile.join(',')
         })
         .then(res => {
-          console.log(res, 333);
-        });
+          if (res.success) {
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
     }
   }
 };

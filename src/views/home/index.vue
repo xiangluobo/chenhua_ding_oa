@@ -134,6 +134,9 @@ export default {
         loading.close()
         this.list = res.result.filter(v => v.parentId)
         console.log(this.list, '流程权限')
+      }).catch((err) => {
+        console.log(err, '流程权限')
+        loading.close()
       })
     },
     goToAnnouncement() {

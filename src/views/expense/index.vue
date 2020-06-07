@@ -161,8 +161,12 @@ export default {
           flowGgExpenseItemsList: this.flowGgExpenseItemsList
         })
         .then(res => {
-          console.log(res, 333);
-        });
+          if (res.success) {
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
     },
     onAdd() {
       let newObj = {
