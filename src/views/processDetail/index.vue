@@ -66,10 +66,11 @@
 
 <script>
 import Vue from 'vue'
-import { Button, Field, Popup } from 'vant'
+import { Button, Field, Popup, Toast } from 'vant'
 Vue.use(Popup)
 Vue.use(Button)
 Vue.use(Field)
+Vue.use(Toast)
 export default {
   data() {
     return {
@@ -152,7 +153,11 @@ export default {
       this.$http
         .post(`/flow/dealMyTodoBussi?opt=${this.opt}&procInstId=${this.procInstId}&id=${Number(this.Id)}&taskId=${this.taskId}&tips=${this.tips}`)
         .then(res => {
-          console.log(res)
+          if (res.success) {
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
         })
     }
   }
