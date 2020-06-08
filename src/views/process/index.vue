@@ -1,6 +1,16 @@
 <template>
   <section class="mod-process">
-    <van-search v-model="value" @search="onSearch" placeholder="请输入搜索关键词" />
+    <van-search
+      v-model="value"
+      show-action
+      label=""
+      placeholder="请输入搜索关键词"
+      @search="onSearch"
+    >
+      <template #action>
+        <div @click="onSearch">搜索</div>
+      </template>
+    </van-search>
     <!-- <div class="mod-tabs">
       <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index)">{{ item.name }}</span>
     </div> -->
@@ -71,7 +81,7 @@ export default {
       this.currentNum = i
     },
     onSearch(val) {
-      Toast(val);
+      Toast(this.value)
     },
     onLoad() {
       this.loading = true

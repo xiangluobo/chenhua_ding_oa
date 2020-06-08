@@ -4,7 +4,7 @@
       <dt><img src="~@/assets/images/report.png"></dt>
       <dd>报表</dd>
     </dl>
-    <div class="chengyun"><img src="~@/assets/images/middle.png"></div>
+    <div class="chengyun" @click="goHome"><img src="~@/assets/images/middle.png"></div>
     <dl class="report sec" @click="goToMine">
       <dt><img src="~@/assets/images/mine.png"></dt>
       <dd>我的</dd>
@@ -18,6 +18,9 @@ export default {
   methods: {
     goToMine() {
       this.$router.push('/mine')
+    },
+    goHome() {
+      this.$router.push('/')
     }
   }
 }

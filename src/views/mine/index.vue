@@ -22,13 +22,13 @@
       </li>
     </ul>
     <ul class="mod-application">
-      <li>
+      <li @click="loginOut">
         <span>切换账号</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
     </ul>
     <ul class="mod-application">
-      <li>
+      <li @click="modifyPassword">
         <span>修改密码</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -49,8 +49,17 @@ export default {
   created() {
   },
   methods: {
+    ...mapActions(['signOut', 'removeToken']),
     goToProcess(path) {
       this.$router.push(`/myProcess?path=${path}`)
+    },
+    loginOut() {
+      this.signOut()
+      this.removeToken()
+      this.$router.push('/login')
+    },
+    modifyPassword() {
+      this.$router.push('/modify')
     }
   }
 };

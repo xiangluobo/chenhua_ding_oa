@@ -17,7 +17,18 @@ export default {
       num: this.$route.query.num || 0
     }
   },
-  created() {
+  mounted() {
+    let readFlag = this.announcement[this.num].readFlag // 0 未读  1 已读
+    let anntId = this.announcement[this.num].anntId
+    if (+readFlag === 0) {
+      this.$http.put('/sys/sysAnnouncementSend/editByAnntIdAndUserId', {
+        data: {
+          anntId: anntId
+        }
+      }).then(res => {
+        console.log(res, 888)
+      })
+    }
   },
   computed: {
     ...mapGetters(['announcement'])

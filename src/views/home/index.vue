@@ -1,9 +1,15 @@
 <template>
   <section class="mod-home">
     <div class="banner">
-      <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <img v-lazy="image" />
+      <van-swipe :autoplay="5000">
+        <van-swipe-item>
+          <img :src="require(`../../assets/images/banner1.png`)" />
+        </van-swipe-item>
+        <van-swipe-item>
+          <img :src="require(`../../assets/images/banner2.png`)" />
+        </van-swipe-item>
+        <van-swipe-item>
+          <img :src="require(`../../assets/images/banner3.png`)" />
         </van-swipe-item>
       </van-swipe>
       <!-- <img src="~@/assets/images/banner.png"> -->
@@ -11,7 +17,7 @@
     <div class="notice">
       <div class="left">
         <span class="en">公告</span>
-        <van-notice-bar v-if="announcement[0]" class="ctn" :text="announcement[0].titile"/>
+        <van-notice-bar v-if="announcement[0]" @click="goToAnnouncementDetail(0)" class="ctn" :text="announcement[0].titile"/>
       </div>
       <div class="right" @click="goToAnnouncement">更多<span class="iconfont recommend">&#xe76d;</span></div>
     </div>
@@ -23,15 +29,15 @@
         </dl>
         <dl>
           <dt>1</dt>
-          <dd>代办审批</dd>
+          <dd>今日日程</dd>
         </dl>
         <dl>
           <dt>1</dt>
-          <dd>代办审批</dd>
+          <dd>未完结流程</dd>
         </dl>
         <dl>
           <dt>1</dt>
-          <dd>代办审批</dd>
+          <dd>未完结任务</dd>
         </dl>
       </div>
       <div class="common">
@@ -97,10 +103,6 @@ Vue.use(NoticeBar)
 export default {
   data() {
     return {
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg'
-      ],
       list: [],
       records: []
     }
@@ -120,6 +122,9 @@ export default {
       }
       this.$router.push(item.appMenuRouter)
     },
+    goToAnnouncementDetail(index) {
+      this.$router.push(`/announcementDetail?num=${index}`)
+    },
     addNewModule() {
       this.$router.push('/create')
     },
@@ -133,9 +138,7 @@ export default {
       }).then(res => {
         loading.close()
         this.list = res.result.filter(v => v.parentId)
-        console.log(this.list, '流程权限')
-      }).catch((err) => {
-        console.log(err, '流程权限')
+      }).catch(() => {
         loading.close()
       })
     },
