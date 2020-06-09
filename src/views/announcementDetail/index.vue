@@ -22,9 +22,7 @@ export default {
     let anntId = this.announcement[this.num].anntId
     if (+readFlag === 0) {
       this.$http.put('/sys/sysAnnouncementSend/editByAnntIdAndUserId', {
-        data: {
-          anntId: anntId
-        }
+        anntId: anntId
       }).then(res => {
         console.log(res, 888)
       })
