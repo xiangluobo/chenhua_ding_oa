@@ -2,7 +2,7 @@
   <section class="mod-modify">
     <van-form @submit="onSubmit">
       <van-field
-        v-model="password"
+        v-model="oldpassword"
         type="password"
         name="密码"
         label="原密码"
@@ -18,7 +18,7 @@
         :rules="[{ required: true, message: '请填写密码' }]"
       />
       <van-field
-        v-model="password"
+        v-model="confirmpassword"
         type="password"
         name="密码"
         label="确认密码"
@@ -36,24 +36,46 @@
 
 <script>
 import Vue from 'vue'
+import { mapGetters, mapActions } from 'vuex'
 import {
   Form,
   field,
-  Button
+  Button,
+  Toast
 } from 'vant'
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(field)
+Vue.use(Toast)
 export default {
   data() {
     return {
       username: '',
-      password: ''
+      oldpassword: '',
+      password: '',
+      confirmpassword: ''
     }
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
+    ...mapActions(['signOut', 'removeToken']),
     onSubmit(values) {
-      console.log('submit', values)
+      this.$http.put('/sys/setUserPassword', {
+        username: this.userInfo.username,
+        oldpassword: this.oldpassword,
+        password: this.password,
+        confirmpassword: this.confirmpassword
+      }).then(res => {
+        if (res.success) {
+          this.signOut()
+          this.removeToken()
+          this.$router.push('/login')
+        } else {
+          Toast.fail(res.message)
+        }
+      })
     }
   }
 };

@@ -11,9 +11,9 @@
         <div @click="onSearch">搜索</div>
       </template>
     </van-search>
-    <!-- <div class="mod-tabs">
-      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index)">{{ item.name }}</span>
-    </div> -->
+    <div class="mod-tabs">
+      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
+    </div>
     <van-list
       v-model="loading"
       :finished="finished"
@@ -47,22 +47,27 @@ export default {
       currentNum: 0,
       tabs: [
         {
+          bpmState: 1,
           name: '全部',
           id: 1
         },
         {
+          bpmState: 2,
           name: '待审核',
           id: 2
         },
         {
-          name: '待审核',
+          bpmState: 3,
+          name: '已通过',
           id: 3
         },
         {
-          name: '待审核',
+          bpmState: 4,
+          name: '未通过',
           id: 4
         }
       ],
+      bpmState: 1,
       value: '',
       list: [],
       finished: false,
@@ -77,7 +82,9 @@ export default {
     }
   },
   methods: {
-    setActive(i) {
+    setActive(i, item) {
+      console.log(item)
+      this.bpmState = item.bpmState
       this.currentNum = i
     },
     onSearch(val) {
@@ -87,6 +94,7 @@ export default {
       this.loading = true
       this.$http.get(`/flow/${this.path}`, {
         params: {
+          bpmState: this.bpmState,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
