@@ -1,7 +1,7 @@
 <template>
   <section class="mod-process">
     <van-search
-      v-model="value"
+      v-model="keywords"
       show-action
       label=""
       placeholder="请输入搜索关键词"
@@ -12,7 +12,7 @@
       </template>
     </van-search>
     <div class="mod-tabs">
-      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index)">{{ item.name }}</span>
+      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
     </div>
     <van-list
       v-model="loading"
@@ -73,23 +73,28 @@ export default {
       currentNum: 0,
       tabs: [
         {
+          bpmState: 1,
           name: '全部',
           id: 1
         },
         {
+          bpmState: 2,
           name: '待审核',
           id: 2
         },
         {
-          name: '待审核',
+          bpmState: 3,
+          name: '已通过',
           id: 3
         },
         {
-          name: '待审核',
+          bpmState: 4,
+          name: '未通过',
           id: 4
         }
       ],
-      value: '',
+      keywords: '',
+      bpmState: 2,
       list: [],
       loading: false,
       finished: false,
@@ -103,15 +108,23 @@ export default {
     }
   },
   methods: {
-    setActive(i) {
+    setActive(i, item) {
+      this.bpmState = item.bpmState
       this.currentNum = i
+      this.pageNo = 1
+      this.list = []
+      this.onLoad()
     },
     onSearch(val) {
-      Toast(this.value)
+      this.list = []
+      this.pageNo = 1
+      this.onLoad()
     },
     onLoad() {
       this.$http.get('/flow/getMyTodoBussiList', {
         params: {
+          keywords: this.keywords,
+          bpmState: this.bpmState,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }

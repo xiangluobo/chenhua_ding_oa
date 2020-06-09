@@ -1,7 +1,7 @@
 <template>
   <section class="mod-process">
     <van-search
-      v-model="value"
+      v-model="keywords"
       show-action
       label=""
       placeholder="请输入搜索关键词"
@@ -45,6 +45,7 @@ export default {
     return {
       path: '',
       currentNum: 0,
+      keywords: '',
       tabs: [
         {
           bpmState: 1,
@@ -67,8 +68,7 @@ export default {
           id: 4
         }
       ],
-      bpmState: 1,
-      value: '',
+      bpmState: 2,
       list: [],
       finished: false,
       pageNo: 1,
@@ -83,17 +83,22 @@ export default {
   },
   methods: {
     setActive(i, item) {
-      console.log(item)
       this.bpmState = item.bpmState
       this.currentNum = i
+      this.pageNo = 1
+      this.list = []
+      this.getList()
     },
     onSearch(val) {
-      Toast(this.value)
+      this.list = []
+      this.pageNo = 1
+      this.getList()
     },
-    onLoad() {
+    getList() {
       this.loading = true
       this.$http.get(`/flow/${this.path}`, {
         params: {
+          keywords: this.keywords,
           bpmState: this.bpmState,
           pageNo: this.pageNo,
           pageSize: this.pageSize
@@ -109,13 +114,16 @@ export default {
         }
       })
     },
+    onLoad() {
+      this.getList()
+    },
     goToDetail(item) {
       this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
     }
   },
   created() {
     this.path = this.$route.query.path
-    this.onLoad()
+    this.getList()
   }
 };
 </script>
