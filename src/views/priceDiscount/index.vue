@@ -70,10 +70,9 @@
       />
       <van-field
         v-model="disPrice"
-        label="*折扣信息"
+        label="折扣信息"
         class="mod-field"
         placeholder="请输入折扣信息"
-        :rules="[{ required: true, message: '请输入折扣信息' }]"
       />
       <van-field
         v-model="description"

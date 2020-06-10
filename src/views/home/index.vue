@@ -24,19 +24,19 @@
     <div class="content">
       <div class="process">
         <dl @click="goToApproval">
-          <dt>1</dt>
-          <dd>代办审批</dd>
+          <dt>0</dt>
+          <dd>待办审批</dd>
         </dl>
         <dl>
-          <dt>1</dt>
+          <dt>0</dt>
           <dd>今日日程</dd>
         </dl>
         <dl>
-          <dt>1</dt>
+          <dt>0</dt>
           <dd>未完结流程</dd>
         </dl>
         <dl>
-          <dt>1</dt>
+          <dt>0</dt>
           <dd>未完结任务</dd>
         </dl>
       </div>

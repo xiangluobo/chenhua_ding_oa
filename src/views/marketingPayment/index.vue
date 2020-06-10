@@ -47,14 +47,14 @@
       />
       <van-field
         v-model="payeeAccount"
-        label="收款人账号"
+        label="*收款人账号"
         class="mod-field"
         placeholder="请输入收款人账号"
         :rules="[{ required: true, message: '请输入收款人账号' }]"
       />
       <van-field
         v-model="payeeBank"
-        label="开户行地址"
+        label="*开户行地址"
         class="mod-field"
         placeholder="请输入开户行地址"
         :rules="[{ required: true, message: '请输入开户行地址' }]"
