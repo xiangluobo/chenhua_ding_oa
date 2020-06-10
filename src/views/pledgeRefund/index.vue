@@ -43,6 +43,7 @@
         label="*认筹金额"
         class="mod-field"
         placeholder="请输入认筹金额"
+        type="number"
         :rules="[{ required: true, message: '请输入认筹金额' }]"
       />
       <van-field

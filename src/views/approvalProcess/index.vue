@@ -69,7 +69,7 @@ export default {
       type: '',
       currentNum: 0,
       keywords: '',
-      bpmState: 2,
+      bpmState: '',
       list: [],
       loading: false,
       finished: false,
@@ -84,11 +84,12 @@ export default {
   },
   methods: {
     onSearch(val) {
+      this.finished = false
       this.list = []
       this.pageNo = 1
-      this.onLoad()
+      this.getList()
     },
-    onLoad() {
+    getList() {
       this.$http.get('/flow/getMyTodoBussiList', {
         params: {
           keywords: this.keywords,
@@ -108,12 +109,16 @@ export default {
         }
       })
     },
+    onLoad() {
+      this.getList()
+    },
     goToDetail(item) {
       this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskId}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
     }
   },
   created() {
-    this.onLoad()
+    this.bpmState = this.$route.query.bpmState
+    this.getList()
   }
 };
 </script>

@@ -40,6 +40,7 @@
         label="*面积"
         class="mod-field"
         placeholder="请输入面积"
+        type="number"
         :rules="[{ required: true, message: '请输入面积' }]"
       />
       <van-field
@@ -47,30 +48,38 @@
         label="*原单价"
         class="mod-field"
         placeholder="请输入原单价"
+        type="number"
         :rules="[{ required: true, message: '请输入原单价' }]"
       />
       <van-field
         v-model="oriTotalPrice"
         label="原总价"
         class="mod-field"
+        type="number"
+        readonly
         placeholder="请输入原总价"
       />
       <van-field
         v-model="disTotalPrice"
         label="*折后总价"
+        type="number"
         class="mod-field"
         placeholder="请输入折后总价"
         :rules="[{ required: true, message: '请输入折后总价' }]"
       />
       <van-field
+        readonly
         v-model="disSinglePrice"
         label="折后单价"
+        type="number"
         class="mod-field"
         placeholder="请输入折后单价"
       />
       <van-field
+        readonly
         v-model="disPrice"
         label="折扣信息"
+        type="number"
         class="mod-field"
         placeholder="请输入折扣信息"
       />
@@ -122,10 +131,7 @@ export default {
       handler: '',
       houseArea: '',
       oriSinglePrice: '',
-      oriTotalPrice: '',
       disTotalPrice: '',
-      disSinglePrice: '',
-      disPrice: '',
       description: '',
       showPicker: false,
       columns: [],
@@ -138,7 +144,16 @@ export default {
     this.getlist()
   },
   computed: {
-    ...mapGetters(['userInfo'])
+    ...mapGetters(['userInfo']),
+    oriTotalPrice() {
+      return this.houseArea * this.oriSinglePrice || ''
+    },
+    disSinglePrice() {
+      return this.disTotalPrice / this.houseArea || ''
+    },
+    disPrice() {
+      return this.oriTotalPrice - this.disTotalPrice || ''
+    }
   },
   methods: {
     getMyProjectList() {

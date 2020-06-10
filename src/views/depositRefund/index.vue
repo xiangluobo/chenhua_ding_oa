@@ -35,6 +35,7 @@
         v-model="telephone"
         label="*手机号码"
         class="mod-field"
+        type="number"
         placeholder="请输入手机号码"
         :rules="[{ required: true, message: '请输入手机号码' }]"
       />
@@ -48,6 +49,7 @@
       <van-field
         v-model="houseArea"
         label="*面积(㎡)"
+        type="number"
         class="mod-field"
         placeholder="请输入面积"
         :rules="[{ required: true, message: '请输入面积' }]"
@@ -55,6 +57,7 @@
       <van-field
         v-model="totalPrice"
         label="*总价"
+        type="number"
         class="mod-field"
         placeholder="请输入总价"
         :rules="[{ required: true, message: '请输入总价' }]"
@@ -62,6 +65,7 @@
       <van-field
         v-model="refundAmount"
         label="*最终退款额"
+        type="number"
         class="mod-field"
         placeholder="请输入最终退款额"
         :rules="[{ required: true, message: '请输入最终退款额' }]"

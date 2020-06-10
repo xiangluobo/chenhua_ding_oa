@@ -38,6 +38,9 @@
       <van-field
         v-model='content'
         label='*审核内容'
+        rows="3"
+        autosize
+        type="textarea"
         class='mod-field'
         placeholder='请输入审核内容'
         :rules="[{ required: true, message: '请输入审核内容'}]"
@@ -160,6 +163,7 @@ export default {
         })
         .then(res => {
           if (res.success) {
+            Toast.success('保存成功')
             this.$router.push('/')
           } else {
             Toast.fail(res.message)

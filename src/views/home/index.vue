@@ -31,7 +31,7 @@
           <dt>{{ dataCount.jinriRichengCount }}</dt>
           <dd>今日日程</dd>
         </dl>
-        <dl>
+        <dl @click="goToApproval(2)">
           <dt>{{ dataCount.weiwanjieLiuchengCount }}</dt>
           <dd>未完结流程</dd>
         </dl>
@@ -122,8 +122,8 @@ export default {
         this.dataCount = res.result
       })
     },
-    goToApproval() {
-      this.$router.push('/approvalProcess')
+    goToApproval(bpmState) {
+      this.$router.push(`/approvalProcess?bpmState=${bpmState}`)
     },
     goToProcess(item) {
       if (item.appMenuRouter.indexOf(';') > -1) {

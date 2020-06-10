@@ -30,6 +30,7 @@
       <van-field
         v-model='salaryPersonCount'
         label='*发放人数'
+        type="number"
         class='mod-field'
         placeholder='请输入发放人数'
         :rules="[{ required: true, message: '请输入发放人数' }]"
@@ -37,6 +38,7 @@
       <van-field
         v-model='salaryAmount'
         label='*总金额'
+        type="number"
         class='mod-field'
         placeholder='请输入总金额'
         :rules="[{ required: true, message: '请输入总金额'}]"

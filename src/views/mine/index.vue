@@ -12,6 +12,10 @@
         <span>我的所有申请</span>
         <i class="iconfont arrow">&#xe7e3;</i>
       </li>
+      <li @click="goToProcess('getMyUnderBussiList')">
+        <span>我的下属申请</span>
+        <i class="iconfont arrow">&#xe7e3;</i>
+      </li>
       <li @click="goToProcess('getMyDealBussiList')">
         <span>经我处理的申请</span>
         <i class="iconfont arrow">&#xe7e3;</i>

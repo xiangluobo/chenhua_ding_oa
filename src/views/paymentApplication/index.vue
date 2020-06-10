@@ -20,6 +20,7 @@
       <van-field
         v-model="payAmount"
         label="*付款金额"
+        type="number"
         class="mod-field"
         placeholder="请输入付款金额"
         :rules="[{ required: true, message: '请输入付款金额' }]"
@@ -34,6 +35,7 @@
       <van-field
         v-model="contractAmount"
         label="*合同金额"
+        type="number"
         class="mod-field"
         placeholder="请输入合同金额"
         :rules="[{ required: true, message: '请输入合同金额' }]"
