@@ -70,6 +70,7 @@ export default {
         loading.close()
         if (res.success) {
           let result = res.result
+          Toast.success('保存成功')
           result.userInfo.userRole = result.userRole
           result.userInfo.userDepart = result.userDepart
           this.setUserInfo(result.userInfo)

@@ -24,38 +24,38 @@
     <div class="content">
       <div class="process">
         <dl @click="goToApproval">
-          <dt>0</dt>
+          <dt>{{ dataCount.daibanShenpiCount }}</dt>
           <dd>待办审批</dd>
         </dl>
         <dl>
-          <dt>0</dt>
+          <dt>{{ dataCount.jinriRichengCount }}</dt>
           <dd>今日日程</dd>
         </dl>
         <dl>
-          <dt>0</dt>
+          <dt>{{ dataCount.weiwanjieLiuchengCount }}</dt>
           <dd>未完结流程</dd>
         </dl>
         <dl>
-          <dt>0</dt>
+          <dt>{{ dataCount.weiwanjieRenwuCount }}</dt>
           <dd>未完结任务</dd>
         </dl>
       </div>
       <div class="common">
         <h3>常用</h3>
         <div class="units">
-          <div class="unit">
+          <div class="unit" @click="unFunction">
             <div class="circle"><img src="~@/assets/images/richeng.png"><span class="dot"></span></div>
             <div class="illustration">日程</div>
           </div>
-          <div class="unit">
+          <div class="unit" @click="unFunction">
             <div class="circle"><img src="~@/assets/images/ribao.png"><span class="dot"></span></div>
             <div class="illustration">日报</div>
           </div>
-          <div class="unit">
+          <div class="unit" @click="unFunction">
             <div class="circle"><img src="~@/assets/images/renwu.png"><span class="dot"></span></div>
             <div class="illustration">任务</div>
           </div>
-          <div class="unit">
+          <div class="unit" @click="unFunction">
             <div class="circle"><img src="~@/assets/images/kaoqing.png"><span class="dot"></span></div>
             <div class="illustration">考勤</div>
           </div>
@@ -93,18 +93,20 @@
 <script>
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar } from 'vant'
+import { Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar, Toast } from 'vant'
 Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Lazyload)
 Vue.use(NoticeBar)
+Vue.use(Toast)
 export default {
   data() {
     return {
       list: [],
-      records: []
+      records: [],
+      dataCount: {}
     }
   },
   computed: {
@@ -112,6 +114,14 @@ export default {
   },
   methods: {
     ...mapActions(['setAnnouncement']),
+    unFunction() {
+      Toast('功能开发中')
+    },
+    getProcessingDataCount() {
+      this.$http.get('/sys/user/getProcessingDataCount').then(res => {
+        this.dataCount = res.result
+      })
+    },
     goToApproval() {
       this.$router.push('/approvalProcess')
     },
@@ -149,6 +159,7 @@ export default {
   created() {
     this.getUserAppPermission()
     this.setAnnouncement()
+    this.getProcessingDataCount()
   }
 }
 </script>

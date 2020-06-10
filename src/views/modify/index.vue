@@ -71,6 +71,7 @@ export default {
         if (res.success) {
           this.signOut()
           this.removeToken()
+          Toast.success('注销成功')
           this.$router.push('/login')
         } else {
           Toast.fail(res.message)

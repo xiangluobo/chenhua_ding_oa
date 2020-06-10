@@ -37,7 +37,7 @@
 
 <script>
 import Vue from 'vue';
-import { Search, Toast, List } from 'vant';
+import { Search, List } from 'vant';
 Vue.use(Search);
 Vue.use(List);
 export default {
@@ -48,7 +48,7 @@ export default {
       keywords: '',
       tabs: [
         {
-          bpmState: 1,
+          bpmState: '',
           name: '全部',
           id: 1
         },
@@ -68,7 +68,7 @@ export default {
           id: 4
         }
       ],
-      bpmState: 2,
+      bpmState: '',
       list: [],
       finished: false,
       pageNo: 1,
@@ -83,6 +83,7 @@ export default {
   },
   methods: {
     setActive(i, item) {
+      this.finished = false
       this.bpmState = item.bpmState
       this.currentNum = i
       this.pageNo = 1
@@ -90,6 +91,7 @@ export default {
       this.getList()
     },
     onSearch(val) {
+      this.finished = false
       this.list = []
       this.pageNo = 1
       this.getList()

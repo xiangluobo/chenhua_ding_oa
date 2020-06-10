@@ -154,6 +154,7 @@ export default {
         .post(`/flow/dealMyTodoBussi?opt=${this.opt}&procInstId=${this.procInstId}&id=${Number(this.Id)}&taskId=${this.taskId}&tips=${this.tips}`)
         .then(res => {
           if (res.success) {
+            Toast.success('保存成功')
             this.$router.push('/')
           } else {
             Toast.fail(res.message)

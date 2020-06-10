@@ -11,9 +11,6 @@
         <div @click="onSearch">搜索</div>
       </template>
     </van-search>
-    <div class="mod-tabs">
-      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
-    </div>
     <van-list
       v-model="loading"
       :finished="finished"
@@ -63,7 +60,7 @@
 
 <script>
 import Vue from 'vue';
-import { Search, Toast, List } from 'vant';
+import { Search, List } from 'vant';
 Vue.use(Search);
 Vue.use(List);
 export default {
@@ -71,28 +68,6 @@ export default {
     return {
       type: '',
       currentNum: 0,
-      tabs: [
-        {
-          bpmState: 1,
-          name: '全部',
-          id: 1
-        },
-        {
-          bpmState: 2,
-          name: '待审核',
-          id: 2
-        },
-        {
-          bpmState: 3,
-          name: '已通过',
-          id: 3
-        },
-        {
-          bpmState: 4,
-          name: '未通过',
-          id: 4
-        }
-      ],
       keywords: '',
       bpmState: 2,
       list: [],
@@ -108,13 +83,6 @@ export default {
     }
   },
   methods: {
-    setActive(i, item) {
-      this.bpmState = item.bpmState
-      this.currentNum = i
-      this.pageNo = 1
-      this.list = []
-      this.onLoad()
-    },
     onSearch(val) {
       this.list = []
       this.pageNo = 1

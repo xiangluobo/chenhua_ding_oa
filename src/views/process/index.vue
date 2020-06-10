@@ -1,7 +1,7 @@
 <template>
   <section class="mod-process">
     <van-search
-      v-model="value"
+      v-model="keywords"
       show-action
       label=""
       placeholder="请输入搜索关键词"
@@ -11,9 +11,9 @@
         <div @click="onSearch">搜索</div>
       </template>
     </van-search>
-    <!-- <div class="mod-tabs">
-      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index)">{{ item.name }}</span>
-    </div> -->
+    <div class="mod-tabs">
+      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
+    </div>
     <van-list
       v-model="loading"
       :finished="finished"
@@ -45,25 +45,30 @@ export default {
     return {
       type: '',
       currentNum: 0,
+      keywords: '',
       tabs: [
         {
+          bpmState: '',
           name: '全部',
           id: 1
         },
         {
+          bpmState: 2,
           name: '待审核',
           id: 2
         },
         {
-          name: '待审核',
+          bpmState: 3,
+          name: '已通过',
           id: 3
         },
         {
-          name: '待审核',
+          bpmState: 4,
+          name: '未通过',
           id: 4
         }
       ],
-      value: '',
+      bpmState: '',
       list: [],
       finished: false,
       pageNo: 1,
@@ -77,17 +82,26 @@ export default {
     }
   },
   methods: {
-    setActive(i) {
+    setActive(i, item) {
+      this.finished = false
+      this.bpmState = item.bpmState
       this.currentNum = i
+      this.pageNo = 1
+      this.list = []
+      this.getList()
     },
     onSearch(val) {
-      Toast(this.value)
+      this.finished = false
+      this.list = []
+      this.pageNo = 1
+      this.getList()
     },
-    onLoad() {
+    getList() {
       this.loading = true
       this.$http.get('/flow/getMyApplyBussiList', {
         params: {
-          flowType: this.type,
+          keywords: this.keywords,
+          bpmState: this.bpmState,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
@@ -102,13 +116,16 @@ export default {
         }
       })
     },
+    onLoad() {
+      this.getList()
+    },
     goToDetail(item) {
       this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
     }
   },
   created() {
     this.type = this.$route.query.type
-    this.onLoad()
+    this.getList()
   }
 };
 </script>
