@@ -7,11 +7,11 @@
       <van-form @submit="onSubmit">
         <van-field
           v-model="username"
-          name="用户名"
+          name="账户名"
           label=""
           left-icon="manager"
-          placeholder="用户名/邮箱/手机号"
-          :rules="[{ required: true, message: '用户名/邮箱/手机号' }]"
+          placeholder="账户名"
+          :rules="[{ required: true, message: '账户名' }]"
         />
         <van-field
           style="margin:20px 0 10px"
