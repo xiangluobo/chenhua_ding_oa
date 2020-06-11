@@ -31,13 +31,13 @@ export const removeToken = function({ commit }) {
 }
 
 export const setAnnouncement = function({ commit }) {
-  window.myVue.$http.get('/sys/sysAnnouncementSend/getMyAnnouncementSend', {
+  window.myVue.$http.get('/sys/annountCement/listByUser', {
     params: {
       msgCategory: 1,
       pageSize: 10,
       pageNo: 1
     }
   }).then(res => {
-    commit(types.ANNOUNCEMENT, res.result.records)
+    commit(types.ANNOUNCEMENT, res.result.anntMsgList)
   })
 }
