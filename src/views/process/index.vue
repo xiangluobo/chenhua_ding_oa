@@ -100,6 +100,7 @@ export default {
       this.loading = true
       this.$http.get('/flow/getMyApplyBussiList', {
         params: {
+          flowType: this.type,
           keywords: this.keywords,
           bpmState: this.bpmState,
           pageNo: this.pageNo,
