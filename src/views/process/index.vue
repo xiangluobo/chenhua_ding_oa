@@ -37,7 +37,7 @@
 
 <script>
 import Vue from 'vue';
-import { Search, Toast, List } from 'vant';
+import { Search, List } from 'vant';
 Vue.use(Search);
 Vue.use(List);
 export default {

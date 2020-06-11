@@ -11,7 +11,7 @@ export const showFooter = function ({ commit }, isShowFooter) {
 }
 
 export const setUserInfo = function ({ commit }, obj) {
-  window.sessionStorage.setItem('userInfo', JSON.stringify(obj))
+  window.localStorage.setItem('userInfo', JSON.stringify(obj))
   commit(types.SET_USERINFO, obj)
 }
 
@@ -21,7 +21,7 @@ export const signOut = function({ commit }) {
 }
 
 export const setToken = function ({ commit }, token) {
-  window.sessionStorage.setItem('token', token)
+  window.localStorage.setItem('token', token)
   commit(types.SET_TOKEN, token)
 }
 

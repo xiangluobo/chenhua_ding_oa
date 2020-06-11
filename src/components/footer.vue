@@ -4,7 +4,12 @@
       <dt><img src="~@/assets/images/report.png"></dt>
       <dd>报表</dd>
     </dl>
-    <div class="chengyun" @click="goHome"><img src="~@/assets/images/middle.png"></div>
+    <div class="chengyun" @click="goHome">
+      <!-- <img src="~@/assets/images/middle.png"> -->
+      <img src=''>
+      <span class="charater">辰化置业</span>
+      <span class="english">CHENGHUAZHIYE</span>
+    </div>
     <dl class="report sec" @click="goToMine">
       <dt><img src="~@/assets/images/mine.png"></dt>
       <dd>我的</dd>
@@ -23,6 +28,7 @@ export default {
       this.$router.push('/mine')
     },
     goHome() {
+      if (this.$route.path === '/') return
       this.$router.push('/')
     },
     unFunction() {
@@ -72,8 +78,28 @@ export default {
     width: 33%;
     img{
       display: block;
-      width: 45px;
-      margin: 8px auto
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      margin: 2px auto 0
+    }
+    .charater{
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #fff ;
+      transform: scale(0.80);
+      margin: 0 auto
+    }
+    .english{
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #f00 ;
+      transform: scale(0.50);
+      margin: 0 auto
     }
   }
 }

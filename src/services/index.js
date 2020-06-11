@@ -20,7 +20,7 @@ instance.interceptors.request.use(async config => {
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   }
   if (config.url.indexOf('mLogin') === -1) {
-    let token = store.state.token ? store.state.token : window.sessionStorage.getItem('token')
+    let token = store.state.token ? store.state.token : window.localStorage.getItem('token')
     config.headers['X-Access-Token'] = token
   }
   return config

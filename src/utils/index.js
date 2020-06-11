@@ -44,14 +44,14 @@ export function throttle(func, wait, options = {}) {
 }
 
 export function saveStore(key, val) {
-  window.sessionStorage.setItem(key, val)
+  window.localStorage.setItem(key, val)
   return JSON.parse(val)
 }
 
 export function getStore(key, val) {
-  window.sessionStorage.getItem(key)
+  window.localStorage.getItem(key)
 }
 
 export function removeStore(key, val) {
-  window.sessionStorage.removeItem(key, null)
+  window.localStorage.removeItem(key, null)
 }
