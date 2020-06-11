@@ -70,6 +70,7 @@ export default {
       currentNum: 0,
       keywords: '',
       bpmState: '',
+      api: '',
       list: [],
       loading: false,
       finished: false,
@@ -90,7 +91,7 @@ export default {
       this.getList()
     },
     getList() {
-      this.$http.get('/flow/getMyTodoBussiList', {
+      this.$http.get(this.api, {
         params: {
           keywords: this.keywords,
           bpmState: this.bpmState,
@@ -118,6 +119,7 @@ export default {
   },
   created() {
     this.bpmState = this.$route.query.bpmState
+    this.api = this.$route.query.api
     this.getList()
   }
 };

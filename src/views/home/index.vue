@@ -23,7 +23,7 @@
     </div>
     <div class="content">
       <div class="process">
-        <dl @click="goToApproval">
+        <dl @click="goToApproval('','/flow/getMyTodoBussiList')">
           <dt>{{ dataCount.daibanShenpiCount }}</dt>
           <dd>待办审批</dd>
         </dl>
@@ -31,7 +31,7 @@
           <dt>{{ dataCount.jinriRichengCount }}</dt>
           <dd>今日日程</dd>
         </dl>
-        <dl @click="goToApproval(2)">
+        <dl @click="goToApproval(2,'/flow/getMyUnderBussiList')">
           <dt>{{ dataCount.weiwanjieLiuchengCount }}</dt>
           <dd>未完结流程</dd>
         </dl>
@@ -122,8 +122,8 @@ export default {
         this.dataCount = res.result
       })
     },
-    goToApproval(bpmState) {
-      this.$router.push(`/approvalProcess?bpmState=${bpmState}`)
+    goToApproval(bpmState, api) {
+      this.$router.push(`/approvalProcess?bpmState=${bpmState}&api=${api}`)
     },
     goToProcess(item) {
       if (item.appMenuRouter.indexOf(';') > -1) {

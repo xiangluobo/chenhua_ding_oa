@@ -151,6 +151,10 @@ export default {
     },
     onReject() {
       this.opt = 0
+      if (!this.tips.trim()) {
+        Toast.fail('拒绝时必须输入审核意见')
+        return;
+      }
       this.onSubmit()
     },
     onSubmit() {
