@@ -57,7 +57,7 @@
         class="mod-field"
         type="number"
         readonly
-        placeholder="请输入原总价"
+        placeholder="自动计算,无需填写"
       />
       <van-field
         v-model="disTotalPrice"
@@ -73,7 +73,7 @@
         label="折后单价"
         type="number"
         class="mod-field"
-        placeholder="请输入折后单价"
+        placeholder="自动计算,无需填写"
       />
       <van-field
         readonly
@@ -81,7 +81,7 @@
         label="折扣信息"
         type="number"
         class="mod-field"
-        placeholder="请输入折扣信息"
+        placeholder="自动计算,无需填写"
       />
       <van-field
         v-model="description"

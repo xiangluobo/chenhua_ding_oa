@@ -124,7 +124,11 @@ export default {
             o.value = arr
           } else {
             if (v[0] === '相关文件') {
-              o.value = v[1].split(',')
+              if (v[1] === null) {
+                o.value = ''
+              } else {
+                o.value = v[1].split(',')
+              }
             } else {
               o.value = v[1]
             }
