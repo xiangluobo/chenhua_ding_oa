@@ -1,25 +1,20 @@
 <template>
-  <section class="mod-process">
-    <van-search
-      v-model="keywords"
-      show-action
-      label=""
-      placeholder="请输入搜索关键词"
-      @search="onSearch"
-    >
-      <template #action>
-        <div @click="onSearch">搜索</div>
-      </template>
-    </van-search>
-    <div class="mod-tabs">
-      <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
-    </div>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
+  <section class="mod-process" ref="wrapper">
+    <div>
+      <van-search
+        v-model="keywords"
+        show-action
+        label=""
+        placeholder="请输入搜索关键词"
+        @search="onSearch"
+      >
+        <template #action>
+          <div @click="onSearch">搜索</div>
+        </template>
+      </van-search>
+      <div class="mod-tabs">
+        <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
+      </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
         <div class="name">{{item.applyUser_dictText }}</div>
         <div class="ctn">
@@ -31,21 +26,25 @@
         </div>
         <div class="time">{{item.applyTime | filterTime}}</div>
       </div>
-    </van-list>
+      <van-loading v-if="loading" type="spinner" />
+      <div v-if="!loading && tips" class="tips">{{ tips }} </div>
+    </div>
   </section>
 </template>
 
 <script>
 import Vue from 'vue';
-import { Search, List } from 'vant';
-Vue.use(Search);
-Vue.use(List);
+import { Search, Loading } from 'vant'
+import BScroll from 'better-scroll'
+Vue.use(Search)
+Vue.use(Loading);
 export default {
   data() {
     return {
       type: '',
       currentNum: 0,
       keywords: '',
+      tips: '',
       tabs: [
         {
           bpmState: '',
@@ -70,9 +69,19 @@ export default {
       ],
       bpmState: '',
       list: [],
-      finished: false,
       pageNo: 1,
       pageSize: 5,
+      scroll: null,
+      options: {
+        pullUpLoad: {
+          threshold: -10
+        },
+        click: true, // better-scroll 默认会阻止浏览器的原生 click 事件
+        probeType: 3, // 不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件
+        startY: 0,
+        scrollbar: true,
+        eventPassthrough: 'horizontal' // 模拟纵向滚动，而横向的滚动还是保留原生滚动
+      },
       loading: false
     };
   },
@@ -83,7 +92,6 @@ export default {
   },
   methods: {
     setActive(i, item) {
-      this.finished = false
       this.bpmState = item.bpmState
       this.currentNum = i
       this.pageNo = 1
@@ -91,7 +99,6 @@ export default {
       this.getList()
     },
     onSearch(val) {
-      this.finished = false
       this.list = []
       this.pageNo = 1
       this.getList()
@@ -108,17 +115,36 @@ export default {
         }
       }).then(res => {
         this.loading = false
-        let records = res.result.records
-        if (records.length) {
-          this.pageNo += 1
-          this.list = this.list.concat(records)
+        // 加载状态结束
+        if (this.pageNo === 1) {
+          this.list = []
+          this.list = res.result.records
+          this.scroll.scrollTo(0, 0)
         } else {
-          this.finished = true
+          this.list = this.list.concat(res.result.records)
         }
+        if (res.result.records && res.result.records.length === 0) {
+          this.tips = '没有更多数据了！'
+        }
+        this.scroll.finishPullUp();
+        this.scroll.refresh()
       })
     },
-    onLoad() {
-      this.getList()
+    load() {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.wrapper, this.options)
+        this.scroll.on('scroll', (obj) => {
+          // if(obj.y <0 || ( obj.y==0 && this.list && this.list.length==0)){
+          //   this.addBg = true
+          // }
+        })
+        this.scroll.on('pullingUp', () => {
+          this.pageNo++
+          this.getList();
+        })
+      } else {
+        this.scroll.refresh()
+      }
     },
     goToDetail(item) {
       this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
@@ -126,11 +152,14 @@ export default {
   },
   created() {
     this.type = this.$route.query.type
-    this.getList()
+    this.$nextTick(() => {
+      this.load()
+      this.getList()
+    })
   }
 };
 </script>
 
-<style lang="less" rel="stylesheet/less" >
+<style lang="less" >
 @import './style.less';
 </style>
