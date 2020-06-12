@@ -5,8 +5,7 @@
       <dd>报表</dd>
     </dl>
     <div class="chengyun" @click="goHome">
-      <!-- <img src="~@/assets/images/middle.png"> -->
-      <img src=''>
+      <img src="~@/assets/images/middle.png">
       <span class="charater">辰化置业</span>
       <span class="english">CHENGHUAZHIYE</span>
     </div>
@@ -81,10 +80,11 @@ export default {
       width: 30px;
       height: 30px;
       object-fit: contain;
-      margin: 2px auto 0
+      margin: 4px auto 0
     }
     .charater{
-      display: block;
+      position: relative;
+      top: 0;
       width: 100%;
       text-align: center;
       font-size: 12px;
@@ -99,7 +99,7 @@ export default {
       font-size: 12px;
       color: #f00 ;
       transform: scale(0.50);
-      margin: 0 auto
+      margin: -4px auto
     }
   }
 }
