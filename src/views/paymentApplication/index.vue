@@ -122,7 +122,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
-import { Select, Option } from 'element-ui';
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -131,8 +130,6 @@ Vue.use(Uploader)
 Vue.use(field)
 Vue.use(Toast)
 Vue.use(Loading)
-Vue.use(Select)
-Vue.use(Option)
 export default {
   data() {
     return {

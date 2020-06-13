@@ -60,7 +60,7 @@
         <div class="btn" @touchstart="onReject">拒绝</div>
       </div>
     </van-popup>
-    <van-button v-if="taskId && Id" @touchstart="onAudit" style="width:90%; margin-top:30px" type="primary" color="#000" size="normal">去审核</van-button>
+    <van-button v-if="taskId!='null' && Id" @touchstart="onAudit" style="width:90%; margin-top:30px" type="primary" color="#000" size="normal">去审核</van-button>
   </section>
 </template>
 
@@ -89,7 +89,7 @@ export default {
   created() {
     this.procInstId = this.$route.query.procInstId
     this.Id = this.$route.query.id
-    this.taskId = this.$route.query.taskId
+    this.taskId = this.$route.query.taskId || ''
     this.bpmState_dictText = this.$route.query.bpmState_dictText
     this.getProcess()
     this.getHistoryData()
