@@ -24,6 +24,7 @@ export default {
   name: 'Footer',
   methods: {
     goToMine() {
+      if (this.$route.path === '/mine') return
       this.$router.push('/mine')
     },
     goHome() {

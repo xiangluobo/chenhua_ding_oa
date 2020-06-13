@@ -126,6 +126,10 @@ export default {
       this.load()
       this.getList()
     })
+  },
+  destroyed() {
+    this.scroll.destroy()
+    this.scroll = null
   }
 };
 </script>
