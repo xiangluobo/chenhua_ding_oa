@@ -26,7 +26,7 @@
       />
       <div class="mod-select">
         <div class="mod-label">*指定审核人</div>
-        <el-select v-model="handler" filterable placeholder="请选择">
+        <el-select @click.native="showDialog" multiple v-model="handler" filterable placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.username"
@@ -107,10 +107,18 @@ export default {
     this.getMyProjectList()
     this.getlist()
   },
+  mounted() {
+    document.addEventListener('click', (e) => {
+      document.querySelector('.el-select-dropdown').style.display = 'none'
+    }, false)
+  },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    showDialog () {
+      document.querySelector('.el-select-dropdown').style.display = 'block'
+    },
     getlist() {
       this.$http.get('/sys/user/appUserList', {
         params: {
@@ -156,7 +164,7 @@ export default {
       this.$http
         .post('/common/flowGgComm/add', {
           title: this.title,
-          handler: this.handler,
+          handler: this.handler.join(','),
           content: this.content,
           projectCode: this.orgCode,
           relatedFile: this.relatedFile.join(',')

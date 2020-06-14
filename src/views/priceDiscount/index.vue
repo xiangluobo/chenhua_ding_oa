@@ -26,7 +26,7 @@
       />
       <div class="mod-select">
         <div class="mod-label">*优惠经手人</div>
-        <el-select v-model="handler" filterable placeholder="请选择">
+        <el-select @click.native="showDialog" multiple v-model="handler" filterable placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.username"
@@ -128,7 +128,7 @@ export default {
       orgCode: '',
       departName: '',
       houseNo: '',
-      handler: '',
+      handler: [],
       houseArea: '',
       oriSinglePrice: '',
       disTotalPrice: '',
@@ -143,6 +143,11 @@ export default {
     this.getMyProjectList()
     this.getlist()
   },
+  mounted() {
+    document.addEventListener('click', (e) => {
+      document.querySelector('.el-select-dropdown').style.display = 'none'
+    }, false)
+  },
   computed: {
     ...mapGetters(['userInfo']),
     oriTotalPrice() {
@@ -156,6 +161,9 @@ export default {
     }
   },
   methods: {
+    showDialog () {
+      document.querySelector('.el-select-dropdown').style.display = 'block'
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
@@ -169,7 +177,6 @@ export default {
           keyword: ''
         }
       }).then(res => {
-        console.log(res, 77)
         this.options = res.result.records
       })
     },
@@ -182,7 +189,7 @@ export default {
       this.$http.post('/discount/flowPriceDiscount/add', {
         projectCode: this.orgCode,
         houseNo: this.houseNo,
-        handler: this.handler,
+        handler: this.handler.join(','),
         houseArea: this.houseArea,
         oriSinglePrice: this.oriSinglePrice,
         oriTotalPrice: this.oriTotalPrice,
