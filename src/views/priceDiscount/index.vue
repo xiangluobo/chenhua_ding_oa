@@ -44,20 +44,20 @@
         :rules="[{ required: true, message: '请输入面积' }]"
       />
       <van-field
-        v-model="oriSinglePrice"
-        label="*原单价"
+        v-model="oriTotalPrice"
+        label="*原总价"
         class="mod-field"
-        placeholder="请输入原单价"
         type="number"
-        :rules="[{ required: true, message: '请输入原单价' }]"
+        placeholder="请输入原总价"
+        :rules="[{ required: true, message: '请输入原总价s' }]"
       />
       <van-field
-        v-model="oriTotalPrice"
-        label="原总价"
+        v-model="oriSinglePrice"
+        label="原单价"
         class="mod-field"
-        type="number"
         readonly
         placeholder="自动计算,无需填写"
+        type="number"
       />
       <van-field
         v-model="disTotalPrice"
@@ -130,7 +130,7 @@ export default {
       houseNo: '',
       handler: [],
       houseArea: '',
-      oriSinglePrice: '',
+      oriTotalPrice: '',
       disTotalPrice: '',
       description: '',
       showPicker: false,
@@ -150,8 +150,8 @@ export default {
   },
   computed: {
     ...mapGetters(['userInfo']),
-    oriTotalPrice() {
-      return this.houseArea * this.oriSinglePrice || ''
+    oriSinglePrice() {
+      return this.oriTotalPrice / this.houseArea || ''
     },
     disSinglePrice() {
       return this.disTotalPrice / this.houseArea || ''

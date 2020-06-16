@@ -7,7 +7,7 @@
     <div class="chengyun" @click="goHome">
       <img src="~@/assets/images/middle.png">
       <span class="charater">辰化置业</span>
-      <span class="english">CHENGHUAZHIYE</span>
+      <span class="english">CHENHUAZHIYE</span>
     </div>
     <dl class="report sec" @click="goToMine">
       <dt><img src="~@/assets/images/mine.png"></dt>

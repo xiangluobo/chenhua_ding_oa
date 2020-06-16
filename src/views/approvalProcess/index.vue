@@ -42,6 +42,7 @@ export default {
       currentNum: 0,
       keywords: '',
       bpmState: '',
+      isWwj: 0,
       api: '',
       list: [],
       pageNo: 1,
@@ -78,6 +79,7 @@ export default {
         params: {
           keywords: this.keywords,
           bpmState: this.bpmState,
+          isWwj: this.isWwj,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
@@ -121,6 +123,7 @@ export default {
   },
   created() {
     this.bpmState = this.$route.query.bpmState
+    this.isWwj = this.$route.query.isWwj
     this.api = this.$route.query.api
     this.$nextTick(() => {
       this.load()

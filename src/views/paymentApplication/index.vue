@@ -85,7 +85,6 @@
         label="其它说明要求"
         class="mod-field"
         placeholder="请输入其它说明要求"
-        :rules="[{ required: true, message: '请输入其它说明要求' }]"
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
