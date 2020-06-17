@@ -1,6 +1,6 @@
 <template>
   <div class="mod-nav">
-    <dl class="report" @click="unFunction">
+    <dl class="report" @click="goReport">
       <dt><img src="~@/assets/images/report.png"></dt>
       <dd>报表</dd>
     </dl>
@@ -17,9 +17,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { Toast } from 'vant'
-Vue.use(Toast)
 export default {
   name: 'Footer',
   methods: {
@@ -31,8 +28,9 @@ export default {
       if (this.$route.path === '/') return
       this.$router.push('/')
     },
-    unFunction() {
-      Toast('功能开发中')
+    goReport() {
+      if (this.$route.path === '/report') return
+      this.$router.push('/report')
     }
   }
 }

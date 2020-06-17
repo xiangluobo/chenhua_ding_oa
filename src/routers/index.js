@@ -28,6 +28,7 @@ const create = () => import(/* webpackChunkName: "create" */ '@/views/create')
 const approvalProcess = () => import(/* webpackChunkName: "approvalProcess" */ '@/views/approvalProcess')
 const myProcess = () => import(/* webpackChunkName: "myProcess" */ '@/views/myProcess')
 const mortgageStatistic = () => import(/* webpackChunkName: "mortgageStatistic" */ '@/views/mortgageStatistic')
+const report = () => import(/* webpackChunkName: "report" */ '@/views/report')
 
 Vue.use(Router)
 
@@ -38,6 +39,15 @@ const routes = [
     component: home,
     meta: {
       title: '辰华OA',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/report',
+    name: 'report',
+    component: report,
+    meta: {
+      title: '报表',
       requireAuth: true // 登录权限
     }
   },
