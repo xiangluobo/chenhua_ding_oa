@@ -50,6 +50,17 @@
           <van-uploader :after-read='afterRead' v-model='uploader' />
         </template>
       </van-field>
+      <div class="mod-select">
+        <div class="mod-label">抄送给</div>
+        <el-select @click.native="showChaotoDialog" multiple v-model="chaoto" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.username"
+            :label="item.realname"
+            :value="item.username">
+          </el-option>
+        </el-select>
+      </div>
       <div style='margin: 16px;'>
         <van-button square block type='info' color='#000' native-type='submit'>提交</van-button>
       </div>
@@ -94,7 +105,8 @@ export default {
       orgCode: '',
       departName: '',
       title: '',
-      handler: '',
+      handler: [],
+      chaoto: [],
       content: '',
       uploader: [],
       relatedFile: [],
@@ -109,15 +121,28 @@ export default {
   },
   mounted() {
     document.addEventListener('click', (e) => {
-      document.querySelector('.el-select-dropdown').style.display = 'none'
+      this.onHidden()
     }, false)
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    onHidden () {
+      let dropdowns = document.querySelectorAll('.el-select-dropdown')
+      for (let i = 0; i < dropdowns.length; i++) {
+        if (dropdowns[i]) {
+          dropdowns[i].style.display = 'none'
+        }
+      }
+    },
+    showChaotoDialog () {
+      this.onHidden()
+      document.querySelectorAll('.el-select-dropdown')[1].style.display = 'block'
+    },
     showDialog () {
-      document.querySelector('.el-select-dropdown').style.display = 'block'
+      this.onHidden()
+      document.querySelectorAll('.el-select-dropdown')[0].style.display = 'block'
     },
     getlist() {
       this.$http.get('/sys/user/appUserList', {
@@ -127,7 +152,6 @@ export default {
           keyword: ''
         }
       }).then(res => {
-        console.log(res, 77)
         this.options = res.result.records
       })
     },
@@ -166,6 +190,7 @@ export default {
           title: this.title,
           handler: this.handler.join(','),
           content: this.content,
+          chaoto: this.chaoto.join(','),
           projectCode: this.orgCode,
           relatedFile: this.relatedFile.join(',')
         })
