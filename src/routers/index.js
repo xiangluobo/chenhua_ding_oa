@@ -29,6 +29,9 @@ const approvalProcess = () => import(/* webpackChunkName: "approvalProcess" */ '
 const myProcess = () => import(/* webpackChunkName: "myProcess" */ '@/views/myProcess')
 const mortgageStatistic = () => import(/* webpackChunkName: "mortgageStatistic" */ '@/views/mortgageStatistic')
 const report = () => import(/* webpackChunkName: "report" */ '@/views/report')
+const salesStatistics = () => import(/* webpackChunkName: "salesStatistics" */ '@/views/salesStatistics')
+const addMortgageData = () => import(/* webpackChunkName: "addMortgageData" */ '@/views/addMortgageData')
+const addSalesData = () => import(/* webpackChunkName: "report" */ '@/views/addSalesData')
 
 Vue.use(Router)
 
@@ -39,6 +42,33 @@ const routes = [
     component: home,
     meta: {
       title: '辰华OA',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/salesStatistics',
+    name: 'salesStatistics',
+    component: salesStatistics,
+    meta: {
+      title: '销售统计',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addMortgageData',
+    name: 'addMortgageData',
+    component: addMortgageData,
+    meta: {
+      title: '按揭数据添加',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addSalesData',
+    name: 'addSalesData',
+    component: addSalesData,
+    meta: {
+      title: '销售数据添加',
       requireAuth: true // 登录权限
     }
   },
