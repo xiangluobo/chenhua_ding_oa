@@ -26,13 +26,6 @@
         :rules="[{ required: true, message: '请输入付款金额' }]"
       />
       <van-field
-        v-model="payAmountTotal"
-        label="*累计付款"
-        class="mod-field"
-        placeholder="请输入累计付款"
-        :rules="[{ required: true, message: '请输入累计付款' }]"
-      />
-      <van-field
         v-model="contractAmount"
         label="*合同金额"
         type="number"
@@ -60,6 +53,13 @@
         class="mod-field"
         placeholder="请输入开户行地址"
         :rules="[{ required: true, message: '请输入开户行地址' }]"
+      />
+      <van-field
+        v-model="payAmountTotal"
+        label="*累计付款"
+        class="mod-field"
+        placeholder="请输入累计付款"
+        :rules="[{ required: true, message: '请输入累计付款' }]"
       />
       <van-field
         readonly
