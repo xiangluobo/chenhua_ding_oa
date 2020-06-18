@@ -33,24 +33,13 @@
         type="number"
         :rules="[{ required: true, message: '请输入合同金额' }]"
       />
-      <div class="mod-select">
-        <div class="mod-label">*收款人全称</div>
-        <el-select
-          v-model="payeeName"
-          filterable
-          remote
-          reserve-keyword
-          placeholder="请输入收款人全称"
-          :remote-method="remoteMethod"
-          :loading="loading">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item">
-          </el-option>
-        </el-select>
-      </div>
+      <van-field
+        v-model="payeeName"
+        label="*收款人全称"
+        class="mod-field"
+        placeholder="请输入收款人全称"
+        :rules="[{ required: true, message: '请输入收款人全称' }]"
+      />
       <van-field
         v-model="payeeAccount"
         label="*收款人账号"
@@ -130,9 +119,8 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
 import { Popup, Picker, Button, Form, field, Uploader, Toast } from 'vant'
-import { Select, Option } from 'element-ui'
+import { mapGetters } from 'vuex'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -140,8 +128,6 @@ Vue.use(Uploader)
 Vue.use(Form)
 Vue.use(field)
 Vue.use(Toast)
-Vue.use(Select)
-Vue.use(Option)
 export default {
   data() {
     return {
@@ -162,38 +148,17 @@ export default {
       showPicker: false,
       showPayType: false,
       columns: [],
-      payTypeColumns: [],
-      options: [],
-      list: [],
-      loading: false,
-      states: ['Alabama', 'Alaska']
+      payTypeColumns: []
     }
   },
   created() {
     this.getMyProjectList()
     this.getPayType()
-    this.list = this.states.map(item => {
-      return { value: `value:${item}`, label: `label:${item}` };
-    })
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
-    remoteMethod(query) {
-      if (query !== '') {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.options = this.list.filter(item => {
-            return item.label.toLowerCase()
-              .indexOf(query.toLowerCase()) > -1;
-          });
-        }, 200);
-      } else {
-        this.options = [];
-      }
-    },
     getPayType() {
       this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
         this.payTypeColumns = res.result
