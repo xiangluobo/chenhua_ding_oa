@@ -80,7 +80,7 @@ export default {
       taskId: 0,
       tips: '',
       opt: 0,
-      resourceName: '流程图.png',
+      resourceName: '',
       applicationList: [],
       auditList: [],
       image: ''
@@ -91,6 +91,7 @@ export default {
     this.Id = this.$route.query.id
     this.taskId = this.$route.query.taskId || ''
     this.bpmState_dictText = this.$route.query.bpmState_dictText
+    this.resourceName = 'process_img_' + this.procInstId + '.png'
     this.getProcess()
     this.getHistoryData()
     this.getViewTaskPic()
@@ -139,7 +140,7 @@ export default {
     },
     getViewTaskPic() {
       this.$http.post(`/flow/viewTaskPic?procInstId=${this.procInstId}&resourceName=${this.resourceName}`).then(res => {
-        this.image = `http://101.37.159.72:8080/chenhuaoa/sys/common/static/flow/task/${this.resourceName}`
+        this.image = `http://101.37.159.72:8080/chenhuaoa/sys/common/static/flow/task/${this.resourceName}` + '?_t=' + Date.parse(new Date()) / 1000;
       })
     },
     onAudit() {
