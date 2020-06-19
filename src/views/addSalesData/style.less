@@ -1,61 +1,44 @@
 
-.mod-report {
+.mod-addSalesData {
   width: 100%;
   padding-bottom: 60px;
-  .mine{
+  .van-cell:not(:last-child)::after{
+    left: 0;
+    border-bottom: none
+  }
+  .van-field__label{
+    text-align: left
+  }
+  .mod-field{
+    // border-top: 1px solid #DCDFE6;
+    font-size: 12px;
+  }
+  .application{
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     box-sizing: border-box;
     overflow: hidden;
-    background: #fff;
-    .avatar{
+    background: rgba(238, 238, 238, 0.7);
+    .person{
       float: left;
-      width: 60px;
-      height: 60px;
-      background: rgba(239, 232, 223, 0.75);
-      position: relative;
-      img{
-        position: absolute;
-        width: 35px;
-        left: 12px;
-        bottom: 0;
-      }
+      width: 90px;
+      text-align: left;
     }
-    .ctn{
+    .role{
       float: left;
       width: 200px;
-      margin-left: 10px;
-      font-size: 12px;
-      color: #666;
-      dt{
-        width: 100%;
-        padding: 12px 0 10px;
-        text-align: left;
-      }
-      dd{
-        width: 100%;
-        text-align: left;
-      }
+      text-align: left;
     }
   }
-  .mod-application{
+  .unit{
     width: 100%;
-    background: #fff;
-    li{
+    &:nth-child(5){
+      margin-bottom: 30px;
+    }
+    dt{
       width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      border-bottom: 1px solid #eee;
-      overflow: hidden;
-      span{
-        float: left;
-        width: 150px;
-        text-align: left;
-      }
-      .arrow{
-        float: right;
-        color: #999;
-      }
+      padding: 20px 15px 15px;
+      text-align: left;
     }
   }
 }
