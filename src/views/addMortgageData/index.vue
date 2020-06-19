@@ -62,7 +62,7 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Popup, Picker, Button,  field, Toast } from 'vant'
+import { Popup, Picker, Button, field, Toast } from 'vant'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
