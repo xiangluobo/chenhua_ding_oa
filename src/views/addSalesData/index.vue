@@ -1,7 +1,7 @@
 <template>
   <section class="mod-addSalesData">
     <div class="application">
-      <div class="person">申请人</div>
+      <div class="person">创建人</div>
       <div class="role">{{userInfo.realname}}</div>
     </div>
     <van-field
@@ -55,11 +55,11 @@
         />
       </dd>
     </dl>
-    <dl class="unit">
-      <dt>一期</dt>
+    <dl class="unit" v-for="(item, index) in list" :key="index">
+      <dt>{{ `${index+1}` | convert }}</dt>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="item.dealedNumber"
           label="*今日成交"
           class="mod-field"
           type="number"
@@ -69,7 +69,7 @@
       </dd>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="item.backNumber"
           label="*调整退房"
           class="mod-field"
           type="number"
@@ -79,7 +79,7 @@
       </dd>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="item.signNumber"
           label="*今日签约"
           class="mod-field"
           type="number"
@@ -88,7 +88,7 @@
         />
       </dd>
     </dl>
-    <van-button type="default" style="display:block; margin: 30px 0px 100px 250px">新增期数</van-button>
+    <van-button @click="onAdd" type="default" style="display:block; margin: 30px 0px 100px 250px">新增期数</van-button>
     <div style="margin: 16px;">
       <van-button square block type="info" color="#000" native-type="submit">
         提交
@@ -110,6 +110,7 @@
 import Vue from 'vue'
 import { Popup, Picker, Button, Form, field, Uploader, Toast } from 'vant'
 import { mapGetters } from 'vuex'
+import { NoToChinese } from '../../utils'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -124,7 +125,19 @@ export default {
       departName: '',
       showPicker: false,
       columns: [],
-      payAmount: ''
+      payAmount: '',
+      list: [
+        {
+          dealedNumber: '',
+          backNumber: '',
+          signNumber: '',
+        }
+      ]
+    }
+  },
+  filters: {
+    convert(v) {
+      return `${NoToChinese(v)} 期`
     }
   },
   created() {
@@ -134,6 +147,13 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    onAdd () {
+      this.list.push({
+        dealedNumber: '',
+        backNumber: '',
+        signNumber: '',
+      })
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
