@@ -1,24 +1,42 @@
 <template>
   <section class='mod-expense'>
-    <van-form @submit='onSubmit'>
-      <van-field
-        readonly
-        clickable
-        class='mod-field'
-        name='picker'
-        :value='departName'
-        label='*所在项目部'
-        :rules="[{ required: true, message: '请选择项目部'}]"
-        right-icon='arrow'
-        placeholder='请选择项目部'
-        @click='showPicker = true'
-      />
-      <div id='main' style='width: 100%;height:400px; background:#fff'></div>
-      <!-- <ve-pie :data='chartData' :settings='chartSettings'></ve-pie> -->
-      <div style='margin: 16px;'>
-        <van-button square block type='info' color='#000' native-type='submit'>提交</van-button>
-      </div>
-    </van-form>
+    <van-field
+      readonly
+      clickable
+      class='mod-field'
+      name='picker'
+      :value='departName'
+      label='*所在项目部'
+      :rules="[{ required: true, message: '请选择项目部'}]"
+      right-icon='arrow'
+      placeholder='请选择项目部'
+      @click='showPicker = true'
+    />
+    <van-field
+      readonly
+      clickable
+      name="calendar"
+      class="mod-field"
+      :value="begin"
+      label="查询时间"
+      right-icon="calender-o"
+      placeholder="请输入开始时间"
+      @click="showCalendar = true"
+    />
+    <van-field
+      readonly
+      clickable
+      class="mod-field"
+      name="calendar"
+      :value="end"
+      label="查询时间"
+      right-icon="calender-o"
+      placeholder="请输入开始时间"
+      @click="showCalendar2 = true"
+    />
+    <div id='main' style='width: 100%;height:400px; background:#fff; margin-top:20px; padding-top:10px'></div>
+    <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+    <van-calendar v-model="showCalendar2" @confirm="onConfirm2" />
     <van-popup v-model='showPicker' position='bottom'>
       <van-picker
         show-toolbar
@@ -40,7 +58,8 @@ import {
   Form,
   field,
   Toast,
-  Loading
+  Loading,
+  Calendar
 } from 'vant'
 Vue.use(Popup)
 Vue.use(Picker)
@@ -49,6 +68,7 @@ Vue.use(Form)
 Vue.use(field)
 Vue.use(Toast)
 Vue.use(Loading)
+Vue.use(Calendar)
 var echarts = require('echarts')
 export default {
   data() {
@@ -56,7 +76,11 @@ export default {
       orgCode: '',
       departName: '',
       showPicker: false,
-      columns: []
+      columns: [],
+      showCalendar: false,
+      showCalendar2: false,
+      begin: '',
+      end: ''
     };
   },
   mounted() {
@@ -66,17 +90,35 @@ export default {
     myChart.setOption({
       title: {
         text: '按揭统计',
-        left: 'left'
+        left: 10,
+        top: 0
       },
       tooltip: {
         trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
       },
       legend: {
         orient: 'vertical',
-        left: 'left',
-        y: 30,
-        data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+        left: 10,
+        top: 30,
+        data: [
+          {
+            name: '全款',
+            icon: 'circle'
+          },
+          {
+            name: '待借合同',
+            icon: 'circle'
+          },
+          {
+            name: '已放款',
+            icon: 'circle'
+          },
+          {
+            name: '待放款',
+            icon: 'circle'
+          }
+        ]
       },
       series: [
         {
@@ -84,20 +126,21 @@ export default {
           type: 'pie',
           radius: '55%',
           center: ['50%', '60%'],
-          data: [
-            { value: 335, name: '直接访问' },
-            { value: 310, name: '邮件营销' },
-            { value: 234, name: '联盟广告' },
-            { value: 135, name: '视频广告' },
-            { value: 1548, name: '搜索引擎' }
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+          itemStyle: {
+            normal: {
+              label: {
+                show: true,
+                position: 'inner',
+                formatter: '{d}%' // 自定义显示格式(b:name, c:value, d:百分比)
+              }
             }
-          }
+          },
+          data: [
+            { value: 577, name: '全款' },
+            { value: 870, name: '待借合同' },
+            { value: 263, name: '已放款' },
+            { value: 956, name: '待放款' }
+          ]
         }
       ]
     });
@@ -108,10 +151,16 @@ export default {
         this.columns = res.result;
       });
     },
-    onConfirm(item) {
-      this.departName = item.departName;
-      this.orgCode = item.orgCode;
-      this.showPicker = false;
+    formatDate(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    onConfirm(date) {
+      this.showCalendar = false
+      this.begin = this.formatDate(date)
+    },
+    onConfirm2(date) {
+      this.showCalendar2 = false
+      this.end = this.formatDate(date)
     },
     onSubmit() {
       this.$http

@@ -130,7 +130,7 @@ export default {
         {
           dealedNumber: '',
           backNumber: '',
-          signNumber: '',
+          signNumber: ''
         }
       ]
     }
@@ -151,7 +151,7 @@ export default {
       this.list.push({
         dealedNumber: '',
         backNumber: '',
-        signNumber: '',
+        signNumber: ''
       })
     },
     getMyProjectList() {

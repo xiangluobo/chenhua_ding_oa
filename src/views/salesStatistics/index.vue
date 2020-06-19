@@ -12,12 +12,7 @@
         @click="showCalendar = true"
       />
     </div>
-    <van-calendar
-      :min-date='minDate'
-      :max-date='maxDate'
-      v-model='showCalendar'
-      @confirm='onDateConfirm'
-    />
+    <van-calendar v-model="showCalendar" @confirm="onConfirm" />
     <dl class="mod-unit">
       <dt>车位销售</dt>
       <dd>
@@ -41,7 +36,6 @@
         </div>
       </dd>
     </dl>
-
     <dl class="mod-unit">
       <dt>车位销售</dt>
       <dd>
@@ -65,7 +59,6 @@
         </div>
       </dd>
     </dl>
-
     <dl class="mod-unit">
       <dt>车位销售</dt>
       <dd>
@@ -89,7 +82,6 @@
         </div>
       </dd>
     </dl>
-
     <dl class="mod-unit">
       <dt>一期销售</dt>
       <dd>
@@ -150,9 +142,7 @@ export default {
   data() {
     return {
       value: '',
-      showCalendar: false,
-      minDate: new Date(2019, 0, 1),
-      maxDate: new Date(2030, 0, 31)
+      showCalendar: false
     }
   },
   created() {
@@ -161,9 +151,12 @@ export default {
     goMorgageReport(path) {
       this.$router.push('/mortgageStatistic')
     },
-    onDateConfirm(date) {
-      // this.salaryTime = this.ChangeDateFormat(date)
-      // this.showCalendar = false;
+    formatDate(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
+    onConfirm(date) {
+      this.showCalendar = false
+      this.value = this.formatDate(date)
     }
   }
 };
