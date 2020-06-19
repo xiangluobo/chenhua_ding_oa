@@ -2,10 +2,15 @@
   <section class="mod-create">
     <div class="block">
       <div class="mod-title">流程管理</div>
-        <van-cell-group>
-          <van-cell v-for="(item, index) in list" :key="`block-${index}`" :title="item.appMenuName" is-link @click="toApplication(item)" />
-        </van-cell-group>
-      </div>
+      <van-cell-group>
+        <van-cell v-for="(item, index) in list" :key="`block-${index}`" :title="item.appMenuName" is-link @click="toApplication(item)" />
+      </van-cell-group>
+    </div>
+    <div class="block">
+      <div class="mod-title">日报管理</div>
+      <van-cell title="按揭数据添加" is-link to="/" />
+      <van-cell title="销售数据添加" is-link to="/" />
+    </div>
   </section>
 </template>
 

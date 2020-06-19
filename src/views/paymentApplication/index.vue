@@ -33,13 +33,25 @@
         placeholder="请输入合同金额"
         :rules="[{ required: true, message: '请输入合同金额' }]"
       />
-      <van-field
-        v-model="payeeName"
-        label="*收款人全称"
-        class="mod-field"
-        placeholder="请输入收款人全称"
-        :rules="[{ required: true, message: '请输入收款人全称' }]"
-      />
+      <div class="mod-select">
+        <div class="mod-label">*收款人全称</div>
+        <el-select
+          v-model="payeeName"
+          filterable
+          remote
+          @change="onChange"
+          reserve-keyword
+          placeholder="请输入收款人全称"
+          :remote-method="remoteMethod"
+          :loading="loading">
+          <el-option
+            v-for="item in options"
+            :key="item.payeeName"
+            :label="item.payeeName"
+            :value="item">
+          </el-option>
+        </el-select>
+      </div>
       <van-field
         v-model="payeeAccount"
         label="*收款人账户"
@@ -121,6 +133,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
+import { Select, Option } from 'element-ui'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -129,6 +142,8 @@ Vue.use(Uploader)
 Vue.use(field)
 Vue.use(Toast)
 Vue.use(Loading)
+Vue.use(Select)
+Vue.use(Option)
 export default {
   data() {
     return {
@@ -137,7 +152,7 @@ export default {
       payAmount: '', // 付款金额
       payAmountTotal: '', // 累计付款
       contractAmount: '', // 合同金额
-      payeeName: '', // 收款人全称
+      payeeName: {}, // 收款人全称
       payeeAccount: '',
       payeeBank: '',
       payType: '',
@@ -150,7 +165,9 @@ export default {
       payTypeColumns: [],
       uploader: [],
       relatedFile: [],
-      loading: false
+      options: [],
+      loading: false,
+      states: ['Alabama', 'Alaska']
     }
   },
   created() {
@@ -161,6 +178,21 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    onChange () {
+      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
+      this.payAmountTotal = payAmountTotal
+      this.payeeAccount = payeeAccount
+      this.payeeBank = payeeBank
+    },
+    remoteMethod (query) {
+      this.$http.get('/ggpay/flowGgPay/getPayeeData', {
+        params: {
+          payeeName: query
+        }
+      }).then(res => {
+        this.options = res.result
+      })
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
@@ -188,7 +220,7 @@ export default {
         payAmount: this.payAmount, // 付款金额
         payAmountTotal: this.payAmountTotal, // 累计付款
         contractAmount: this.contractAmount, // 合同金额
-        payeeName: this.payeeName, // 收款人全称
+        payeeName: this.payeeName.payeeName, // 收款人全称
         payeeAccount: this.payeeAccount,
         payeeBank: this.payeeBank,
         payType: this.payType,
