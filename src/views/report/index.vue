@@ -26,7 +26,7 @@ export default {
       this.$router.push('/mortgageStatistic')
     },
     goSaleReport() {
-      this.$router.push('/')
+      this.$router.push('/salesStatistics')
     }
   }
 };

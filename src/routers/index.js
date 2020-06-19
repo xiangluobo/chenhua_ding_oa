@@ -32,6 +32,7 @@ const report = () => import(/* webpackChunkName: "report" */ '@/views/report')
 const salesStatistics = () => import(/* webpackChunkName: "salesStatistics" */ '@/views/salesStatistics')
 const addMortgageData = () => import(/* webpackChunkName: "addMortgageData" */ '@/views/addMortgageData')
 const addSalesData = () => import(/* webpackChunkName: "report" */ '@/views/addSalesData')
+const dailyPaperProcess = () => import(/* webpackChunkName: "dailyPaperProcess" */ '@/views/dailyPaperProcess')
 
 Vue.use(Router)
 
@@ -42,6 +43,15 @@ const routes = [
     component: home,
     meta: {
       title: '辰华OA',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/dailyPaperProcess',
+    name: 'dailyPaperProcess',
+    component: dailyPaperProcess,
+    meta: {
+      title: '日报',
       requireAuth: true // 登录权限
     }
   },

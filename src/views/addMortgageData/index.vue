@@ -1,7 +1,7 @@
 <template>
   <section class="mod-addMortgageData">
     <div class="application">
-      <div class="person">申请人</div>
+      <div class="person">创建人</div>
       <div class="role">{{userInfo.realname}}</div>
     </div>
     <van-field

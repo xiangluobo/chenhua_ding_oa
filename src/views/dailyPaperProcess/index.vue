@@ -1,0 +1,159 @@
+<template>
+  <section class="mod-process" ref="wrapper">
+    <div>
+      <div class="mod-tabs">
+        <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
+      </div>
+      <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
+        <div class="name">{{item.applyUser_dictText }}</div>
+        <!-- <div class="ctn">
+          <h3>{{ item.projectCode_dictText }}</h3>
+          <div class="subtitle">
+            {{ item.busiSummary }}
+          </div>
+          <div class="audit">{{item.bpmState_dictText}}</div>
+        </div> -->
+        <div class="time">{{item.applyTime | filterTime}}</div>
+      </div>
+      <van-loading v-if="loading" type="spinner" />
+      <div v-if="!loading && tips" class="tips">{{ tips }} </div>
+      <van-popup v-model="show" get-container="body">
+        <div @click="onEdit" class="dialogBtns">编辑</div>
+        <div @click="onDelete" class="dialogBtns">删除</div>
+      </van-popup>
+    </div>
+  </section>
+</template>
+
+<script>
+import Vue from 'vue';
+import { Loading, Popup } from 'vant'
+import BScroll from 'better-scroll'
+Vue.use(Loading)
+Vue.use(Popup)
+export default {
+  data() {
+    return {
+      id: 1,
+      type: '',
+      currentNum: 0,
+      keywords: '',
+      tips: '',
+      tabs: [
+        {
+          bpmState: '',
+          name: '按揭日报',
+          id: 1
+        },
+        {
+          bpmState: 2,
+          name: '销售日报',
+          id: 2
+        }
+      ],
+      bpmState: '',
+      list: [],
+      pageNo: 1,
+      pageSize: 5,
+      scroll: null,
+      options: {
+        pullUpLoad: {
+          threshold: -10
+        },
+        click: true, // better-scroll 默认会阻止浏览器的原生 click 事件
+        probeType: 3, // 不仅在屏幕滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件
+        startY: 0,
+        scrollbar: true,
+        eventPassthrough: 'horizontal' // 模拟纵向滚动，而横向的滚动还是保留原生滚动
+      },
+      loading: false,
+      show: false
+    };
+  },
+  filters: {
+    filterTime(val) {
+      return val.substr(0, 10)
+    }
+  },
+  methods: {
+    setActive(i, item) {
+      this.bpmState = item.bpmState
+      this.currentNum = i
+      this.pageNo = 1
+      this.list = []
+      this.getList()
+    },
+    onSearch(val) {
+      this.list = []
+      this.pageNo = 1
+      this.getList()
+    },
+    getList() {
+      this.loading = true
+      this.$http.get('/flow/getMyApplyBussiList', {
+        params: {
+          flowType: this.type,
+          keywords: this.keywords,
+          bpmState: this.bpmState,
+          pageNo: this.pageNo,
+          pageSize: this.pageSize
+        }
+      }).then(res => {
+        this.loading = false
+        // 加载状态结束
+        if (this.pageNo === 1) {
+          this.list = []
+          this.list = res.result.records
+          this.scroll.scrollTo(0, 0)
+        } else {
+          this.list = this.list.concat(res.result.records)
+        }
+        if (res.result.records && res.result.records.length === 0) {
+          this.tips = '没有更多数据了！'
+        }
+        this.scroll.finishPullUp();
+        this.scroll.refresh()
+      })
+    },
+    load() {
+      if (!this.scroll) {
+        this.scroll = new BScroll(this.$refs.wrapper, this.options)
+        this.scroll.on('scroll', (obj) => {
+          // if(obj.y <0 || ( obj.y==0 && this.list && this.list.length==0)){
+          //   this.addBg = true
+          // }
+        })
+        this.scroll.on('pullingUp', () => {
+          this.pageNo++
+          this.getList();
+        })
+      } else {
+        this.scroll.refresh()
+      }
+    },
+    onEdit () {
+      // this.$router.push(`/addMortgageData?id=${this.id}`)
+      this.$router.push(`/addSalesData?id=${this.id}`)
+    },
+    onDelete () {},
+    goToDetail(item) {
+      this.show = true
+    },
+    destroyed() {
+      this.scroll.destroy()
+      this.scroll = null
+    }
+  },
+  created() {
+    this.type = this.$route.query.type
+    this.$nextTick(() => {
+      this.load()
+      this.getList()
+    })
+  }
+};
+</script>
+
+<style lang="less" >
+@import './style.less';
+</style>

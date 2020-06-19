@@ -8,8 +8,8 @@
     </div>
     <div class="block">
       <div class="mod-title">日报管理</div>
-      <van-cell title="按揭数据添加" is-link to="/" />
-      <van-cell title="销售数据添加" is-link to="/" />
+      <van-cell title="按揭数据添加" is-link to="/addMortgageData" />
+      <van-cell title="销售数据添加" is-link to="/addSalesData" />
     </div>
   </section>
 </template>
