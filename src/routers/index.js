@@ -29,6 +29,8 @@ const approvalProcess = () => import(/* webpackChunkName: "approvalProcess" */ '
 const myProcess = () => import(/* webpackChunkName: "myProcess" */ '@/views/myProcess')
 const mortgageStatistic = () => import(/* webpackChunkName: "mortgageStatistic" */ '@/views/mortgageStatistic')
 const report = () => import(/* webpackChunkName: "report" */ '@/views/report')
+const createSchedule = () => import(/* webpackChunkName: "createSchedule" */ '@/views/createSchedule')
+const mySchedule = () => import(/* webpackChunkName: "mySchedule" */ '@/views/mySchedule')
 
 Vue.use(Router)
 
@@ -48,6 +50,24 @@ const routes = [
     component: report,
     meta: {
       title: '报表',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/createSchedule',
+    name: 'createSchedule',
+    component: createSchedule,
+    meta: {
+      title: '新建日程',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/mySchedule',
+    name: 'mySchedule',
+    component: mySchedule,
+    meta: {
+      title: '我的日程',
       requireAuth: true // 登录权限
     }
   },

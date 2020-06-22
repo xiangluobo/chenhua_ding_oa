@@ -11,6 +11,10 @@
       <van-cell title="按揭数据添加" is-link to="/" />
       <van-cell title="销售数据添加" is-link to="/" />
     </div>
+    <div class="block">
+      <div class="mod-title">日程管理</div>
+      <van-cell title="新建日程" is-link to="/" />
+    </div>
   </section>
 </template>
 
