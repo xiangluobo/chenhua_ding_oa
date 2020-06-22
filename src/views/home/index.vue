@@ -43,7 +43,7 @@
       <div class="common">
         <h3>常用</h3>
         <div class="units">
-          <div class="unit" @click="unFunction">
+          <div class="unit" @click="goToSchedule">
             <div class="circle"><img src="~@/assets/images/richeng.png"><span class="dot"></span></div>
             <div class="illustration">日程</div>
           </div>
@@ -119,6 +119,9 @@ export default {
     },
     goToDailyPaper () {
       this.$router.push('/dailyPaperProcess')
+    },
+    goToSchedule () {
+      this.$router.push('/mySchedule')
     },
     getProcessingDataCount() {
       this.$http.get('/sys/user/getProcessingDataCount').then(res => {
