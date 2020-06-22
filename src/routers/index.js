@@ -31,6 +31,10 @@ const mortgageStatistic = () => import(/* webpackChunkName: "mortgageStatistic" 
 const report = () => import(/* webpackChunkName: "report" */ '@/views/report')
 const createSchedule = () => import(/* webpackChunkName: "createSchedule" */ '@/views/createSchedule')
 const mySchedule = () => import(/* webpackChunkName: "mySchedule" */ '@/views/mySchedule')
+const salesStatistics = () => import(/* webpackChunkName: "salesStatistics" */ '@/views/salesStatistics')
+const addMortgageData = () => import(/* webpackChunkName: "addMortgageData" */ '@/views/addMortgageData')
+const addSalesData = () => import(/* webpackChunkName: "report" */ '@/views/addSalesData')
+const dailyPaperProcess = () => import(/* webpackChunkName: "dailyPaperProcess" */ '@/views/dailyPaperProcess')
 
 Vue.use(Router)
 
@@ -41,15 +45,6 @@ const routes = [
     component: home,
     meta: {
       title: '辰华OA',
-      requireAuth: true // 登录权限
-    }
-  },
-  {
-    path: '/report',
-    name: 'report',
-    component: report,
-    meta: {
-      title: '报表',
       requireAuth: true // 登录权限
     }
   },
@@ -68,6 +63,51 @@ const routes = [
     component: mySchedule,
     meta: {
       title: '我的日程',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/dailyPaperProcess',
+    name: 'dailyPaperProcess',
+    component: dailyPaperProcess,
+    meta: {
+      title: '日报',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/salesStatistics',
+    name: 'salesStatistics',
+    component: salesStatistics,
+    meta: {
+      title: '销售统计',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addMortgageData',
+    name: 'addMortgageData',
+    component: addMortgageData,
+    meta: {
+      title: '按揭数据添加',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addSalesData',
+    name: 'addSalesData',
+    component: addSalesData,
+    meta: {
+      title: '销售数据添加',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/report',
+    name: 'report',
+    component: report,
+    meta: {
+      title: '报表',
       requireAuth: true // 登录权限
     }
   },

@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant'
 export default {
   name: 'Footer',
   methods: {
@@ -29,6 +30,7 @@ export default {
       this.$router.push('/')
     },
     goReport() {
+      // Toast('功能开发中')
       if (this.$route.path === '/report') return
       this.$router.push('/report')
     }

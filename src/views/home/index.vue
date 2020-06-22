@@ -47,7 +47,7 @@
             <div class="circle"><img src="~@/assets/images/richeng.png"><span class="dot"></span></div>
             <div class="illustration">日程</div>
           </div>
-          <div class="unit" @click="unFunction">
+          <div class="unit" @click="goToDailyPaper">
             <div class="circle"><img src="~@/assets/images/ribao.png"><span class="dot"></span></div>
             <div class="illustration">日报</div>
           </div>
@@ -116,6 +116,9 @@ export default {
     ...mapActions(['setAnnouncement']),
     unFunction() {
       Toast('功能开发中')
+    },
+    goToDailyPaper () {
+      this.$router.push('/dailyPaperProcess')
     },
     getProcessingDataCount() {
       this.$http.get('/sys/user/getProcessingDataCount').then(res => {
