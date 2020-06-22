@@ -51,13 +51,9 @@
             <div class="circle"><img src="~@/assets/images/ribao.png"><span class="dot"></span></div>
             <div class="illustration">日报</div>
           </div>
-          <div class="unit" @click="unFunction">
+          <div class="unit" @click="goToTaskList">
             <div class="circle"><img src="~@/assets/images/renwu.png"><span class="dot"></span></div>
             <div class="illustration">任务</div>
-          </div>
-          <div class="unit" @click="unFunction">
-            <div class="circle"><img src="~@/assets/images/kaoqing.png"><span class="dot"></span></div>
-            <div class="illustration">考勤</div>
           </div>
         </div>
       </div>
@@ -93,14 +89,13 @@
 <script>
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import { Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar, Toast } from 'vant'
+import { Grid, GridItem, Swipe, SwipeItem, Lazyload, NoticeBar } from 'vant'
 Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Lazyload)
 Vue.use(NoticeBar)
-Vue.use(Toast)
 export default {
   data() {
     return {
@@ -114,8 +109,8 @@ export default {
   },
   methods: {
     ...mapActions(['setAnnouncement']),
-    unFunction() {
-      Toast('功能开发中')
+    goToTaskList (){
+      this.$router.push('/taskList')
     },
     goToDailyPaper () {
       this.$router.push('/dailyPaperProcess')
