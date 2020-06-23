@@ -6,14 +6,7 @@
       </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
         <div class="name">{{item.applyUser_dictText }}</div>
-        <!-- <div class="ctn">
-          <h3>{{ item.projectCode_dictText }}</h3>
-          <div class="subtitle">
-            {{ item.busiSummary }}
-          </div>
-          <div class="audit">{{item.bpmState_dictText}}</div>
-        </div> -->
-        <div class="time">{{item.applyTime | filterTime}}</div>
+        <div class="time">{{item.applyTime }}</div>
       </div>
       <van-loading v-if="loading" type="spinner" />
       <div v-if="!loading && tips" class="tips">{{ tips }} </div>
@@ -35,23 +28,18 @@ export default {
   data() {
     return {
       id: 1,
-      type: '',
       currentNum: 0,
-      keywords: '',
       tips: '',
       tabs: [
         {
-          bpmState: '',
           name: '按揭日报',
           id: 1
         },
         {
-          bpmState: 2,
           name: '销售日报',
           id: 2
         }
       ],
-      bpmState: '',
       list: [],
       pageNo: 1,
       pageSize: 5,
@@ -67,34 +55,28 @@ export default {
         eventPassthrough: 'horizontal' // 模拟纵向滚动，而横向的滚动还是保留原生滚动
       },
       loading: false,
-      show: false
+      show: false,
+      status: 1
     };
-  },
-  filters: {
-    filterTime(val) {
-      return val.substr(0, 10)
-    }
   },
   methods: {
     setActive(i, item) {
-      this.bpmState = item.bpmState
+      this.status = item.id
       this.currentNum = i
       this.pageNo = 1
       this.list = []
       this.getList()
     },
-    onSearch(val) {
-      this.list = []
-      this.pageNo = 1
-      this.getList()
-    },
     getList() {
       this.loading = true
-      this.$http.get('/flow/getMyApplyBussiList', {
+      let url = ''
+      if (this.status === 1) {
+        url = '/report/anjieData/list'
+      } else {
+        url = '/report/xiaoshouData/list'
+      }
+      this.$http.get(url, {
         params: {
-          flowType: this.type,
-          keywords: this.keywords,
-          bpmState: this.bpmState,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
@@ -132,11 +114,33 @@ export default {
       }
     },
     onEdit () {
-      // this.$router.push(`/addMortgageData?id=${this.id}`)
-      this.$router.push(`/addSalesData?id=${this.id}`)
+      if (this.status === 1) {
+        this.$router.push(`/addMortgageData?id=${this.id}`)
+      } else {
+        this.$router.push(`/addSalesData?id=${this.id}`)
+      }
     },
-    onDelete () {},
+    onDelete () {
+      if (this.status === 1) {
+        this.$http.delete('/report/anjieData/delete', {
+          params: {
+            id: this.id
+          }
+        }).then(res => {
+
+        })
+      } else {
+        this.$http.delete('/report/xiaoshouData/delete', {
+          params: {
+            id: this.id
+          }
+        }).then(res => {
+
+        })
+      }
+    },
     goToDetail(item) {
+      this.id = item.id
       this.show = true
     },
     destroyed() {
@@ -145,7 +149,6 @@ export default {
     }
   },
   created() {
-    this.type = this.$route.query.type
     this.$nextTick(() => {
       this.load()
       this.getList()

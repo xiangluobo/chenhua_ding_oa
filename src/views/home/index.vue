@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     ...mapActions(['setAnnouncement']),
-    goToTaskList (){
+    goToTaskList () {
       this.$router.push('/taskList')
     },
     goToDailyPaper () {

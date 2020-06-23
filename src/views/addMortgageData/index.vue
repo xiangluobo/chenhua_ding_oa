@@ -16,28 +16,28 @@
       placeholder="请选择项目部"
       @click="showPicker = true"
     />
-    <div class="mod-module" v-for="(item, index) in list" :key="index">
+    <div class="mod-module" v-for="(item, index) in reportAnjieItemList" :key="index">
       <div class="subtitle">{{ `${index+1}` | convert }}</div>
       <div class="mod-form">
         <div class="verify">
           <label for="username">*全款</label>
-          <input class="verify-input" v-model="item.fullPaymentNumbers" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.Money" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.fullPayNum" placeholder="请输入数量" type="text" name="username">数
+          <input class="verify-input" v-model="item.fullPayAmount" placeholder="请输入金额" type="text" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*待借合同</label>
-          <input class="verify-input" v-model="item.fullPaymentNumbers" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.Money" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.waitBorrowNum" placeholder="请输入数量" type="text" name="username">数
+          <input class="verify-input" v-model="item.waitBorrowAmount" placeholder="请输入金额" type="text" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*已放款</label>
-          <input class="verify-input" v-model="item.fullPaymentNumbers" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.Money" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.releasedNum" placeholder="请输入数量" type="text" name="username">数
+          <input class="verify-input" v-model="item.releasedAmount" placeholder="请输入金额" type="text" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*待放款</label>
-          <input class="verify-input" v-model="item.fullPaymentNumbers" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.Money" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.waitReleaseNum" placeholder="请输入数量" type="text" name="username">数
+          <input class="verify-input" v-model="item.waitReleaseAmount" placeholder="请输入金额" type="text" name="username">万元
         </div>
       </div>
     </div>
@@ -76,12 +76,19 @@ export default {
       orgCode: '',
       showPicker: false,
       columns: [],
-      list: [
+      reportAnjieItemList: [
         {
-          fullPaymentNumbers: '',
-          Money: ''
+          fullPayAmount: '', // 全款金额
+          fullPayNum: '', // 全款数量
+          releasedAmount: '', // 已放款金额
+          releasedNum: '', // 已放款数
+          waitBorrowAmount: '', // 待借合同金额
+          waitBorrowNum: '', // 待借合同数
+          waitReleaseAmount: '', // 待放款金额
+          waitReleaseNum: '' // 待放款数
         }
-      ]
+      ],
+      id: 0
     }
   },
   filters: {
@@ -91,15 +98,34 @@ export default {
   },
   created() {
     this.getMyProjectList()
+    this.id = this.$route.query.id
+    if (this.id) { // 编辑
+      this.getEditedData()
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getEditedData () {
+      this.$http.get('/report/anjieData/queryById', {
+        params: {
+          id: this.id
+        }
+      }).then(res => {
+
+      })
+    },
     onAdd () {
-      this.list.push({
-        fullPaymentNumbers: '',
-        Money: ''
+      this.reportAnjieItemList.push({
+        fullPayAmount: '', // 全款金额
+        fullPayNum: '', // 全款数量
+        releasedAmount: '', // 已放款金额
+        releasedNum: '', // 已放款数
+        waitBorrowAmount: '', // 待借合同金额
+        waitBorrowNum: '', // 待借合同数
+        waitReleaseAmount: '', // 待放款金额
+        waitReleaseNum: '' // 待放款数
       })
     },
     getMyProjectList() {
@@ -113,16 +139,31 @@ export default {
       this.showPicker = false
     },
     onSubmit() {
-      this.$http.post('/djfk/flowDjfkRefund/add', {
-        projectCode: this.orgCode
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.$http.put('/report/anjieData/add', {
+          projectCode: this.orgCode,
+          reportAnjieItemList: this.reportAnjieItemList
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/report/anjieData/add', {
+          projectCode: this.orgCode,
+          reportAnjieItemList: this.reportAnjieItemList
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };

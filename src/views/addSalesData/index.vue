@@ -132,7 +132,8 @@ export default {
           backNumber: '',
           signNumber: ''
         }
-      ]
+      ],
+      id: 0
     }
   },
   filters: {
@@ -142,11 +143,24 @@ export default {
   },
   created() {
     this.getMyProjectList()
+    this.id = this.$route.query.id
+    if (this.id) { // 编辑
+      this.getEditedData()
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getEditedData () {
+      this.$http.get('/report/xiaoshouData/queryById', {
+        params: {
+          id: this.id
+        }
+      }).then(res => {
+
+      })
+    },
     onAdd () {
       this.list.push({
         dealedNumber: '',
@@ -166,16 +180,31 @@ export default {
     },
 
     onSubmit() {
-      this.$http.post('/yxpay/flowYxPay/add', {
-        projectCode: this.orgCode
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.$http.put('/report/xiaoshouData/edit', {
+          projectCode: this.orgCode,
+          reportAnjieItemList: this.reportAnjieItemList
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/report/xiaoshouData/add', {
+          projectCode: this.orgCode,
+          reportAnjieItemList: this.reportAnjieItemList
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };

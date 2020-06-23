@@ -67,7 +67,7 @@ export default {
   computed: {
     text() {
       return this.currentRate.toFixed(0) + '%';
-    },
+    }
   },
   filters: {
     filterTime(val) {
