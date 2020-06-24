@@ -20,7 +20,7 @@
       <dt>来访情况</dt>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="todayVisit"
           label="*今日"
           class="mod-field"
           type="number"
@@ -33,7 +33,7 @@
       <dt>来电咨询情况</dt>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="todayCall"
           label="*今日"
           class="mod-field"
           type="number"
@@ -46,7 +46,7 @@
       <dt>车位成交情况</dt>
       <dd>
         <van-field
-          v-model="payAmount"
+          v-model="todayLotDeal"
           label="*今日"
           class="mod-field"
           type="number"
@@ -55,11 +55,11 @@
         />
       </dd>
     </dl>
-    <dl class="unit" v-for="(item, index) in list" :key="index">
+    <dl class="unit" v-for="(item, index) in reportXiaoshouItemList" :key="index">
       <dt>{{ `${index+1}` | convert }}</dt>
       <dd>
         <van-field
-          v-model="item.dealedNumber"
+          v-model="item.todayDealNum"
           label="*今日成交"
           class="mod-field"
           type="number"
@@ -69,7 +69,7 @@
       </dd>
       <dd>
         <van-field
-          v-model="item.backNumber"
+          v-model="item.checkOutNum"
           label="*调整退房"
           class="mod-field"
           type="number"
@@ -79,7 +79,7 @@
       </dd>
       <dd>
         <van-field
-          v-model="item.signNumber"
+          v-model="item.todaySignNum"
           label="*今日签约"
           class="mod-field"
           type="number"
@@ -90,7 +90,7 @@
     </dl>
     <van-button @click="onAdd" type="default" style="display:block; margin: 30px 0px 100px 250px">新增期数</van-button>
     <div style="margin: 16px;">
-      <van-button square block type="info" color="#000" native-type="submit">
+      <van-button square block type="info" color="#000" @click="onSubmit">
         提交
       </van-button>
     </div>
@@ -126,14 +126,17 @@ export default {
       showPicker: false,
       columns: [],
       payAmount: '',
-      list: [
+      reportXiaoshouItemList: [
         {
-          dealedNumber: '',
-          backNumber: '',
-          signNumber: ''
+          todayDealNum: '',
+          checkOutNum: '',
+          todaySignNum: ''
         }
       ],
-      id: 0
+      id: 0,
+      todayVisit: '',
+      todayCall: '',
+      todayLotDeal: ''
     }
   },
   filters: {
@@ -144,6 +147,10 @@ export default {
   created() {
     this.getMyProjectList()
     this.id = this.$route.query.id
+    this.projectCode = this.$route.query.projectCode
+    this.todayVisit = this.$route.query.todayVisit
+    this.todayCall = this.$route.query.todayCall
+    this.todayLotDeal = this.$route.query.todayLotDeal
     if (this.id) { // 编辑
       this.getEditedData()
     }
@@ -153,24 +160,32 @@ export default {
   },
   methods: {
     getEditedData () {
-      this.$http.get('/report/xiaoshouData/queryById', {
+      this.$http.get('/report/xiaoshouData/queryReportXiaoshouItemByMainId', {
         params: {
           id: this.id
         }
       }).then(res => {
-
+        this.reportXiaoshouItemList = res.result || []
       })
     },
     onAdd () {
-      this.list.push({
-        dealedNumber: '',
-        backNumber: '',
-        signNumber: ''
+      this.reportXiaoshouItemList.push({
+        todayDealNum: '',
+        checkOutNum: '',
+        todaySignNum: ''
       })
     },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
+        if (this.projectCode) {
+          this.columns.forEach(v => {
+            if (v.orgCode === this.projectCode) {
+              this.departName = v.departName
+              this.orgCode = v.orgCode
+            }
+          })
+        }
       })
     },
     onConfirm(item) {
@@ -182,8 +197,12 @@ export default {
     onSubmit() {
       if (this.id) {
         this.$http.put('/report/xiaoshouData/edit', {
+          id: this.id,
           projectCode: this.orgCode,
-          reportAnjieItemList: this.reportAnjieItemList
+          reportXiaoshouItemList: this.reportXiaoshouItemList,
+          todayVisit: this.todayVisit,
+          todayCall: this.todayCall,
+          todayLotDeal: this.todayLotDeal
         }).then(res => {
           if (res.success) {
             Toast.success('保存成功')
@@ -195,7 +214,10 @@ export default {
       } else {
         this.$http.post('/report/xiaoshouData/add', {
           projectCode: this.orgCode,
-          reportAnjieItemList: this.reportAnjieItemList
+          reportXiaoshouItemList: this.reportXiaoshouItemList,
+          todayVisit: this.todayVisit,
+          todayCall: this.todayCall,
+          todayLotDeal: this.todayLotDeal
         }).then(res => {
           if (res.success) {
             Toast.success('保存成功')

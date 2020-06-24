@@ -21,29 +21,29 @@
       <div class="mod-form">
         <div class="verify">
           <label for="username">*全款</label>
-          <input class="verify-input" v-model="item.fullPayNum" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.fullPayAmount" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input"  v-model="item.fullPayNum" placeholder="请输入数量" type="number" name="username">数
+          <input class="verify-input" v-model="item.fullPayAmount" placeholder="请输入金额" type="number" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*待借合同</label>
-          <input class="verify-input" v-model="item.waitBorrowNum" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.waitBorrowAmount" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.waitBorrowNum" placeholder="请输入数量" type="number" name="username">数
+          <input class="verify-input" v-model="item.waitBorrowAmount" placeholder="请输入金额" type="number" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*已放款</label>
-          <input class="verify-input" v-model="item.releasedNum" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.releasedAmount" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.releasedNum" placeholder="请输入数量" type="number" name="username">数
+          <input class="verify-input" v-model="item.releasedAmount" placeholder="请输入金额" type="number" name="username">万元
         </div>
         <div class="verify">
           <label for="username">*待放款</label>
-          <input class="verify-input" v-model="item.waitReleaseNum" placeholder="请输入数量" type="text" name="username">数
-          <input class="verify-input" v-model="item.waitReleaseAmount" placeholder="请输入金额" type="text" name="username">万元
+          <input class="verify-input" v-model="item.waitReleaseNum" placeholder="请输入数量" type="number" name="username">数
+          <input class="verify-input" v-model="item.waitReleaseAmount" placeholder="请输入金额" type="number" name="username">万元
         </div>
       </div>
     </div>
     <van-button type="default" @click="onAdd" style="margin: 30px 0px 100px 200px">新增期数</van-button>
     <div style="margin: 16px;">
-      <van-button square block type="info" color="#000" native-type="submit">
+      <van-button square block type="info" color="#000" @click="onSubmit" >
         提交
       </van-button>
     </div>
@@ -88,7 +88,8 @@ export default {
           waitReleaseNum: '' // 待放款数
         }
       ],
-      id: 0
+      id: 0,
+      projectCode: ''
     }
   },
   filters: {
@@ -99,6 +100,7 @@ export default {
   created() {
     this.getMyProjectList()
     this.id = this.$route.query.id
+    this.projectCode = this.$route.query.projectCode
     if (this.id) { // 编辑
       this.getEditedData()
     }
@@ -108,12 +110,12 @@ export default {
   },
   methods: {
     getEditedData () {
-      this.$http.get('/report/anjieData/queryById', {
+      this.$http.get('/report/anjieData/queryReportAnjieItemByMainId', {
         params: {
           id: this.id
         }
       }).then(res => {
-
+        this.reportAnjieItemList = res.result || []
       })
     },
     onAdd () {
@@ -131,6 +133,14 @@ export default {
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
+        if (this.projectCode) {
+          this.columns.forEach(v => {
+            if (v.orgCode === this.projectCode) {
+              this.departName = v.departName
+              this.orgCode = v.orgCode
+            }
+          })
+        }
       })
     },
     onConfirm(item) {
@@ -140,7 +150,8 @@ export default {
     },
     onSubmit() {
       if (this.id) {
-        this.$http.put('/report/anjieData/add', {
+        this.$http.put('/report/anjieData/edit', {
+          id: this.id,
           projectCode: this.orgCode,
           reportAnjieItemList: this.reportAnjieItemList
         }).then(res => {

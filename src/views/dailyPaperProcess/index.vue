@@ -5,8 +5,8 @@
         <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
       </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
-        <div class="name">{{item.applyUser_dictText }}</div>
-        <div class="time">{{item.applyTime }}</div>
+        <div class="name">{{item.createBy }}</div>
+        <div class="time">{{item.createTime }}</div>
       </div>
       <van-loading v-if="loading" type="spinner" />
       <div v-if="!loading && tips" class="tips">{{ tips }} </div>
@@ -20,10 +20,11 @@
 
 <script>
 import Vue from 'vue';
-import { Loading, Popup } from 'vant'
+import { Loading, Popup, Toast } from 'vant'
 import BScroll from 'better-scroll'
 Vue.use(Loading)
 Vue.use(Popup)
+Vue.use(Toast)
 export default {
   data() {
     return {
@@ -56,7 +57,12 @@ export default {
       },
       loading: false,
       show: false,
-      status: 1
+      status: 1,
+      projectCode: '',
+      todayVisit: '',
+      todayCall: '',
+      todayLotDeal: ''
+
     };
   },
   methods: {
@@ -115,9 +121,9 @@ export default {
     },
     onEdit () {
       if (this.status === 1) {
-        this.$router.push(`/addMortgageData?id=${this.id}`)
+        this.$router.push(`/addMortgageData?id=${this.id}&projectCode=${this.projectCode}`)
       } else {
-        this.$router.push(`/addSalesData?id=${this.id}`)
+        this.$router.push(`/addSalesData?id=${this.id}&projectCode=${this.projectCode}&todayVisit=${this.todayVisit}&todayLotDeal=${this.todayLotDeal}&todayCall=${this.todayCall}`)
       }
     },
     onDelete () {
@@ -127,7 +133,13 @@ export default {
             id: this.id
           }
         }).then(res => {
-
+          this.show = false
+          this.getList()
+          if (res.success) {
+            Toast.success(res.message)
+          } else {
+            Toast.fail(res.message)
+          }
         })
       } else {
         this.$http.delete('/report/xiaoshouData/delete', {
@@ -135,12 +147,22 @@ export default {
             id: this.id
           }
         }).then(res => {
-
+          this.show = false
+          this.getList()
+          if (res.success) {
+            Toast.success(res.message)
+          } else {
+            Toast.fail(res.message)
+          }
         })
       }
     },
     goToDetail(item) {
+      this.todayVisit = item.todayVisit
+      this.todayCall = item.todayCall
+      this.todayLotDeal = item.todayLotDeal
       this.id = item.id
+      this.projectCode = item.projectCode
       this.show = true
     },
     destroyed() {
