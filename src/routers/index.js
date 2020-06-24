@@ -36,6 +36,8 @@ const addMortgageData = () => import(/* webpackChunkName: "addMortgageData" */ '
 const addSalesData = () => import(/* webpackChunkName: "report" */ '@/views/addSalesData')
 const dailyPaperProcess = () => import(/* webpackChunkName: "dailyPaperProcess" */ '@/views/dailyPaperProcess')
 const taskList = () => import(/* webpackChunkName: "taskList" */ '@/views/taskList')
+const addTask = () => import(/* webpackChunkName: "addTask" */ '@/views/addTask')
+const taskDetail = () => import(/* webpackChunkName: "taskDetail" */ '@/views/taskDetail')
 
 Vue.use(Router)
 
@@ -46,6 +48,24 @@ const routes = [
     component: home,
     meta: {
       title: '辰华OA',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addTask',
+    name: 'addTask',
+    component: addTask,
+    meta: {
+      title: '添加任务',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/taskDetail',
+    name: 'taskDetail',
+    component: taskDetail,
+    meta: {
+      title: '任务详情',
       requireAuth: true // 登录权限
     }
   },
