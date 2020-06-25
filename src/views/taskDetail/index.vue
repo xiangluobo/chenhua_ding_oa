@@ -1,189 +1,74 @@
 <template>
-  <section class="mod-expense">
-    <div class="application">
-      <div class="person">申请人</div>
-      <div class="role">{{userInfo.realname}}</div>
-    </div>
-    <van-form @submit="onSubmit">
-      <van-field
-        readonly
-        clickable
-        class="mod-field"
-        name="picker"
-        :value="departName"
-        label="*所在项目部"
-        :rules="[{ required: true, message: '请选择项目部' }]"
-        right-icon="arrow"
-        placeholder="请选择项目部"
-        @click="showPicker = true"
-      />
-      <van-field
-        v-model="payAmount"
-        label="*付款金额"
-        type="number"
-        class="mod-field"
-        placeholder="请输入付款金额"
-        :rules="[{ required: true, message: '请输入付款金额' }]"
-      />
-      <van-field
-        v-model="contractAmount"
-        label="*合同金额"
-        type="number"
-        class="mod-field"
-        placeholder="请输入合同金额"
-        :rules="[{ required: true, message: '请输入合同金额' }]"
-      />
-      <div class="mod-select">
-        <div class="mod-label">*收款人全称</div>
-        <el-select
-          v-model="payeeName"
-          filterable
-          remote
-          @change="onChange"
-          reserve-keyword
-          placeholder="请输入收款人全称"
-          :remote-method="remoteMethod"
-          :loading="loading">
-          <el-option
-            v-for="item in options"
-            :key="item.payeeName"
-            :label="item.payeeName"
-            :value="item">
-          </el-option>
-        </el-select>
+  <section class="mod-taskDetail">
+    <div class="mod-head">
+      <div class="left">
+        <div class="name">任务名称</div>
+        <div class="time">截止时间： 2020-03-23</div>
+        <div class="extend">紧急程度：重要</div>
+        <div class="status">未完成</div>
       </div>
+      <div class="middle">
+        <van-circle v-model="currentRate" :rate="50"  layer-color="#ebedf0" color="#f00" :size="70" :speed="100" :text="text" />
+      </div>
+      <div class="right">
+        任务负责人姓名
+      </div>
+    </div>
+    <dl class="mod-startTime">
+      <dt>
+        <span>开始时间</span>
+        <span>开始时间</span>
+      </dt>
+      <dd>
+        <span>参与人</span>
+        <span>姓名</span>
+        <span>姓名</span>
+        <span>姓名</span>
+      </dd>
+    </dl>
+    <div class="mod-explanation">追加说明</div>
+    <div class="explanation">
+      <div class="title">姓名 2020-07-12</div>
+      <div class="content">
+        文本内容
+        文本内容
+        文本内容
+        文本内容
+      </div>
+    </div>
+    <div class="mod-input">
       <van-field
-        v-model="payeeAccount"
-        label="*收款人账户"
-        class="mod-field"
-        placeholder="请输入收款人账户"
-        :rules="[{ required: true, message: '请输入收款人账户' }]"
-      />
-      <van-field
-        v-model="payeeBank"
-        label="*开户行地址"
-        class="mod-field"
-        placeholder="请输入开户行地址"
-        :rules="[{ required: true, message: '请输入开户行地址' }]"
-      />
-      <van-field
-        v-model="payAmountTotal"
-        label="*累计付款"
-        class="mod-field"
-        placeholder="请输入累计付款"
-        :rules="[{ required: true, message: '请输入累计付款' }]"
-      />
-      <van-field
-        readonly
-        clickable
-        class="mod-field"
-        name="picker"
-        :value="payTypeVal"
-        label="*付款方式"
-        :rules="[{ required: true, message: '请选择付款方式' }]"
-        right-icon="arrow"
-        placeholder="请选择付款方式"
-        @click="showPayType = true"
-      />
-      <van-field
-        v-model="payDesc"
-        label="*付款说明"
-        class="mod-field"
-        placeholder="请输入付款说明"
-        :rules="[{ required: true, message: '请输入付款说明' }]"
-      />
-      <van-field
-        v-model="otherRequire"
-        label="其它说明要求"
-        class="mod-field"
-        placeholder="请输入其它说明要求"
-      />
-      <van-field name="uploader" class="mod-field" label="相关文件">
-        <template #input>
-          <van-uploader :after-read="afterRead" v-model="uploader" />
+        v-model="sms"
+        clearable
+        label=""
+        placeholder="请输入追加说明"
+      >
+        <template #button>
+          <van-button size="small" color="#000">提交</van-button>
         </template>
       </van-field>
-      <div style="margin: 16px;">
-        <van-button square block type="info" color="#000" native-type="submit">
-          提交
-        </van-button>
-      </div>
-    </van-form>
-    <van-popup v-model="showPicker" position="bottom">
-      <van-picker
-        show-toolbar
-        value-key="departName"
-        :columns="columns"
-        @confirm="onConfirm"
-        @cancel="showPicker = false"
-      />
-    </van-popup>
-    <van-popup v-model="showPayType" position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="payTypeColumns"
-        @confirm="onConfirmPayType"
-        @cancel="showPayType = false"
-      />
-    </van-popup>
+    </div>
   </section>
 </template>
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
-import { Select, Option } from 'element-ui'
-Vue.use(Popup)
-Vue.use(Picker)
-Vue.use(Button)
-Vue.use(Form)
-Vue.use(Uploader)
-Vue.use(field)
+import { Toast, Circle, Field, Button } from 'vant'
 Vue.use(Toast)
-Vue.use(Loading)
-Vue.use(Select)
-Vue.use(Option)
+Vue.use(Circle)
+Vue.use(Field)
+Vue.use(Button)
 export default {
   data() {
     return {
-      orgCode: '',
-      departName: '',
-      payAmount: '', // 付款金额
-      payAmountTotal: '', // 累计付款
-      contractAmount: '', // 合同金额
-      payeeName: {}, // 收款人全称
-      payeeAccount: '',
-      payeeBank: '',
-      payType: '',
-      payTypeVal: '',
-      payDesc: '',
-      otherRequire: '',
-      showPicker: false,
-      showPayType: false,
-      columns: [],
-      payTypeColumns: [],
-      uploader: [],
-      relatedFile: [],
-      options: [],
-      loading: false,
-      states: ['Alabama', 'Alaska']
+      currentRate: 0,
+      text: '任务进度51',
+      sms: ''
     }
   },
   created() {
-    this.getMyProjectList()
-    this.getPayType()
-  },
-  computed: {
-    ...mapGetters(['userInfo'])
   },
   methods: {
-    onChange () {
-      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
-      this.payAmountTotal = payAmountTotal
-      this.payeeAccount = payeeAccount
-      this.payeeBank = payeeBank
-    },
     remoteMethod (query) {
       this.$http.get('/ggpay/flowGgPay/getPayeeData', {
         params: {
@@ -192,26 +77,6 @@ export default {
       }).then(res => {
         this.options = res.result
       })
-    },
-    getMyProjectList() {
-      this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
-        this.columns = res.result
-      })
-    },
-    getPayType() {
-      this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
-        this.payTypeColumns = res.result
-      })
-    },
-    onConfirmPayType(item) {
-      this.payType = item.value
-      this.payTypeVal = item.text;
-      this.showPayType = false;
-    },
-    onConfirm(item) {
-      this.departName = item.departName;
-      this.orgCode = item.orgCode;
-      this.showPicker = false;
     },
     onSubmit() {
       this.$http.post('/ggpay/flowGgPay/add', {
@@ -235,22 +100,6 @@ export default {
         } else {
           Toast.fail(res.message)
         }
-      })
-    },
-    afterRead(file) {
-      file.status = 'uploading'
-      file.message = '上传中...'
-      let formData = new FormData()
-      formData.append('file', file.file)
-      formData.append('biz', 'ggpay')
-      this.$http.post('/sys/common/upload', formData).then(res => {
-        file.status = 'success'
-        file.message = '上传成功'
-        this.relatedFile.push(res.message)
-      }).catch(err => {
-        console.log(err)
-        file.status = 'failed'
-        file.message = '上传失败'
       })
     }
   }
