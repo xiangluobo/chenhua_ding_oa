@@ -155,8 +155,8 @@ export default {
       payeeName: {}, // 收款人全称
       payeeAccount: '',
       payeeBank: '',
-      payType: '',
-      payTypeVal: '',
+      payType: '4',
+      payTypeVal: '转账支付',
       payDesc: '',
       otherRequire: '',
       showPicker: false,

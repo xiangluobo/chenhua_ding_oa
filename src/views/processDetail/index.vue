@@ -15,7 +15,7 @@
             </div>
           </div>
           <div v-else-if="item.name == '相关文件'" class="application-val">
-            <img v-for="(image, k) in item.value" :key="k" :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">
+            <img v-for="(image, k) in item.value" :key="k" :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">
           </div>
           <div v-else class="application-val">
             {{item.value}}
@@ -66,7 +66,7 @@
 
 <script>
 import Vue from 'vue'
-import { Button, Field, Popup, Toast } from 'vant'
+import { Button, Field, Popup, Toast, ImagePreview } from 'vant'
 Vue.use(Popup)
 Vue.use(Button)
 Vue.use(Field)
@@ -97,6 +97,16 @@ export default {
     this.getViewTaskPic()
   },
   methods: {
+    sceneImg(image) {
+      if (image) {
+        ImagePreview({
+          images: [image],
+          showIndex: true,
+          loop: false,
+          startPosition: 0
+        })
+      }
+    },
     getProcess() {
       this.$http.get('/flow/getHiFormCheckProcess', {
         params: {

@@ -96,7 +96,7 @@ export default {
     return {
       orgCode: '',
       departName: '',
-      salaryTime: '',
+      salaryTime: this.ChangeDateFormat(new Date()),
       salaryPersonCount: '',
       salaryAmount: '',
       uploader: [],

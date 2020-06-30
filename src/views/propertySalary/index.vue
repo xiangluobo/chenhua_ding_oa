@@ -96,7 +96,7 @@ export default {
     return {
       orgCode: '',
       departName: '',
-      salaryTime: '',
+      salaryTime: this.ChangeDateFormat(new Date()),
       salaryPersonCount: '',
       salaryAmount: '',
       uploader: [],
@@ -158,7 +158,7 @@ export default {
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result;
-      });
+      })
     },
     onDateConfirm(date) {
       this.salaryTime = this.ChangeDateFormat(date)
