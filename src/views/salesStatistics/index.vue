@@ -23,7 +23,7 @@
       placeholder="请输入开始时间"
       @click="showCalendar = true"
     />
-    <van-button style="margin: 10px 10px 0" @click="onSearch" type="default">查询</van-button>
+    <van-button style="width:95%; margin-top:10px" type="default" @click="onSearch">查询</van-button>
     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
     <dl class="mod-unit">
       <dt>来访情况</dt>

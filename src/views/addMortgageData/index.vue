@@ -17,7 +17,7 @@
       @click="showPicker = true"
     />
     <div class="mod-module" v-for="(item, index) in reportAnjieItemList" :key="index">
-      <div class="subtitle">{{ `${index+1}` | convert }}</div>
+      <div class="subtitle">{{ item.periodNum | convert }}</div>
       <div class="mod-form">
         <div class="verify">
           <label for="username">*全款</label>
@@ -56,37 +56,44 @@
         @cancel="showPicker = false"
       />
     </van-popup>
+    <van-dialog v-model="addMortageData" @confirm='confirmPeriodNum' title="请输入新增期数" show-cancel-button>
+      <van-field v-model="periodNum" type="number" label="新增期数" placeholder="请输入第几期数" />
+    </van-dialog>
   </section>
 </template>
 
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Popup, Picker, Button, field, Toast } from 'vant'
+import { Popup, Picker, Button, field, Toast, Dialog } from 'vant'
 import { NoToChinese } from '../../utils'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
 Vue.use(field)
 Vue.use(Toast)
+Vue.use(Dialog)
 export default {
   data() {
     return {
+      periodNum: '',
+      addMortageData: false,
       departName: '',
       orgCode: '',
       showPicker: false,
       columns: [],
       reportAnjieItemList: [
-        {
-          fullPayAmount: '', // 全款金额
-          fullPayNum: '', // 全款数量
-          releasedAmount: '', // 已放款金额
-          releasedNum: '', // 已放款数
-          waitBorrowAmount: '', // 待借合同金额
-          waitBorrowNum: '', // 待借合同数
-          waitReleaseAmount: '', // 待放款金额
-          waitReleaseNum: '' // 待放款数
-        }
+        // {
+        //   periodNum: 1,
+        //   fullPayAmount: '', // 全款金额
+        //   fullPayNum: '', // 全款数量
+        //   releasedAmount: '', // 已放款金额
+        //   releasedNum: '', // 已放款数
+        //   waitBorrowAmount: '', // 待借合同金额
+        //   waitBorrowNum: '', // 待借合同数
+        //   waitReleaseAmount: '', // 待放款金额
+        //   waitReleaseNum: '' // 待放款数
+        // }
       ],
       id: 0,
       projectCode: ''
@@ -119,16 +126,7 @@ export default {
       })
     },
     onAdd () {
-      this.reportAnjieItemList.push({
-        fullPayAmount: '', // 全款金额
-        fullPayNum: '', // 全款数量
-        releasedAmount: '', // 已放款金额
-        releasedNum: '', // 已放款数
-        waitBorrowAmount: '', // 待借合同金额
-        waitBorrowNum: '', // 待借合同数
-        waitReleaseAmount: '', // 待放款金额
-        waitReleaseNum: '' // 待放款数
-      })
+      this.addMortageData = true
     },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
@@ -147,6 +145,26 @@ export default {
       this.departName = item.departName
       this.orgCode = item.orgCode
       this.showPicker = false
+    },
+    confirmPeriodNum () {
+      if (this.periodNum) {
+        if (this.reportAnjieItemList.some(v => +v.periodNum === +this.periodNum)) {
+          Toast.fail('请不要输入相同的期数')
+          return
+        }
+        this.reportAnjieItemList.push({
+          periodNum: this.periodNum,
+          fullPayAmount: '', // 全款金额
+          fullPayNum: '', // 全款数量
+          releasedAmount: '', // 已放款金额
+          releasedNum: '', // 已放款数
+          waitBorrowAmount: '', // 待借合同金额
+          waitBorrowNum: '', // 待借合同数
+          waitReleaseAmount: '', // 待放款金额
+          waitReleaseNum: '' // 待放款数
+        })
+        this.periodNum = ''
+      }
     },
     onSubmit() {
       if (this.id) {

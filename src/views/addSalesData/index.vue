@@ -56,7 +56,7 @@
       </dd>
     </dl>
     <dl class="unit" v-for="(item, index) in reportXiaoshouItemList" :key="index">
-      <dt>{{ `${index+1}` | convert }}</dt>
+      <dt>{{ item.periodNum | convert }}</dt>
       <dd>
         <van-field
           v-model="item.todayDealNum"
@@ -103,12 +103,15 @@
         @cancel="showPicker = false"
       />
     </van-popup>
+    <van-dialog v-model="addMortageData" @confirm='confirmPeriodNum' title="请输入新增期数" show-cancel-button>
+      <van-field v-model="periodNum" type="number" label="新增期数" placeholder="请输入第几期数" />
+    </van-dialog>
   </section>
 </template>
 
 <script>
 import Vue from 'vue'
-import { Popup, Picker, Button, Form, field, Uploader, Toast } from 'vant'
+import { Popup, Picker, Button, Form, field, Uploader, Toast, Dialog } from 'vant'
 import { mapGetters } from 'vuex'
 import { NoToChinese } from '../../utils'
 Vue.use(Popup)
@@ -118,21 +121,18 @@ Vue.use(Uploader)
 Vue.use(Form)
 Vue.use(field)
 Vue.use(Toast)
+Vue.use(Dialog)
 export default {
   data() {
     return {
+      periodNum: '',
+      addMortageData: false,
       orgCode: '',
       departName: '',
       showPicker: false,
       columns: [],
       payAmount: '',
-      reportXiaoshouItemList: [
-        {
-          todayDealNum: '',
-          checkOutNum: '',
-          todaySignNum: ''
-        }
-      ],
+      reportXiaoshouItemList: [],
       id: 0,
       todayVisit: '',
       todayCall: '',
@@ -168,12 +168,23 @@ export default {
         this.reportXiaoshouItemList = res.result || []
       })
     },
+    confirmPeriodNum () {
+      if (this.periodNum) {
+        if (this.reportXiaoshouItemList.some(v => +v.periodNum === +this.periodNum)) {
+          Toast.fail('请不要输入相同的期数')
+          return
+        }
+        this.reportXiaoshouItemList.push({
+          periodNum: this.periodNum,
+          todayDealNum: '',
+          checkOutNum: '',
+          todaySignNum: ''
+        })
+        this.periodNum = ''
+      }
+    },
     onAdd () {
-      this.reportXiaoshouItemList.push({
-        todayDealNum: '',
-        checkOutNum: '',
-        todaySignNum: ''
-      })
+      this.addMortageData = true
     },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {

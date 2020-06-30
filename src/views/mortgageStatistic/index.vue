@@ -17,8 +17,8 @@
       clickable
       name="calendar"
       class="mod-field"
-      :value="begin"
-      label="查询时间"
+      :value="beginTime"
+      label="*开始时间"
       right-icon="calender-o"
       placeholder="请输入开始时间"
       @click="showCalendar = true"
@@ -28,12 +28,13 @@
       clickable
       class="mod-field"
       name="calendar"
-      :value="end"
-      label="查询时间"
+      :value="endTime"
+      label="*结束时间"
       right-icon="calender-o"
       placeholder="请输入开始时间"
       @click="showCalendar2 = true"
     />
+    <van-button style="width:95%; margin-top:10px" type="default" @click="onSearch">查询</van-button>
     <div id='main' style='width: 100%;height:400px; background:#fff; margin-top:20px; padding-top:10px'></div>
     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
     <van-calendar v-model="showCalendar2" @confirm="onConfirm2" />
@@ -42,7 +43,7 @@
         show-toolbar
         value-key='departName'
         :columns='columns'
-        @confirm='onConfirm'
+        @confirm='onConfirm3'
         @cancel='showPicker = false'
       />
     </van-popup>
@@ -79,103 +80,132 @@ export default {
       columns: [],
       showCalendar: false,
       showCalendar2: false,
-      begin: '',
-      end: ''
+      beginTime: '',
+      endTime: '',
+      list: []
     };
   },
   mounted() {
     this.getMyProjectList();
-    var myChart = echarts.init(document.getElementById('main'));
-    // // 绘制图表
-    myChart.setOption({
-      title: {
-        text: '按揭统计',
-        left: 10,
-        top: 0
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b}: {c} ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 10,
-        top: 30,
-        data: [
-          {
-            name: '全款',
-            icon: 'circle'
-          },
-          {
-            name: '待借合同',
-            icon: 'circle'
-          },
-          {
-            name: '已放款',
-            icon: 'circle'
-          },
-          {
-            name: '待放款',
-            icon: 'circle'
-          }
-        ]
-      },
-      series: [
-        {
-          name: '访问来源',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          itemStyle: {
-            normal: {
-              label: {
-                show: true,
-                position: 'inner',
-                formatter: '{d}%' // 自定义显示格式(b:name, c:value, d:百分比)
-              }
-            }
-          },
-          data: [
-            { value: 577, name: '全款' },
-            { value: 870, name: '待借合同' },
-            { value: 263, name: '已放款' },
-            { value: 956, name: '待放款' }
-          ]
-        }
-      ]
-    });
   },
   methods: {
+    onSearch() {
+      this.getSaleData()
+    },
+    renderPie() {
+      var myChart = echarts.init(document.getElementById('main'));
+      // 绘制图表
+      myChart.setOption({
+        title: {
+          text: '按揭统计',
+          left: 10,
+          top: 0
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 10,
+          top: 30,
+          data: [
+            {
+              name: '全款',
+              icon: 'circle'
+            },
+            {
+              name: '待借合同',
+              icon: 'circle'
+            },
+            {
+              name: '已放款',
+              icon: 'circle'
+            },
+            {
+              name: '待放款',
+              icon: 'circle'
+            }
+          ]
+        },
+        series: [
+          {
+            name: '访问来源',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            itemStyle: {
+              normal: {
+                label: {
+                  show: true,
+                  position: 'inner',
+                  formatter: '{d}%' // 自定义显示格式(b:name, c:value, d:百分比)
+                }
+              }
+            },
+            data: this.list
+          }
+        ]
+      })
+    },
+    getSaleData() {
+      this.$http.post('/report/anjieData/analysis', {
+        projectCode: this.orgCode,
+        beginTime: this.beginTime,
+        endTime: this.endTime
+      }).then(res => {
+        if (res.success) {
+          let { fullPayAmountTotal, releasedAmountTotal, waitBorrowAmountTotal, waitReleaseAmountTotal } = res.result
+          this.list = [
+            { value: fullPayAmountTotal, name: '全款' },
+            { value: waitBorrowAmountTotal, name: '待借合同' },
+            { value: releasedAmountTotal, name: '已放款' },
+            { value: waitReleaseAmountTotal, name: '待放款' }
+          ]
+          this.renderPie()
+        } else {
+          Toast.fail(res.message)
+        }
+      })
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result;
       });
     },
-    formatDate(date) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    onConfirm3(item) {
+      this.departName = item.departName;
+      this.orgCode = item.orgCode;
+      this.showPicker = false;
+    },
+    ChangeDateFormat(val) {
+      if (val != null) {
+        var year = val.getFullYear()
+        var month = val.getMonth() + 1
+        var date = val.getDate()
+        if (month < 10) {
+          month = '0' + month
+        }
+        if (date < 10) {
+          date = '0' + date
+        }
+        var time =
+          year +
+          '-' +
+          month +
+          '-' +
+          date;
+        return time
+      }
+      return ''
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.begin = this.formatDate(date)
+      this.beginTime = this.ChangeDateFormat(date)
     },
     onConfirm2(date) {
       this.showCalendar2 = false
-      this.end = this.formatDate(date)
-    },
-    onSubmit() {
-      this.$http
-        .post('/ggpay/flowGgPay/add', {
-          projectCode: this.orgCode,
-          departName: this.departName
-        })
-        .then(res => {
-          if (res.success) {
-            Toast.success('保存成功')
-            this.$router.push('/')
-          } else {
-            Toast.fail(res.message)
-          }
-        });
+      this.endTime = this.ChangeDateFormat(date)
     }
   }
 };
