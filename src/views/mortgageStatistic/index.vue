@@ -36,8 +36,8 @@
     />
     <van-button style="width:95%; margin-top:10px" type="default" @click="onSearch">查询</van-button>
     <div id='main' style='width: 100%;height:400px; background:#fff; margin-top:20px; padding-top:10px'></div>
-    <van-calendar v-model="showCalendar" @confirm="onConfirm" />
-    <van-calendar v-model="showCalendar2" @confirm="onConfirm2" />
+    <van-calendar :min-date="minDate" v-model="showCalendar" @confirm="onConfirm" />
+    <van-calendar :min-date="minDate" v-model="showCalendar2" @confirm="onConfirm2" />
     <van-popup v-model='showPicker' position='bottom'>
       <van-picker
         show-toolbar
@@ -74,6 +74,7 @@ var echarts = require('echarts')
 export default {
   data() {
     return {
+      minDate: new Date(2016, 0, 1),
       orgCode: '',
       departName: '',
       showPicker: false,
@@ -155,6 +156,10 @@ export default {
         endTime: this.endTime
       }).then(res => {
         if (res.success) {
+          if (!res.result) {
+            Toast.fail('没有数据')
+            return
+          }
           let { fullPayAmountTotal, releasedAmountTotal, waitBorrowAmountTotal, waitReleaseAmountTotal } = res.result
           this.list = [
             { value: fullPayAmountTotal, name: '全款' },

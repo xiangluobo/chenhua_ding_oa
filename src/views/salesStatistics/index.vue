@@ -24,7 +24,7 @@
       @click="showCalendar = true"
     />
     <van-button style="width:95%; margin-top:10px" type="default" @click="onSearch">查询</van-button>
-    <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+    <van-calendar :min-date="minDate" v-model="showCalendar" @confirm="onConfirm" />
     <dl class="mod-unit">
       <dt>来访情况</dt>
       <dd>
@@ -174,6 +174,7 @@ Vue.use(Toast)
 export default {
   data() {
     return {
+      minDate: new Date(2016, 0, 1),
       todayVisit: 0,
       weekVisit: 0,
       monthVisit: 0,
@@ -215,6 +216,10 @@ export default {
         queryTime: this.queryTime
       }).then(res => {
         if (res.success) {
+          if (!res.result) {
+            Toast.fail('没有数据')
+            return
+          }
           let { reportXiaoshouItemRsp, totalLotDeal, monthLotDeal, weekLotDeal, todayVisit, weekVisit, monthVisit, totalVisit, todayCall, weekCall, monthCall, totalCall, todayLotDeal } = res.result
           this.todayVisit = todayVisit
           this.weekVisit = weekVisit
