@@ -180,10 +180,12 @@ export default {
   },
   methods: {
     onChange () {
-      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
-      this.payAmountTotal = payAmountTotal
-      this.payeeAccount = payeeAccount
-      this.payeeBank = payeeBank
+      if (this.options.length > 0) {
+        let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
+        this.payAmountTotal = payAmountTotal
+        this.payeeAccount = payeeAccount
+        this.payeeBank = payeeBank
+      }
     },
     remoteMethod (query) {
       this.$http.get('/ggpay/flowGgPay/getPayeeData', {
