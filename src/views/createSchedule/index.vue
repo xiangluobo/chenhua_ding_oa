@@ -5,7 +5,7 @@
     </div>
     <van-form>
       <van-field
-        v-model='content'
+        v-model='scheContent'
         label='*日程内容'
         rows="3"
         autosize
@@ -19,14 +19,14 @@
         clickable
         name="calendar"
         class="mod-field"
-        :value="time"
+        :value="scheDate"
         label="日程时间"
         right-icon="calender-o"
         placeholder="请输入日程时间"
         @click="showCalendar = true"
       />
       <van-field
-        v-model='remark'
+        v-model='scheRemarks'
         label='备注'
         rows="3"
         autosize
@@ -40,7 +40,7 @@
         提交
       </van-button>
     </div>
-     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
+     <van-calendar :min-date='minDate' v-model="showCalendar" @confirm="onConfirm" />
   </section>
 </template>
 
@@ -55,47 +55,82 @@ Vue.use(Toast)
 export default {
   data() {
     return {
-      content: '',
-      time: '',
-      remark: '',
-      showCalendar: false
+      id: 0,
+      scheContent: '',
+      scheDate: '',
+      scheRemarks: '',
+      showCalendar: false,
+      minDate: new Date(2019, 0, 1)
     }
   },
   created() {
-
+    let { id, scheDate, scheRemarks, scheContent } = this.$route.query
+    if (id) {
+      this.id = id
+      this.scheDate = scheDate
+      this.scheRemarks = scheRemarks
+      this.scheContent = scheContent
+    }
   },
   methods: {
-    formatDate(date) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    ChangeDateFormat(val) {
+      if (val != null) {
+        var year = val.getFullYear()
+        var month = val.getMonth() + 1
+        var date = val.getDate()
+        if (month < 10) {
+          month = '0' + month
+        }
+        if (date < 10) {
+          date = '0' + date
+        }
+        var time =
+          year +
+          '-' +
+          month +
+          '-' +
+          date;
+        return time
+      }
+      return ''
     },
     onConfirm(date) {
       this.showCalendar = false
-      this.time = this.formatDate(date)
+      this.scheDate = this.ChangeDateFormat(date)
     },
     onSubmit() {
-      if (!this.departName) {
-        Toast.fail('请选择项目部')
-        return false
+      if (this.id) {
+        this.$http
+          .put('/schedule/userSchedule/edit', {
+            id: this.id,
+            scheContent: this.scheContent,
+            scheDate: this.scheDate,
+            scheRemarks: this.scheRemarks
+          })
+          .then(res => {
+            if (res.success) {
+              Toast.success('编辑成功')
+              this.$router.push('/mySchedule')
+            } else {
+              Toast.fail(res.message)
+            }
+          })
+      } else {
+        this.$http
+          .post('/schedule/userSchedule/add', {
+            scheContent: this.scheContent,
+            scheDate: this.scheDate,
+            scheRemarks: this.scheRemarks
+          })
+          .then(res => {
+            if (res.success) {
+              Toast.success('新建成功')
+              this.$router.push('/mySchedule')
+            } else {
+              Toast.fail(res.message)
+            }
+          })
       }
-      if (this.flowYxExpenseItemsList.some(v => !v.expenseType || !v.expenseRemark || !v.expenseAmount)) {
-        Toast.fail('报销明细填写有问题，请仔细检查')
-        return false
-      }
-      this.$http
-        .post('/yxexpense/flowYxExpense/add', {
-          expenseTotal: this.expenseTotal,
-          projectCode: this.orgCode,
-          relatedFile: this.relatedFile.join(','),
-          flowYxExpenseItemsList: this.flowYxExpenseItemsList
-        })
-        .then(res => {
-          if (res.success) {
-            Toast.success('保存成功')
-            this.$router.push('/')
-          } else {
-            Toast.fail(res.message)
-          }
-        })
     }
   }
 }

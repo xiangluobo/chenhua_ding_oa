@@ -27,7 +27,7 @@
           <dt>{{ dataCount.daibanShenpiCount }}</dt>
           <dd>待办审批</dd>
         </dl>
-        <dl>
+        <dl @click="goToSchedule">
           <dt>{{ dataCount.jinriRichengCount }}</dt>
           <dd>今日日程</dd>
         </dl>
