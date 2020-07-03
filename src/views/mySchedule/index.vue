@@ -42,7 +42,7 @@ export default {
       this.$router.push(`/createSchedule?id=${item.id}&scheDate=${item.scheDate}&scheRemarks=${item.scheRemarks}&scheContent=${item.scheContent}`)
     },
     onDelete (id) {
-      this.$http.delete('/report/xiaoshouData/delete', {
+      this.$http.delete('/schedule/userSchedule/delete', {
         params: {
           id: id
         }
