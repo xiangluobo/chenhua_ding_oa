@@ -33,13 +33,33 @@
         type="number"
         :rules="[{ required: true, message: '请输入合同金额' }]"
       />
-      <van-field
+      <div class="mod-select">
+        <div class="mod-label">*收款人全称</div>
+        <el-select
+          v-model="payeeName"
+          filterable
+          remote
+          allow-create
+          @change="onChange"
+          reserve-keyword
+          placeholder="请输入收款人全称"
+          :remote-method="remoteMethod"
+          :loading="loading">
+          <el-option
+            v-for="item in options"
+            :key="item.payeeName"
+            :label="item.payeeName"
+            :value="item">
+          </el-option>
+        </el-select>
+      </div>
+      <!-- <van-field
         v-model="payeeName"
         label="*收款人全称"
         class="mod-field"
         placeholder="请输入收款人全称"
         :rules="[{ required: true, message: '请输入收款人全称' }]"
-      />
+      /> -->
       <van-field
         v-model="payeeAccount"
         label="*收款人账号"
@@ -119,8 +139,9 @@
 
 <script>
 import Vue from 'vue'
-import { Popup, Picker, Button, Form, field, Uploader, Toast } from 'vant'
+import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
 import { mapGetters } from 'vuex'
+import { Select, Option } from 'element-ui'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -128,6 +149,9 @@ Vue.use(Uploader)
 Vue.use(Form)
 Vue.use(field)
 Vue.use(Toast)
+Vue.use(Loading)
+Vue.use(Select)
+Vue.use(Option)
 export default {
   data() {
     return {
@@ -148,7 +172,9 @@ export default {
       showPicker: false,
       showPayType: false,
       columns: [],
-      payTypeColumns: []
+      payTypeColumns: [],
+      options: [],
+      loading: false
     }
   },
   created() {
@@ -159,6 +185,21 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    onChange () {
+      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
+      this.payAmountTotal = payAmountTotal
+      this.payeeAccount = payeeAccount
+      this.payeeBank = payeeBank
+    },
+    remoteMethod (query) {
+      this.$http.get('/ggpay/flowGgPay/getPayeeData', {
+        params: {
+          payeeName: query
+        }
+      }).then(res => {
+        this.options = res.result
+      })
+    },
     getPayType() {
       this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
         this.payTypeColumns = res.result

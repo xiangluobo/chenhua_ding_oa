@@ -39,6 +39,7 @@
           v-model="payeeName"
           filterable
           remote
+          allow-create
           @change="onChange"
           reserve-keyword
           placeholder="请输入收款人全称"
