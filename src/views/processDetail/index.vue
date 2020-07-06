@@ -46,6 +46,10 @@
         <img :src="image">
       </dd>
     </dl>
+    <div style="margin: 10px" v-if="bpmState != 3">
+      <van-button style="width:40%" type="info" @touchstart="onEdit">编辑</van-button>
+      <van-button style="width:40%; margin-left:10px" type="warning" @touchstart="onInvalid">作废</van-button>
+    </div>
     <van-popup v-model="show" position="bottom" :style="{ height: '38%', paddingTop: '10px'}">
       <van-field
         v-model="tips"
@@ -80,10 +84,13 @@ export default {
       taskId: 0,
       tips: '',
       opt: 0,
+      bpmState: 0,
+      busiId: 0,
       resourceName: '',
       applicationList: [],
       auditList: [],
-      image: ''
+      image: '',
+      flowType_dictText: ''
     }
   },
   created() {
@@ -91,12 +98,61 @@ export default {
     this.Id = this.$route.query.id
     this.taskId = this.$route.query.taskId || ''
     this.bpmState_dictText = this.$route.query.bpmState_dictText
+    this.bpmState = this.$route.query.bpmState
+    this.flowType_dictText = this.$route.query.flowType_dictText
+    this.busiId = this.$route.query.busiId
     this.resourceName = 'process_img_' + this.procInstId + '.png'
     this.getProcess()
     this.getHistoryData()
     this.getViewTaskPic()
   },
   methods: {
+    onInvalid () {
+      this.$http.post('/flow/doCancelFlow', {
+        busiId: this.busiId
+      }).then(res => {
+        if (res.success) {
+          Toast.success(res.message)
+          // this.$router.push('/')
+        } else {
+          Toast.fail(res.message)
+        }
+      })
+    },
+    onEdit () {
+      switch (this.flowType_dictText) {
+        case '价格优惠申请':
+          this.$router.push(`/priceDiscount?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '通用审批流程申请':
+          this.$router.push(`/approvedProcess?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '营销工资发放申请':
+          this.$router.push(`/marketingSalary?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '营销费用报销申请':
+          this.$router.push(`/marketingExpense?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '营销付款申请':
+          this.$router.push(`/marketingPayment?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '认筹退款申请':
+          this.$router.push(`/pledgeRefund?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '定金/房款退款申请':
+          this.$router.push(`/depositRefund?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '房产工资发放申请':
+          this.$router.push(`/propertySalary?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '费用报销申请':
+          this.$router.push(`/expense?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+        case '付款申请':
+          this.$router.push(`/paymentApplication?busiId=${this.busiId}&bpmState=${this.bpmState}`)
+          break;
+      }
+    },
     sceneImg(image) {
       if (image) {
         ImagePreview({

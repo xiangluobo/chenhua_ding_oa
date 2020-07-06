@@ -147,7 +147,7 @@ export default {
       }
     },
     goToDetail(item) {
-      this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
+      this.$router.push(`/processDetail?procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}&bpmState=${item.bpmState}&flowType_dictText=${item.flowType_dictText}&busiId=${item.busiId}`)
     },
     destroyed() {
       this.scroll.destroy()

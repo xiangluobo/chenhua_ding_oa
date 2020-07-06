@@ -148,12 +148,23 @@ export default {
       showPicker: false,
       columns: [],
       options: [],
-      loading: false
+      loading: false,
+      busiId: 0,
+      id: 0,
+      procInstId: 0,
+      projectCode: 0,
+      sysOrgCode: 0
     }
   },
   created() {
     this.getMyProjectList()
     this.getlist()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   mounted() {
     document.addEventListener('click', (e) => {
@@ -173,6 +184,28 @@ export default {
     }
   },
   methods: {
+    getDetail () {
+      this.$http.get('/discount/flowPriceDiscount/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.houseNo = result.houseNo
+        this.handler = result.handler.split(',')
+        this.chaoto = result.chaoto.split(',')
+        this.houseArea = result.houseArea
+        this.oriTotalPrice = result.oriTotalPrice
+        this.disTotalPrice = result.disTotalPrice
+        this.description = result.description
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.procInstId = result.procInstId
+        this.projectCode = result.projectCode
+        this.sysOrgCode = result.sysOrgCode
+      })
+    },
     onHidden () {
       let dropdowns = document.querySelectorAll('.el-select-dropdown')
       for (let i = 0; i < dropdowns.length; i++) {
@@ -211,26 +244,53 @@ export default {
       this.showPicker = false
     },
     onSubmit() {
-      this.$http.post('/discount/flowPriceDiscount/add', {
-        projectCode: this.orgCode,
-        houseNo: this.houseNo,
-        handler: this.handler.join(','),
-        chaoto: this.chaoto.join(','),
-        houseArea: this.houseArea,
-        oriSinglePrice: this.oriSinglePrice,
-        oriTotalPrice: this.oriTotalPrice,
-        disTotalPrice: this.disTotalPrice,
-        disSinglePrice: this.disSinglePrice,
-        disPrice: Number(this.disPrice),
-        description: this.description
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.$http.put('/discount/flowPriceDiscount/edit', {
+          bpmStatus: this.bpmStatus,
+          id: this.id,
+          projectCode: this.orgCode,
+          houseNo: this.houseNo,
+          handler: this.handler.join(','),
+          chaoto: this.chaoto.join(','),
+          houseArea: this.houseArea,
+          oriSinglePrice: this.oriSinglePrice,
+          oriTotalPrice: this.oriTotalPrice,
+          disTotalPrice: this.disTotalPrice,
+          disSinglePrice: this.disSinglePrice,
+          disPrice: Number(this.disPrice),
+          description: this.description,
+          procInstId: this.procInstId,
+          sysOrgCode: this.sysOrgCode
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/discount/flowPriceDiscount/add', {
+          projectCode: this.orgCode,
+          houseNo: this.houseNo,
+          handler: this.handler.join(','),
+          chaoto: this.chaoto.join(','),
+          houseArea: this.houseArea,
+          oriSinglePrice: this.oriSinglePrice,
+          oriTotalPrice: this.oriTotalPrice,
+          disTotalPrice: this.disTotalPrice,
+          disSinglePrice: this.disSinglePrice,
+          disPrice: Number(this.disPrice),
+          description: this.description
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };
