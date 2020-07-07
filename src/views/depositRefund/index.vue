@@ -164,16 +164,52 @@ export default {
       refundReason: '',
       handleTips: '',
       showPicker: false,
-      columns: []
+      columns: [],
+      busiId: 0,
+      id: 0,
+      formData: {}
     }
   },
   created() {
     this.getMyProjectList()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getDetail () {
+      this.$http.get('/djfk/flowDjfkRefund/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.bankAccount = result.bankAccount
+        this.bankAddr = result.bankAddr
+        this.bankName = result.bankName
+        this.bankUser = result.bankUser
+        this.custName = result.custName
+        this.identityNo = result.identityNo
+        this.telephone = result.telephone
+        this.houseNo = result.houseNo
+        this.houseArea = result.houseArea
+        this.totalPrice = result.totalPrice
+        this.refundAmount = result.refundAmount
+        this.buyDesc = result.buyDesc
+        this.refundReason = result.refundReason
+        this.handleTips = result.handleTips
+      })
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
@@ -185,30 +221,56 @@ export default {
       this.showPicker = false
     },
     onSubmit() {
-      this.$http.post('/djfk/flowDjfkRefund/add', {
-        projectCode: this.orgCode,
-        custName: this.custName,
-        identityNo: this.identityNo,
-        telephone: this.telephone,
-        houseNo: this.houseNo,
-        houseArea: this.houseArea,
-        totalPrice: this.totalPrice,
-        refundAmount: this.refundAmount,
-        bankUser: this.bankUser,
-        bankAccount: this.bankAccount,
-        bankName: this.bankName,
-        bankAddr: this.bankAddr,
-        buyDesc: this.buyDesc,
-        refundReason: this.refundReason,
-        handleTips: this.handleTips
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.custName = this.custName
+        this.formData.identityNo = this.identityNo
+        this.formData.bankUser = this.bankUser
+        this.formData.bankAccount = this.bankAccount
+        this.formData.bankName = this.bankName
+        this.formData.bankAddr = this.bankAddr
+        this.formData.telephone = this.telephone
+        this.formData.houseNo = this.houseNo
+        this.formData.houseArea = this.houseArea
+        this.formData.totalPrice = this.totalPrice
+        this.formData.refundAmount = this.refundAmount
+        this.formData.buyDesc = this.buyDesc
+        this.formData.refundReason = this.refundReason
+        this.formData.handleTips = this.handleTips
+        this.$http.put('/djfk/flowDjfkRefund/edit', this.formData).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/djfk/flowDjfkRefund/add', {
+          projectCode: this.orgCode,
+          custName: this.custName,
+          identityNo: this.identityNo,
+          telephone: this.telephone,
+          houseNo: this.houseNo,
+          houseArea: this.houseArea,
+          totalPrice: this.totalPrice,
+          refundAmount: this.refundAmount,
+          bankUser: this.bankUser,
+          bankAccount: this.bankAccount,
+          bankName: this.bankName,
+          bankAddr: this.bankAddr,
+          buyDesc: this.buyDesc,
+          refundReason: this.refundReason,
+          handleTips: this.handleTips
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };

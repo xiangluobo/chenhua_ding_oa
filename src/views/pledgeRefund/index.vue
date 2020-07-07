@@ -130,16 +130,51 @@ export default {
       remarks: '',
       refundDesc: '',
       showPicker: false,
-      columns: []
+      columns: [],
+      busiId: 0,
+      id: 0,
+      formData: {}
     }
   },
   created() {
     this.getMyProjectList()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getDetail () {
+      this.$http.get('/rc/flowRcRefund/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.procInstId = result.procInstId
+        this.projectCode = result.projectCode
+        this.sysOrgCode = result.sysOrgCode
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.bankAccount = result.bankAccount
+        this.bankAddr = result.bankAddr
+        this.bankName = result.bankName
+        this.bankUser = result.bankUser
+        this.custName = result.custName
+        this.identityNo = result.identityNo
+        this.rcAmount = result.rcAmount
+        this.refundDesc = result.refundDesc
+        this.remarks = result.remarks
+        this.vipCardNo = result.vipCardNo
+      })
+    },
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result
@@ -151,26 +186,48 @@ export default {
       this.showPicker = false
     },
     onSubmit() {
-      this.$http.post('/rc/flowRcRefund/add', {
-        projectCode: this.orgCode,
-        vipCardNo: this.vipCardNo,
-        custName: this.custName,
-        identityNo: this.identityNo,
-        rcAmount: this.rcAmount,
-        bankUser: this.bankUser,
-        bankAccount: this.bankAccount,
-        bankName: this.bankName,
-        bankAddr: this.bankAddr,
-        remarks: this.remarks,
-        refundDesc: this.refundDesc
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.vipCardNo = this.vipCardNo
+        this.formData.custName = this.custName
+        this.formData.identityNo = this.identityNo
+        this.formData.rcAmount = this.rcAmount
+        this.formData.bankUser = this.bankUser
+        this.formData.bankAccount = this.bankAccount
+        this.formData.bankName = this.bankName
+        this.formData.bankAddr = this.bankAddr
+        this.formData.remarks = this.remarks
+        this.formData.refundDesc = this.refundDesc
+        this.$http.put('/rc/flowRcRefund/edit', this.formData).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/rc/flowRcRefund/add', {
+          projectCode: this.orgCode,
+          vipCardNo: this.vipCardNo,
+          custName: this.custName,
+          identityNo: this.identityNo,
+          rcAmount: this.rcAmount,
+          bankUser: this.bankUser,
+          bankAccount: this.bankAccount,
+          bankName: this.bankName,
+          bankAddr: this.bankAddr,
+          remarks: this.remarks,
+          refundDesc: this.refundDesc
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };

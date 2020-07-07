@@ -108,7 +108,7 @@
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
-          <van-uploader :after-read="afterRead" v-model="uploader" />
+          <van-uploader :before-delete="onDelete" :after-read="afterRead" v-model="fileList" />
         </template>
       </van-field>
       <div style="margin: 16px;">
@@ -167,24 +167,71 @@ export default {
       payTypeVal: '转账支付',
       payDesc: '',
       otherRequire: '',
-      uploader: [],
       relatedFile: [],
       showPicker: false,
       showPayType: false,
       columns: [],
       payTypeColumns: [],
       options: [],
-      loading: false
+      fileList: [],
+      loading: false,
+      busiId: 0,
+      id: 0,
+      formData: {}
     }
   },
   created() {
     this.getMyProjectList()
     this.getPayType()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    onDelete (item) {
+      for (let i=0; i<this.fileList.length; i++) {
+        if (this.fileList[i].url == item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g,""))
+    },
+    getDetail () {
+      this.$http.get('/yxpay/flowYxPay/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.payAmount = result.payAmount
+        this.payAmountTotal = result.payAmountTotal
+        this.contractAmount = result.contractAmount
+        this.payeeName = result.payeeName
+        this.payeeAccount = result.payeeAccount
+        this.payeeBank = result.payeeBank
+        this.payType = result.payType
+        this.payDesc = result.payDesc
+        this.otherRequire = result.otherRequire
+        this.relatedFile = result.relatedFile.split(',')
+        let fileList = result.relatedFile.split(',').map(v => {
+          return {
+            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+          }
+        })
+        this.fileList = fileList
+      })
+    },
     onChange () {
       let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
       this.payAmountTotal = payAmountTotal
@@ -237,26 +284,47 @@ export default {
       })
     },
     onSubmit() {
-      this.$http.post('/yxpay/flowYxPay/add', {
-        projectCode: this.orgCode,
-        payAmount: this.payAmount,
-        payAmountTotal: this.payAmountTotal,
-        contractAmount: this.contractAmount,
-        payeeName: this.payeeName,
-        payeeAccount: this.payeeAccount,
-        payeeBank: this.payeeBank,
-        payType: this.payType,
-        payDesc: this.payDesc,
-        otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(',')
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.payAmount = this.payAmount
+        this.formData.payAmountTotal = this.payAmountTotal
+        this.formData.contractAmount = this.contractAmount
+        this.formData.payeeName = this.payeeName
+        this.formData.payeeAccount = this.payeeAccount
+        this.formData.payeeBank = this.payeeBank
+        this.formData.payType = this.payType
+        this.formData.payDesc = this.payDesc
+        this.formData.relatedFile = this.relatedFile.join(',')
+        this.$http.put('/yxpay/flowYxPay/edit', this.formData).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/yxpay/flowYxPay/add', {
+          projectCode: this.orgCode,
+          payAmount: this.payAmount,
+          payAmountTotal: this.payAmountTotal,
+          contractAmount: this.contractAmount,
+          payeeName: this.payeeName,
+          payeeAccount: this.payeeAccount,
+          payeeBank: this.payeeBank,
+          payType: this.payType,
+          payDesc: this.payDesc,
+          otherRequire: this.otherRequire,
+          relatedFile: this.relatedFile.join(',')
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     }
   }
 };
