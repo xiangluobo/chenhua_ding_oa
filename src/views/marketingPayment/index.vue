@@ -195,13 +195,13 @@ export default {
   },
   methods: {
     onDelete (item) {
-      for (let i=0; i<this.fileList.length; i++) {
-        if (this.fileList[i].url == item.url) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
           this.fileList.splice(i, 1)
           break
         }
       }
-      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g,""))
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
     },
     getDetail () {
       this.$http.get('/yxpay/flowYxPay/queryById', {
