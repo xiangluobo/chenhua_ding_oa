@@ -153,7 +153,8 @@ export default {
       id: 0,
       procInstId: 0,
       projectCode: 0,
-      sysOrgCode: 0
+      sysOrgCode: 0,
+      formData: {}
     }
   },
   created() {
@@ -191,6 +192,7 @@ export default {
         }
       }).then(res => {
         let result = res.result
+        this.formData = result;
         this.id = result.id
         this.orgCode = result.sysOrgCode
         this.houseNo = result.houseNo
@@ -245,23 +247,18 @@ export default {
     },
     onSubmit() {
       if (this.id) {
-        this.$http.put('/discount/flowPriceDiscount/edit', {
-          bpmStatus: this.bpmStatus,
-          id: this.id,
-          projectCode: this.orgCode,
-          houseNo: this.houseNo,
-          handler: this.handler.join(','),
-          chaoto: this.chaoto.join(','),
-          houseArea: this.houseArea,
-          oriSinglePrice: this.oriSinglePrice,
-          oriTotalPrice: this.oriTotalPrice,
-          disTotalPrice: this.disTotalPrice,
-          disSinglePrice: this.disSinglePrice,
-          disPrice: Number(this.disPrice),
-          description: this.description,
-          procInstId: this.procInstId,
-          sysOrgCode: this.sysOrgCode
-        }).then(res => {
+        this.formData.projectCode = this.orgCode;
+        this.formData.houseNo = this.houseNo;
+        this.formData.handler = this.handler.join(',');
+        this.formData.chaoto = this.chaoto.join(',');
+        this.formData.houseArea = this.houseArea;
+        this.formData.oriSinglePrice = this.oriSinglePrice;
+        this.formData.oriTotalPrice = this.oriTotalPrice;
+        this.formData.disTotalPrice = this.disTotalPrice;
+        this.formData.disSinglePrice = this.disSinglePrice;
+        this.formData.disPrice = Number(this.disPrice);
+        this.formData.description = this.description;
+        this.$http.put('/discount/flowPriceDiscount/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
             this.$router.push('/')

@@ -46,7 +46,7 @@
         <img :src="image">
       </dd>
     </dl>
-    <div style="margin: 10px" v-if="bpmState != 3">
+    <div style="margin: 10px" v-if="bpmState != 3 && bpmState != 5">
       <van-button style="width:40%" type="info" @touchstart="onEdit">编辑</van-button>
       <van-button style="width:40%; margin-left:10px" type="warning" @touchstart="onInvalid">作废</van-button>
     </div>
@@ -108,8 +108,10 @@ export default {
   },
   methods: {
     onInvalid () {
-      this.$http.post('/flow/doCancelFlow', {
-        busiId: this.busiId
+      this.$http.get('/flow/doCancelFlow', {
+        params: {
+          busiId: this.busiId
+        }
       }).then(res => {
         if (res.success) {
           Toast.success(res.message)
