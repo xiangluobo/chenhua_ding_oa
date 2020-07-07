@@ -101,7 +101,7 @@
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
-          <van-uploader :after-read="afterRead" v-model="uploader" />
+          <van-uploader :before-delete="uploadDelete" :after-read='afterRead' v-model='fileList' />
         </template>
       </van-field>
       <div style="margin: 16px;">
@@ -168,17 +168,67 @@ export default {
       relatedFile: [],
       options: [],
       loading: false,
-      states: ['Alabama', 'Alaska']
+      states: ['Alabama', 'Alaska'],
+      busiId: 0,
+      id: 0,
+      formData: {},
+      fileList: []
     }
   },
   created() {
     this.getMyProjectList()
     this.getPayType()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    uploadDelete (item) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+    },
+    getDetail () {
+      this.$http.get('/ggpay/flowGgPay/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.projectCode = result.projectCode
+        this.payAmount = result.payAmount
+        this.payAmountTotal = result.payAmountTotal
+        this.contractAmount = result.contractAmount
+        this.payeeName = result.payeeName.payeeName
+        this.payeeAccount = result.payeeAccount
+        this.payeeBank = result.payeeBank
+        this.payType = result.payType
+        this.payTypeVal = result.payTypeVal
+        this.payDesc = result.payDesc
+        this.otherRequire = result.otherRequire
+        this.relatedFile = result.relatedFile.split(',')
+        let fileList = this.relatedFile.map(v => {
+          return {
+            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+          }
+        })
+        this.fileList = fileList
+      })
+    },
     onChange () {
       if (this.options.length > 0) {
         let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
@@ -217,28 +267,52 @@ export default {
       this.showPicker = false;
     },
     onSubmit() {
-      this.$http.post('/ggpay/flowGgPay/add', {
-        projectCode: this.orgCode,
-        departName: this.departName,
-        payAmount: this.payAmount, // 付款金额
-        payAmountTotal: this.payAmountTotal, // 累计付款
-        contractAmount: this.contractAmount, // 合同金额
-        payeeName: this.payeeName.payeeName, // 收款人全称
-        payeeAccount: this.payeeAccount,
-        payeeBank: this.payeeBank,
-        payType: this.payType,
-        payTypeVal: this.payTypeVal,
-        payDesc: this.payDesc,
-        otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(',')
-      }).then(res => {
-        if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
-        } else {
-          Toast.fail(res.message)
-        }
-      })
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.departName = this.departName
+        this.formData.payAmount = this.payAmount
+        this.formData.payAmountTotal = this.payAmountTotal
+        this.formData.contractAmount = this.contractAmount
+        this.formData.payeeName = this.payeeName
+        this.formData.payeeAccount = this.payeeAccount
+        this.formData.payeeBank = this.payeeBank
+        this.formData.payType = this.payType
+        this.formData.payTypeVal = this.payTypeVal
+        this.formData.payDesc = this.payDesc
+        this.formData.otherRequire = this.otherRequire
+        this.formData.relatedFile = this.relatedFile.join(',')
+        this.$http.put('/ggpay/flowGgPay/edit', this.formData).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      } else {
+        this.$http.post('/ggpay/flowGgPay/add', {
+          projectCode: this.orgCode,
+          departName: this.departName,
+          payAmount: this.payAmount, // 付款金额
+          payAmountTotal: this.payAmountTotal, // 累计付款
+          contractAmount: this.contractAmount, // 合同金额
+          payeeName: this.payeeName.payeeName, // 收款人全称
+          payeeAccount: this.payeeAccount,
+          payeeBank: this.payeeBank,
+          payType: this.payType,
+          payTypeVal: this.payTypeVal,
+          payDesc: this.payDesc,
+          otherRequire: this.otherRequire,
+          relatedFile: this.relatedFile.join(',')
+        }).then(res => {
+          if (res.success) {
+            Toast.success('保存成功')
+            this.$router.push('/')
+          } else {
+            Toast.fail(res.message)
+          }
+        })
+      }
     },
     afterRead(file) {
       file.status = 'uploading'

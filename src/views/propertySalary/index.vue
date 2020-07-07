@@ -45,7 +45,7 @@
       />
       <van-field name='uploader' class='mod-field' label='相关文件'>
         <template #input>
-          <van-uploader :after-read='afterRead' v-model='uploader' />
+          <van-uploader :before-delete="uploadDelete" :after-read='afterRead' v-model='fileList' />
         </template>
       </van-field>
       <div style='margin: 16px;'>
@@ -99,22 +99,64 @@ export default {
       salaryTime: this.ChangeDateFormat(new Date()),
       salaryPersonCount: '',
       salaryAmount: '',
-      uploader: [],
       relatedFile: [],
       showPicker: false,
       showCalendar: false,
       minDate: new Date(2019, 0, 1),
       maxDate: new Date(2030, 0, 31),
-      columns: []
+      columns: [],
+      busiId: 0,
+      id: 0,
+      formData: {},
+      fileList: []
     };
   },
   created() {
-    this.getMyProjectList();
+    this.getMyProjectList()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   computed: {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getDetail () {
+      this.$http.get('/ggsalary/flowGgSalary/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.projectCode = result.projectCode
+        this.salaryTime = result.salaryTime
+        this.salaryPersonCount = result.salaryPersonCount
+        this.salaryAmount = result.salaryAmount
+        this.relatedFile = result.relatedFile.split(',')
+        let fileList = this.relatedFile.map(v => {
+          return {
+            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+          }
+        })
+        this.fileList = fileList
+      })
+    },
+    uploadDelete (item) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+    },
     afterRead(file) {
       file.status = 'uploading';
       file.message = '上传中...';
@@ -170,15 +212,13 @@ export default {
       this.showPicker = false;
     },
     onSubmit() {
-      this.$http
-        .post('/ggsalary/flowGgSalary/add', {
-          projectCode: this.orgCode,
-          salaryTime: this.salaryTime,
-          salaryPersonCount: this.salaryPersonCount,
-          salaryAmount: this.salaryAmount,
-          relatedFile: this.relatedFile.join(',')
-        })
-        .then(res => {
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.salaryTime = this.salaryTime
+        this.formData.salaryPersonCount = this.salaryPersonCount
+        this.formData.salaryAmount = this.salaryAmount
+        this.formData.relatedFile = this.relatedFile.join(',')
+        this.$http.put('/ggsalary/flowGgSalary/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
             this.$router.push('/')
@@ -186,6 +226,24 @@ export default {
             Toast.fail(res.message)
           }
         })
+      } else {
+        this.$http
+          .post('/ggsalary/flowGgSalary/add', {
+            projectCode: this.orgCode,
+            salaryTime: this.salaryTime,
+            salaryPersonCount: this.salaryPersonCount,
+            salaryAmount: this.salaryAmount,
+            relatedFile: this.relatedFile.join(',')
+          })
+          .then(res => {
+            if (res.success) {
+              Toast.success('保存成功')
+              this.$router.push('/')
+            } else {
+              Toast.fail(res.message)
+            }
+          })
+      }
     }
   }
 };

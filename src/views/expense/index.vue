@@ -27,7 +27,7 @@
       />
       <van-field name='uploader' class='mod-field' label='相关文件'>
         <template #input>
-          <van-uploader :after-read='afterRead' v-model='uploader' />
+          <van-uploader :before-delete="uploadDelete" :after-read='afterRead' v-model="fileList" />
         </template>
       </van-field>
     </van-form>
@@ -111,7 +111,11 @@ export default {
           expenseRemark: '',
           expenseAmount: ''
         }
-      ]
+      ],
+      busiId: 0,
+      id: 0,
+      formData: {},
+      fileList: []
     }
   },
   computed: {
@@ -127,8 +131,57 @@ export default {
   created() {
     this.getMyProjectList()
     this.getlist()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+        this.getExpenseDetail()
+      }, 500)
+    }
   },
   methods: {
+    getExpenseDetail () {
+      this.$http.get('/expense/flowGgExpense/queryFlowGgExpenseItemsByMainId', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        res.result.forEach(v => {
+          v.expenseType = v.expenseType.toString()
+        })
+        this.flowGgExpenseItemsList = res.result
+      })
+    },
+    getDetail () {
+      this.$http.get('/expense/flowGgExpense/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.projectCode = result.projectCode
+        this.relatedFile = result.relatedFile.split(',')
+        let fileList = this.relatedFile.map(v => {
+          return {
+            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+          }
+        })
+        this.fileList = fileList
+      })
+    },
+    uploadDelete (item) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+    },
     getlist() {
       this.$http.get('/sys/dict/getDictItems/oa_expense_type').then(res => {
         this.options = res.result
@@ -153,14 +206,12 @@ export default {
         Toast.fail('报销明细填写有问题，请仔细检查')
         return false
       }
-      this.$http
-        .post('/expense/flowGgExpense/add', {
-          expenseTotal: this.expenseTotal,
-          projectCode: this.orgCode,
-          relatedFile: this.relatedFile.join(','),
-          flowGgExpenseItemsList: this.flowGgExpenseItemsList
-        })
-        .then(res => {
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.expenseTotal = this.expenseTotal
+        this.formData.flowGgExpenseItemsList = this.flowGgExpenseItemsList
+        this.formData.relatedFile = this.relatedFile.join(',')
+        this.$http.put('/expense/flowGgExpense/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
             this.$router.push('/')
@@ -168,6 +219,23 @@ export default {
             Toast.fail(res.message)
           }
         })
+      } else {
+        this.$http
+          .post('/expense/flowGgExpense/add', {
+            expenseTotal: this.expenseTotal,
+            projectCode: this.orgCode,
+            relatedFile: this.relatedFile.join(','),
+            flowGgExpenseItemsList: this.flowGgExpenseItemsList
+          })
+          .then(res => {
+            if (res.success) {
+              Toast.success('保存成功')
+              this.$router.push('/')
+            } else {
+              Toast.fail(res.message)
+            }
+          })
+      }
     },
     onAdd() {
       let newObj = {

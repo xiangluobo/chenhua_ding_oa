@@ -46,7 +46,7 @@
         <img :src="image">
       </dd>
     </dl>
-    <div style="margin: 10px" v-if="bpmState != 3 && bpmState != 5">
+    <div style="margin: 10px" v-if="busiId && bpmState != 3 && bpmState != 5">
       <van-button style="width:40%" type="info" @touchstart="onEdit">编辑</van-button>
       <van-button style="width:40%; margin-left:10px" type="warning" @touchstart="onInvalid">作废</van-button>
     </div>

@@ -47,7 +47,7 @@
       />
       <van-field name='uploader' class='mod-field' label='相关文件'>
         <template #input>
-          <van-uploader :after-read='afterRead' v-model='uploader' />
+          <van-uploader :before-delete="uploadDelete" :after-read='afterRead' v-model='fileList' />
         </template>
       </van-field>
       <div class="mod-select">
@@ -108,16 +108,25 @@ export default {
       handler: [],
       chaoto: [],
       content: '',
-      uploader: [],
       relatedFile: [],
       showPicker: false,
       columns: [],
-      options: []
+      options: [],
+      busiId: 0,
+      id: 0,
+      formData: {},
+      fileList: []
     };
   },
   created() {
     this.getMyProjectList()
     this.getlist()
+    this.busiId = this.$route.query.busiId || 0
+    if (this.busiId) {
+      setTimeout(() => {
+        this.getDetail()
+      }, 500)
+    }
   },
   mounted() {
     document.addEventListener('click', (e) => {
@@ -128,6 +137,40 @@ export default {
     ...mapGetters(['userInfo'])
   },
   methods: {
+    getDetail () {
+      this.$http.get('/common/flowGgComm/queryById', {
+        params: {
+          id: this.busiId
+        }
+      }).then(res => {
+        let result = res.result
+        this.formData = result;
+        this.id = result.id
+        this.orgCode = result.sysOrgCode
+        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.projectCode = result.projectCode
+        this.handler = result.handler.split(',')
+        this.title = result.title
+        this.content = result.content
+        this.chaoto = result.chaoto.split(',')
+        this.relatedFile = result.relatedFile.split(',')
+        let fileList = this.relatedFile.map(v => {
+          return {
+            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+          }
+        })
+        this.fileList = fileList
+      })
+    },
+    uploadDelete (item) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+    },
     onHidden () {
       let dropdowns = document.querySelectorAll('.el-select-dropdown')
       for (let i = 0; i < dropdowns.length; i++) {
@@ -185,16 +228,14 @@ export default {
       this.showPicker = false;
     },
     onSubmit() {
-      this.$http
-        .post('/common/flowGgComm/add', {
-          title: this.title,
-          handler: this.handler.join(','),
-          content: this.content,
-          chaoto: this.chaoto.join(','),
-          projectCode: this.orgCode,
-          relatedFile: this.relatedFile.join(',')
-        })
-        .then(res => {
+      if (this.id) {
+        this.formData.projectCode = this.orgCode
+        this.formData.title = this.title
+        this.formData.content = this.content
+        this.formData.handler = this.handler.join(',')
+        this.formData.chaoto = this.chaoto.join(',')
+        this.formData.relatedFile = this.relatedFile.join(',')
+        this.$http.put('/common/flowGgComm/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
             this.$router.push('/')
@@ -202,6 +243,25 @@ export default {
             Toast.fail(res.message)
           }
         })
+      } else {
+        this.$http
+          .post('/common/flowGgComm/add', {
+            title: this.title,
+            handler: this.handler.join(','),
+            content: this.content,
+            chaoto: this.chaoto.join(','),
+            projectCode: this.orgCode,
+            relatedFile: this.relatedFile.join(',')
+          })
+          .then(res => {
+            if (res.success) {
+              Toast.success('保存成功')
+              this.$router.push('/')
+            } else {
+              Toast.fail(res.message)
+            }
+          })
+      }
     }
   }
 };
