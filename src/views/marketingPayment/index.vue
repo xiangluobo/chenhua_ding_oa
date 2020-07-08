@@ -40,7 +40,6 @@
           filterable
           remote
           allow-create
-          @change="onChange"
           reserve-keyword
           placeholder="请输入收款人全称"
           :remote-method="remoteMethod"
@@ -221,6 +220,7 @@ export default {
         this.payeeAccount = result.payeeAccount
         this.payeeBank = result.payeeBank
         this.payType = result.payType
+        this.payTypeVal = this.payTypeColumns.find(v => +v.value === this.payType).text
         this.payDesc = result.payDesc
         this.otherRequire = result.otherRequire
         this.relatedFile = result.relatedFile.split(',')
@@ -232,12 +232,12 @@ export default {
         this.fileList = fileList
       })
     },
-    onChange () {
-      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
-      this.payAmountTotal = payAmountTotal
-      this.payeeAccount = payeeAccount
-      this.payeeBank = payeeBank
-    },
+    // onChange () {
+    //   let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
+    //   this.payAmountTotal = payAmountTotal
+    //   this.payeeAccount = payeeAccount
+    //   this.payeeBank = payeeBank
+    // },
     remoteMethod (query) {
       this.$http.get('/ggpay/flowGgPay/getPayeeData', {
         params: {

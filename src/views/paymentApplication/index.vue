@@ -40,7 +40,6 @@
           filterable
           remote
           allow-create
-          @change="onChange"
           reserve-keyword
           placeholder="请输入收款人全称"
           :remote-method="remoteMethod"
@@ -153,7 +152,7 @@ export default {
       payAmount: '', // 付款金额
       payAmountTotal: '', // 累计付款
       contractAmount: '', // 合同金额
-      payeeName: {}, // 收款人全称
+      payeeName: '', // 收款人全称
       payeeAccount: '',
       payeeBank: '',
       payType: '4',
@@ -213,11 +212,11 @@ export default {
         this.payAmount = result.payAmount
         this.payAmountTotal = result.payAmountTotal
         this.contractAmount = result.contractAmount
-        this.payeeName = result.payeeName.payeeName
+        this.payeeName = result.payeeName
         this.payeeAccount = result.payeeAccount
         this.payeeBank = result.payeeBank
         this.payType = result.payType
-        this.payTypeVal = result.payTypeVal
+        this.payTypeVal = this.payTypeColumns.find(v => +v.value === this.payType).text
         this.payDesc = result.payDesc
         this.otherRequire = result.otherRequire
         this.relatedFile = result.relatedFile.split(',')
@@ -228,14 +227,6 @@ export default {
         })
         this.fileList = fileList
       })
-    },
-    onChange () {
-      if (this.options.length > 0) {
-        let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
-        this.payAmountTotal = payAmountTotal
-        this.payeeAccount = payeeAccount
-        this.payeeBank = payeeBank
-      }
     },
     remoteMethod (query) {
       this.$http.get('/ggpay/flowGgPay/getPayeeData', {
@@ -296,7 +287,7 @@ export default {
           payAmount: this.payAmount, // 付款金额
           payAmountTotal: this.payAmountTotal, // 累计付款
           contractAmount: this.contractAmount, // 合同金额
-          payeeName: this.payeeName.payeeName, // 收款人全称
+          payeeName: this.payeeName, // 收款人全称
           payeeAccount: this.payeeAccount,
           payeeBank: this.payeeBank,
           payType: this.payType,
