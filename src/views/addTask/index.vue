@@ -2,7 +2,7 @@
   <section class="mod-expense">
     <van-form @submit="onSubmit">
       <van-field
-        v-model="payAmount"
+        v-model="taskName"
         label="*任务名称"
         type="text"
         class="mod-field"
@@ -12,19 +12,19 @@
       <div class="mod-select">
         <div class="mod-label">*负责人</div>
         <el-select
-          v-model="payeeName"
+          v-model="taskCharger"
           filterable
           remote
-          @change="onChange"
+          allow-create
           reserve-keyword
           placeholder="请输入负责人"
           :remote-method="remoteMethod"
           :loading="loading">
           <el-option
             v-for="item in options"
-            :key="item.payeeName"
+            :key="item.payeeAccount"
             :label="item.payeeName"
-            :value="item">
+            :value="item.payeeName">
           </el-option>
         </el-select>
       </div>
@@ -34,6 +34,7 @@
         name="calendar"
         class="mod-field"
         :value="beginTime"
+        :min-date='minDate'
         label="开始时间"
         right-icon="calender-o"
         placeholder="请输入开始时间"
@@ -51,31 +52,27 @@
         @click="showCalendar1 = true"
       />
       <van-field
-        v-model="payeeAccount"
+        v-model="progressRate"
         label="*进度"
         class="mod-field"
-        placeholder="请输入合同金额"
-        :rules="[{ required: true, message: '请输入合同金额' }]"
+        placeholder="请输入进度"
+        type="number"
+        :rules="[{ required: true, message: '请输入进度' }]"
       />
       <van-field
-        readonly
-        clickable
         class="mod-field"
-        name="picker"
-        :value="payTypeVal"
+        v-model="importance"
         label="*重要程度"
+        type="number"
         :rules="[{ required: true, message: '请输入重要程度' }]"
-        right-icon="arrow"
         placeholder="请输入重要程度"
-        @click="showPayType = true"
       />
       <div class="mod-select">
         <div class="mod-label">*参与人</div>
         <el-select
-          v-model="payeeName"
+          v-model="joinPeople"
           filterable
           remote
-          @change="onChange"
           reserve-keyword
           placeholder="请输入参与人"
           :remote-method="remoteMethod"
@@ -84,19 +81,19 @@
             v-for="item in options"
             :key="item.payeeName"
             :label="item.payeeName"
-            :value="item">
+            :value="item.payeeName">
           </el-option>
         </el-select>
       </div>
       <van-field
-        v-model="payeeBank"
+        v-model="taskDetails"
         label="*任务详情"
         class="mod-field"
         placeholder="请输入任务详情"
         :rules="[{ required: true, message: '请输入任务详情' }]"
       />
       <van-field
-        v-model='remark'
+        v-model='taskNote'
         label='备注'
         rows="3"
         autosize
@@ -110,14 +107,6 @@
         </van-button>
       </div>
     </van-form>
-    <van-popup v-model="showPayType" position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="payTypeColumns"
-        @confirm="onConfirmPayType"
-        @cancel="showPayType = false"
-      />
-    </van-popup>
     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
     <van-calendar v-model="showCalendar1" @confirm="onConfirm1" />
   </section>
@@ -125,10 +114,9 @@
 
 <script>
 import Vue from 'vue'
-import { Popup, Picker, Button, Form, field, Toast, Loading, Calendar } from 'vant'
+import { Picker, Button, Form, field, Toast, Loading, Calendar } from 'vant'
 import { Select, Option } from 'element-ui'
 Vue.use(Calendar)
-Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
 Vue.use(Form)
@@ -140,32 +128,23 @@ Vue.use(Option)
 export default {
   data() {
     return {
+      minDate: new Date(2019, 0, 1),
+      taskName: '',
+      taskCharger: '',
+      joinPeople: '',
       beginTime: '',
       endTime: '',
-      remark: '',
+      progressRate: '',
+      importance: '',
+      taskDetails: '',
+      taskNote: '',
       showCalendar: false,
       showCalendar1: false,
-      payAmount: '', // 付款金额
-      payAmountTotal: '', // 累计付款
-      contractAmount: '', // 合同金额
-      payeeName: {}, // 收款人全称
-      payeeAccount: '',
-      payeeBank: '',
-      payType: '',
-      payTypeVal: '',
-      payDesc: '',
-      otherRequire: '',
-      showPicker: false,
-      showPayType: false,
-      columns: [],
-      payTypeColumns: [],
       options: [],
       loading: false
     }
   },
   created() {
-    this.getMyProjectList()
-    this.getPayType()
   },
   methods: {
     formatDate(date) {
@@ -179,12 +158,6 @@ export default {
       this.showCalendar1 = false
       this.endTime = this.formatDate(date)
     },
-    onChange () {
-      let { payAmountTotal, payeeAccount, payeeBank } = this.payeeName
-      this.payAmountTotal = payAmountTotal
-      this.payeeAccount = payeeAccount
-      this.payeeBank = payeeBank
-    },
     remoteMethod (query) {
       this.$http.get('/ggpay/flowGgPay/getPayeeData', {
         params: {
@@ -194,34 +167,17 @@ export default {
         this.options = res.result
       })
     },
-    getMyProjectList() {
-      this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
-        this.columns = res.result
-      })
-    },
-    getPayType() {
-      this.$http.get('/sys/dict/getDictItems/oa_pay_type').then(res => {
-        this.payTypeColumns = res.result
-      })
-    },
-    onConfirmPayType(item) {
-      this.payType = item.value
-      this.payTypeVal = item.text;
-      this.showPayType = false;
-    },
     onSubmit() {
-      this.$http.post('/ggpay/flowGgPay/add', {
-        payAmount: this.payAmount, // 付款金额
-        payAmountTotal: this.payAmountTotal, // 累计付款
-        contractAmount: this.contractAmount, // 合同金额
-        payeeName: this.payeeName.payeeName, // 收款人全称
-        payeeAccount: this.payeeAccount,
-        payeeBank: this.payeeBank,
-        payType: this.payType,
-        payTypeVal: this.payTypeVal,
-        payDesc: this.payDesc,
-        otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(',')
+      this.$http.post('/task/userTask/add', {
+        taskName: this.taskName, // 付款金额
+        taskCharger: this.taskCharger, // 累计付款
+        joinPeople: this.joinPeople, // 合同金额
+        beginTime: this.beginTime, // 收款人全称
+        endTime: this.endTime,
+        progressRate: this.progressRate,
+        importance: this.importance,
+        taskDetails: this.taskDetails,
+        taskNote: this.taskNote
       }).then(res => {
         if (res.success) {
           Toast.success('保存成功')

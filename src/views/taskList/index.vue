@@ -6,14 +6,14 @@
       </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
         <div class="ctn">
-          <div class="title">{{ item.projectCode_dictText }}</div>
+          <div class="title">{{ item.taskName }}</div>
           <div class="subtitle">
-            {{ item.busiSummary }}
+            创建人 {{ item.taskCharger }}
           </div>
-          <div class="audit">{{item.bpmState_dictText}}</div>
+          <div class="audit">创建时间 {{item.createTime}}</div>
         </div>
         <div class="persontage">
-          <van-circle v-model="currentRate" :rate="30"  layer-color="#ebedf0" color="#f00" :size="50" :speed="100" :text="text" />
+          <van-circle v-model="item.progressRate" :rate="item.progressRate"  layer-color="#ebedf0" color="#f00" :size="50" :speed="100" :text="`${item.progressRate}%`" />
         </div>
       </div>
       <van-loading v-if="loading" type="spinner" />
@@ -32,21 +32,19 @@ Vue.use(Circle)
 export default {
   data() {
     return {
-      currentRate: 0,
-      type: '',
       currentNum: 0,
       tips: '',
       tabs: [
         {
           name: '未完成',
-          id: 3
+          id: 0
         },
         {
           name: '已完成',
-          id: 4
+          id: 100
         }
       ],
-      bpmState: '',
+      progressRate: 0,
       list: [],
       pageNo: 1,
       pageSize: 5,
@@ -64,11 +62,6 @@ export default {
       loading: false
     }
   },
-  computed: {
-    text() {
-      return this.currentRate.toFixed(0) + '%';
-    }
-  },
   filters: {
     filterTime(val) {
       return val.substr(0, 10)
@@ -76,7 +69,7 @@ export default {
   },
   methods: {
     setActive(i, item) {
-      this.bpmState = item.bpmState
+      this.progressRate = item.id
       this.currentNum = i
       this.pageNo = 1
       this.list = []
@@ -84,10 +77,9 @@ export default {
     },
     getList() {
       this.loading = true
-      this.$http.get('/flow/getMyApplyBussiList', {
+      this.$http.get('/task/userTask/list', {
         params: {
-          flowType: this.type,
-          bpmState: this.bpmState,
+          progressRate: this.progressRate,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
@@ -125,7 +117,7 @@ export default {
       }
     },
     goToDetail(item) {
-      this.$router.push(`/taskDetail?procInstId=${item.procInstId}`)
+      this.$router.push(`/taskDetail?id=${item.id}`)
     },
     destroyed() {
       this.scroll.destroy()
@@ -133,7 +125,7 @@ export default {
     }
   },
   created() {
-    this.type = this.$route.query.type
+    // this.type = this.$route.query.type
     this.$nextTick(() => {
       this.load()
       this.getList()

@@ -2,49 +2,47 @@
   <section class="mod-taskDetail">
     <div class="mod-head">
       <div class="left">
-        <div class="name">任务名称</div>
-        <div class="time">截止时间： 2020-03-23</div>
-        <div class="extend">紧急程度：重要</div>
-        <div class="status">未完成</div>
+        <div class="name">{{ content.taskName }}</div>
+        <div class="time">截止时间： {{ content.endTime }}</div>
+        <div class="extend">紧急程度：{{ content.importance }}</div>
+        <div class="status" v-if="content.progressRate == 100">已完成</div>
+        <div class="status" v-else>未完成</div>
       </div>
       <div class="middle">
-        <van-circle v-model="currentRate" :rate="50"  layer-color="#ebedf0" color="#f00" :size="70" :speed="100" :text="text" />
+        <van-circle v-model="content.progressRate" :rate="content.progressRate"  layer-color="#ebedf0" color="#f00" :size="70" :speed="100" :text="`任务进度${content.progressRate}%`" />
       </div>
       <div class="right">
-        任务负责人姓名
+        任务负责人{{ content.taskCharger }}
       </div>
     </div>
     <dl class="mod-startTime">
       <dt>
         <span>开始时间</span>
-        <span>开始时间</span>
+        <span>{{ content.beginTime }}</span>
       </dt>
       <dd>
         <span>参与人</span>
-        <span>姓名</span>
-        <span>姓名</span>
-        <span>姓名</span>
+        <span>{{ content.joinPeople }}</span>
       </dd>
     </dl>
     <div class="mod-explanation">追加说明</div>
-    <div class="explanation">
-      <div class="title">姓名 2020-07-12</div>
-      <div class="content">
-        文本内容
-        文本内容
-        文本内容
-        文本内容
+    <div v-if="list.length">
+      <div class="explanation" v-for="(item, index) in list" :key="index">
+        <div class="title">{{ item.userName }} {{ item.createTime }}</div>
+        <div class="content">
+          {{ item.explainContent }}
+        </div>
       </div>
     </div>
     <div class="mod-input">
       <van-field
-        v-model="sms"
+        v-model="explainContent"
         clearable
         label=""
         placeholder="请输入追加说明"
       >
         <template #button>
-          <van-button size="small" color="#000">提交</van-button>
+          <van-button size="small" @click="onSubmit" color="#000">提交</van-button>
         </template>
       </van-field>
     </div>
@@ -61,42 +59,45 @@ Vue.use(Button)
 export default {
   data() {
     return {
-      currentRate: 0,
-      text: '任务进度51',
-      sms: ''
+      explainContent: '',
+      id: '',
+      content: {},
+      list: []
     }
   },
   created() {
+    this.id = this.$route.query.id
+    this.getDetail()
+    this.getMoreDetail()
   },
   methods: {
-    remoteMethod (query) {
-      this.$http.get('/ggpay/flowGgPay/getPayeeData', {
+    getMoreDetail () {
+      this.$http.get('/task/userTask/queryExplain', {
         params: {
-          payeeName: query
+          taskId: this.id
         }
       }).then(res => {
-        this.options = res.result
+        this.list = res.result
+      })
+    },
+    getDetail () {
+      this.$http.get('/task/userTask/queryById', {
+        params: {
+          id: this.id
+        }
+      }).then(res => {
+        this.content = res.result
       })
     },
     onSubmit() {
-      this.$http.post('/ggpay/flowGgPay/add', {
-        projectCode: this.orgCode,
-        departName: this.departName,
-        payAmount: this.payAmount, // 付款金额
-        payAmountTotal: this.payAmountTotal, // 累计付款
-        contractAmount: this.contractAmount, // 合同金额
-        payeeName: this.payeeName.payeeName, // 收款人全称
-        payeeAccount: this.payeeAccount,
-        payeeBank: this.payeeBank,
-        payType: this.payType,
-        payTypeVal: this.payTypeVal,
-        payDesc: this.payDesc,
-        otherRequire: this.otherRequire,
-        relatedFile: this.relatedFile.join(',')
+      this.$http.post('/task/userTask/addExplain', {
+        explainContent: this.explainContent,
+        taskId: this.id
       }).then(res => {
+        this.explainContent = ''
         if (res.success) {
-          Toast.success('保存成功')
-          this.$router.push('/')
+          this.getMoreDetail()
+          Toast.success('提交成功')
         } else {
           Toast.fail(res.message)
         }
