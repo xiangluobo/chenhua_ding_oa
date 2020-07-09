@@ -11,6 +11,17 @@
       />
       <div class="mod-select">
         <div class="mod-label">*负责人</div>
+        <el-select @click.native="showChaotoDialog" multiple v-model="taskCharger" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.username"
+            :label="item.realname"
+            :value="item.username">
+          </el-option>
+        </el-select>
+      </div>
+      <!-- <div class="mod-select">
+        <div class="mod-label">*负责人</div>
         <el-select
           v-model="taskCharger"
           filterable
@@ -27,7 +38,7 @@
             :value="item.payeeName">
           </el-option>
         </el-select>
-      </div>
+      </div> -->
       <van-field
         readonly
         clickable
@@ -60,14 +71,28 @@
         :rules="[{ required: true, message: '请输入进度' }]"
       />
       <van-field
+        readonly
+        clickable
         class="mod-field"
-        v-model="importance"
+        :value="importanceVal"
         label="*重要程度"
         type="number"
         :rules="[{ required: true, message: '请输入重要程度' }]"
         placeholder="请输入重要程度"
+        @click="showImportance = true"
       />
       <div class="mod-select">
+        <div class="mod-label">*参与人</div>
+        <el-select @click.native="showChaotoDialog" multiple v-model="joinPeople" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.username"
+            :label="item.realname"
+            :value="item.username">
+          </el-option>
+        </el-select>
+      </div>
+      <!-- <div class="mod-select">
         <div class="mod-label">*参与人</div>
         <el-select
           v-model="joinPeople"
@@ -84,7 +109,7 @@
             :value="item.payeeName">
           </el-option>
         </el-select>
-      </div>
+      </div> -->
       <van-field
         v-model="taskDetails"
         label="*任务详情"
@@ -109,13 +134,22 @@
     </van-form>
     <van-calendar v-model="showCalendar" @confirm="onConfirm" />
     <van-calendar v-model="showCalendar1" @confirm="onConfirm1" />
+    <van-popup v-model="showImportance" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="importanceColumns"
+        @confirm="onConfirmPayType"
+        @cancel="showImportance = false"
+      />
+    </van-popup>
   </section>
 </template>
 
 <script>
 import Vue from 'vue'
-import { Picker, Button, Form, field, Toast, Loading, Calendar } from 'vant'
+import { Popup, Picker, Button, Form, field, Toast, Loading, Calendar } from 'vant'
 import { Select, Option } from 'element-ui'
+Vue.use(Popup)
 Vue.use(Calendar)
 Vue.use(Picker)
 Vue.use(Button)
@@ -136,17 +170,37 @@ export default {
       endTime: '',
       progressRate: '',
       importance: '',
+      importanceVal: '',
       taskDetails: '',
       taskNote: '',
       showCalendar: false,
       showCalendar1: false,
       options: [],
-      loading: false
+      loading: false,
+      showImportance: false,
+      importanceColumns: []
     }
   },
   created() {
+    this.getlist()
+    this.getImportant()
+    document.addEventListener('click', (e) => {
+      this.onHidden()
+    }, false)
   },
   methods: {
+    onHidden () {
+      let dropdowns = document.querySelectorAll('.el-select-dropdown')
+      for (let i = 0; i < dropdowns.length; i++) {
+        if (dropdowns[i]) {
+          dropdowns[i].style.display = 'none'
+        }
+      }
+    },
+    showChaotoDialog () {
+      this.onHidden()
+      document.querySelectorAll('.el-select-dropdown')[1].style.display = 'block'
+    },
     formatDate(date) {
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     },
@@ -158,20 +212,32 @@ export default {
       this.showCalendar1 = false
       this.endTime = this.formatDate(date)
     },
-    remoteMethod (query) {
-      this.$http.get('/ggpay/flowGgPay/getPayeeData', {
+    onConfirmPayType(item) {
+      this.importance = item.value
+      this.importanceVal = item.text
+      this.showImportance = false;
+    },
+    getImportant() {
+      this.$http.get('/sys/dict/getDictItems/importance_rate').then(res => {
+        this.importanceColumns = res.result
+      })
+    },
+    getlist() {
+      this.$http.get('/sys/user/appUserList', {
         params: {
-          payeeName: query
+          pageNo: 1,
+          pageSize: 1000,
+          keyword: ''
         }
       }).then(res => {
-        this.options = res.result
+        this.options = res.result.records
       })
     },
     onSubmit() {
       this.$http.post('/task/userTask/add', {
         taskName: this.taskName, // 付款金额
-        taskCharger: this.taskCharger, // 累计付款
-        joinPeople: this.joinPeople, // 合同金额
+        taskCharger: this.taskCharger.join(','), // 累计付款
+        joinPeople: this.joinPeople.join(','), // 合同金额
         beginTime: this.beginTime, // 收款人全称
         endTime: this.endTime,
         progressRate: this.progressRate,

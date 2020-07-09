@@ -1,7 +1,7 @@
 <template>
   <section class="mod-taskList" ref="wrapper">
     <div>
-      <div class="mod-tabs">
+      <div class="mod-tabs" v-if="!todo">
         <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
       </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
@@ -59,8 +59,16 @@ export default {
         scrollbar: true,
         eventPassthrough: 'horizontal' // 模拟纵向滚动，而横向的滚动还是保留原生滚动
       },
-      loading: false
+      loading: false,
+      todo: 0
     }
+  },
+  created() {
+    this.todo = this.$route.query.todo
+    this.$nextTick(() => {
+      this.load()
+      this.getList()
+    })
   },
   filters: {
     filterTime(val) {
@@ -76,13 +84,25 @@ export default {
       this.getList()
     },
     getList() {
-      this.loading = true
-      this.$http.get('/task/userTask/list', {
-        params: {
+      let url
+      let params = {}
+      if (this.todo) {
+        url = '/task/userTask/queryWwjList'
+        params = {
+          pageNo: this.pageNo,
+          pageSize: this.pageSize
+        }
+      } else {
+        url = '/task/userTask/list'
+        params = {
           progressRate: this.progressRate,
           pageNo: this.pageNo,
           pageSize: this.pageSize
         }
+      }
+      this.loading = true
+      this.$http.get(url, {
+        params
       }).then(res => {
         this.loading = false
         // 加载状态结束
@@ -123,13 +143,6 @@ export default {
       this.scroll.destroy()
       this.scroll = null
     }
-  },
-  created() {
-    // this.type = this.$route.query.type
-    this.$nextTick(() => {
-      this.load()
-      this.getList()
-    })
   }
 };
 </script>

@@ -35,7 +35,7 @@
           <dt>{{ dataCount.weiwanjieLiuchengCount }}</dt>
           <dd>未完结流程</dd>
         </dl>
-        <dl>
+        <dl @click="goToTask">
           <dt>{{ dataCount.weiwanjieRenwuCount }}</dt>
           <dd>未完结任务</dd>
         </dl>
@@ -125,6 +125,9 @@ export default {
     },
     goToApproval(bpmState, isWwj, api) {
       this.$router.push(`/approvalProcess?bpmState=${bpmState}&isWwj=${isWwj}&api=${api}`)
+    },
+    goToTask() {
+      this.$router.push(`/taskList?todo=1`)
     },
     goToProcess(item) {
       if (item.appMenuRouter.indexOf(';') > -1) {

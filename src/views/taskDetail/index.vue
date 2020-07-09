@@ -4,7 +4,7 @@
       <div class="left">
         <div class="name">{{ content.taskName }}</div>
         <div class="time">截止时间： {{ content.endTime }}</div>
-        <div class="extend">紧急程度：{{ content.importance }}</div>
+        <div class="extend">紧急程度：{{ content.importanceName }}</div>
         <div class="status" v-if="content.progressRate == 100">已完成</div>
         <div class="status" v-else>未完成</div>
       </div>
@@ -12,7 +12,7 @@
         <van-circle v-model="content.progressRate" :rate="content.progressRate"  layer-color="#ebedf0" color="#f00" :size="70" :speed="100" :text="`任务进度${content.progressRate}%`" />
       </div>
       <div class="right">
-        任务负责人{{ content.taskCharger }}
+        任务负责人{{ content.taskChargerName }}
       </div>
     </div>
     <dl class="mod-startTime">
@@ -22,7 +22,7 @@
       </dt>
       <dd>
         <span>参与人</span>
-        <span>{{ content.joinPeople }}</span>
+        <span>{{ content.joinPeopleName }}</span>
       </dd>
     </dl>
     <div class="mod-explanation">追加说明</div>

@@ -100,7 +100,7 @@
       />
       <van-field name="uploader" class="mod-field" label="相关文件">
         <template #input>
-          <van-uploader :before-delete="uploadDelete" :after-read='afterRead' v-model='fileList' />
+          <van-uploader accept=".xlsx,.xls,.docx,.doc,.png,.jpg,.jpeg,.bmp" :before-delete="uploadDelete" :after-read='afterRead' v-model='fileList' />
         </template>
       </van-field>
       <div style="margin: 16px;">

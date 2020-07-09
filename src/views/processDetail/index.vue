@@ -15,7 +15,10 @@
             </div>
           </div>
           <div v-else-if="item.name == '相关文件'" class="application-val">
-            <img v-for="(image, k) in item.value" :key="k" :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">
+            <span v-for="(image, k) in item.value" :key="k" style="display:block; padding-bottom:10px">
+              <img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">
+              <a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>
+            </span>
           </div>
           <div v-else class="application-val">
             {{item.value}}
