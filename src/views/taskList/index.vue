@@ -8,7 +8,7 @@
         <div class="ctn">
           <div class="title">{{ item.taskName }}</div>
           <div class="subtitle">
-            创建人 {{ item.taskCharger }}
+            创建人 {{ item.createBy_dictText }}
           </div>
           <div class="audit">创建时间 {{item.createTime}}</div>
         </div>
