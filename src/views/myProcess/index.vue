@@ -146,7 +146,7 @@ export default {
       }
     },
     goToDetail(item) {
-      this.$router.push(`/createSchedule?id=${item.id}&scheContent=${item.scheContent}&scheRemarks=${item.scheRemarks}`)
+      this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskId}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}`)
     }
   },
   created() {
