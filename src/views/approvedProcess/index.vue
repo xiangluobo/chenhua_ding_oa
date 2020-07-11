@@ -24,7 +24,14 @@
         placeholder='请输入申请标题'
         :rules="[{ required: true, message: '请输入申请标题' }]"
       />
-      <div class="mod-select">
+      <van-field
+        v-model='handler'
+        label='*指定审核人'
+        class='mod-field'
+        placeholder='请输入指定审核人'
+        :rules="[{ required: true, message: '请输入指定审核人' }]"
+      />
+      <!-- <div class="mod-select">
         <div class="mod-label">*指定审核人</div>
         <el-select @click.native="showDialog" multiple v-model="handler" filterable placeholder="请选择">
           <el-option
@@ -34,7 +41,7 @@
             :value="item.username">
           </el-option>
         </el-select>
-      </div>
+      </div> -->
       <van-field
         v-model='content'
         label='*审核内容'
@@ -105,7 +112,7 @@ export default {
       orgCode: '',
       departName: '',
       title: '',
-      handler: [],
+      handler: '',
       chaoto: [],
       content: '',
       relatedFile: [],
@@ -149,7 +156,7 @@ export default {
         this.orgCode = result.sysOrgCode
         this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
         this.projectCode = result.projectCode
-        this.handler = result.handler.split(',')
+        this.handler = result.handler
         this.title = result.title
         this.content = result.content
         this.chaoto = result.chaoto.split(',')
@@ -181,12 +188,12 @@ export default {
     },
     showChaotoDialog () {
       this.onHidden()
-      document.querySelectorAll('.el-select-dropdown')[1].style.display = 'block'
-    },
-    showDialog () {
-      this.onHidden()
       document.querySelectorAll('.el-select-dropdown')[0].style.display = 'block'
     },
+    // showDialog () {
+    //   this.onHidden()
+    //   document.querySelectorAll('.el-select-dropdown')[0].style.display = 'block'
+    // },
     getlist() {
       this.$http.get('/sys/user/appUserList', {
         params: {
@@ -232,7 +239,7 @@ export default {
         this.formData.projectCode = this.orgCode
         this.formData.title = this.title
         this.formData.content = this.content
-        this.formData.handler = this.handler.join(',')
+        this.formData.handler = this.handler
         this.formData.chaoto = this.chaoto.join(',')
         this.formData.relatedFile = this.relatedFile.join(',')
         this.$http.put('/common/flowGgComm/edit', this.formData).then(res => {
@@ -247,7 +254,7 @@ export default {
         this.$http
           .post('/common/flowGgComm/add', {
             title: this.title,
-            handler: this.handler.join(','),
+            handler: this.handler,
             content: this.content,
             chaoto: this.chaoto.join(','),
             projectCode: this.orgCode,
