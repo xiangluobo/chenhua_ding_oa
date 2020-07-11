@@ -33,25 +33,13 @@
         placeholder="请输入合同金额"
         :rules="[{ required: true, message: '请输入合同金额' }]"
       />
-      <div class="mod-select">
-        <div class="mod-label">*收款人全称</div>
-        <el-select
-          v-model="payeeName"
-          filterable
-          remote
-          allow-create
-          reserve-keyword
-          placeholder="请输入收款人全称"
-          :remote-method="remoteMethod"
-          :loading="loading">
-          <el-option
-            v-for="item in options"
-            :key="item.payeeName"
-            :label="item.payeeName"
-            :value="item">
-          </el-option>
-        </el-select>
-      </div>
+      <van-field
+        v-model="payeeName"
+        label="*收款人全称"
+        class="mod-field"
+        placeholder="请输入收款人全称"
+        :rules="[{ required: true, message: '请输入收款人全称' }]"
+      />
       <van-field
         v-model="payeeAccount"
         label="*收款人账户"
@@ -133,7 +121,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { Popup, Picker, Button, Form, field, Uploader, Toast, Loading } from 'vant'
-import { Select, Option } from 'element-ui'
 Vue.use(Popup)
 Vue.use(Picker)
 Vue.use(Button)
@@ -142,8 +129,6 @@ Vue.use(Uploader)
 Vue.use(field)
 Vue.use(Toast)
 Vue.use(Loading)
-Vue.use(Select)
-Vue.use(Option)
 export default {
   data() {
     return {
@@ -226,15 +211,6 @@ export default {
           }
         })
         this.fileList = fileList
-      })
-    },
-    remoteMethod (query) {
-      this.$http.get('/ggpay/flowGgPay/getPayeeData', {
-        params: {
-          payeeName: query
-        }
-      }).then(res => {
-        this.options = res.result
       })
     },
     getMyProjectList() {

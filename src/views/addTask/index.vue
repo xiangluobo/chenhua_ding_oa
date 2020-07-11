@@ -235,10 +235,10 @@ export default {
     },
     onSubmit() {
       this.$http.post('/task/userTask/add', {
-        taskName: this.taskName, // 付款金额
-        taskCharger: this.taskCharger.join(','), // 累计付款
-        joinPeople: this.joinPeople.join(','), // 合同金额
-        beginTime: this.beginTime, // 收款人全称
+        taskName: this.taskName,
+        taskCharger: this.taskCharger.join(','),
+        joinPeople: this.joinPeople.join(','),
+        beginTime: this.beginTime,
         endTime: this.endTime,
         progressRate: this.progressRate,
         importance: this.importance,
