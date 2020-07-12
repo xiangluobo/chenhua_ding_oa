@@ -169,13 +169,22 @@ export default {
   computed: {
     ...mapGetters(['userInfo']),
     oriSinglePrice() {
-      return this.oriTotalPrice / this.houseArea || ''
+      if (this.oriTotalPrice && this.houseArea) {
+        return Math.round(this.oriTotalPrice / this.houseArea)
+      }
+      return ''
     },
     disSinglePrice() {
-      return this.disTotalPrice / this.houseArea || ''
+      if (this.disTotalPrice && this.houseArea) {
+        return Math.round(this.disTotalPrice / this.houseArea)
+      }
+      return ''
     },
     disPrice() {
-      return this.oriTotalPrice - this.disTotalPrice || ''
+      if (this.oriTotalPrice && this.disTotalPrice) {
+        return this.oriTotalPrice - this.disTotalPrice
+      }
+      return ''
     }
   },
   methods: {
@@ -267,7 +276,7 @@ export default {
           oriTotalPrice: this.oriTotalPrice,
           disTotalPrice: this.disTotalPrice,
           disSinglePrice: this.disSinglePrice,
-          disPrice: Number(this.disPrice),
+          disPrice: this.disPrice,
           description: this.description
         }).then(res => {
           if (res.success) {
