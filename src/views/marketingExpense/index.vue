@@ -97,7 +97,6 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       relatedFile: [],
       columns: [],
@@ -160,16 +159,17 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
         this.projectCode = result.projectCode
-        this.relatedFile = result.relatedFile.split(',')
-        let fileList = this.relatedFile.map(v => {
-          return {
-            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
-          }
-        })
-        this.fileList = fileList
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
+        if (result.relatedFile) {
+          this.relatedFile = result.relatedFile.split(',')
+          let fileList = this.relatedFile.map(v => {
+            return {
+              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+            }
+          })
+          this.fileList = fileList
+        }
       })
     },
     uploadDelete (item) {
@@ -193,7 +193,7 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.orgCode = item.orgCode
+      this.projectCode = item.orgCode
       this.showPicker = false
     },
     onSubmit() {
@@ -206,7 +206,7 @@ export default {
         return false
       }
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.expenseTotal = this.expenseTotal
         this.formData.flowYxExpenseItemsList = this.flowYxExpenseItemsList
         this.formData.relatedFile = this.relatedFile.join(',')
@@ -222,7 +222,7 @@ export default {
         this.$http
           .post('/yxexpense/flowYxExpense/add', {
             expenseTotal: this.expenseTotal,
-            projectCode: this.orgCode,
+            projectCode: this.projectCode,
             relatedFile: this.relatedFile.join(','),
             flowYxExpenseItemsList: this.flowYxExpenseItemsList
           })

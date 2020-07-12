@@ -117,7 +117,6 @@ Vue.use(Toast)
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       vipCardNo: '',
       custName: '',
@@ -160,9 +159,7 @@ export default {
         this.id = result.id
         this.procInstId = result.procInstId
         this.projectCode = result.projectCode
-        this.sysOrgCode = result.sysOrgCode
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.bankAccount = result.bankAccount
         this.bankAddr = result.bankAddr
         this.bankName = result.bankName
@@ -182,12 +179,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.orgCode = item.orgCode
+      this.projectCode = item.orgCode
       this.showPicker = false
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.vipCardNo = this.vipCardNo
         this.formData.custName = this.custName
         this.formData.identityNo = this.identityNo
@@ -208,7 +205,7 @@ export default {
         })
       } else {
         this.$http.post('/rc/flowRcRefund/add', {
-          projectCode: this.orgCode,
+          projectCode: this.projectCode,
           vipCardNo: this.vipCardNo,
           custName: this.custName,
           identityNo: this.identityNo,

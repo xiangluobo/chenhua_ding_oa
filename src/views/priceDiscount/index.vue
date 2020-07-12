@@ -24,17 +24,13 @@
         placeholder="请输入房号"
         :rules="[{ required: true, message: '请输入房号' }]"
       />
-      <div class="mod-select">
-        <div class="mod-label">*优惠经手人</div>
-        <el-select @click.native="showDialog" multiple v-model="handler" filterable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.username"
-            :label="item.realname"
-            :value="item.username">
-          </el-option>
-        </el-select>
-      </div>
+      <van-field
+        v-model="handler"
+        label="*优惠经手人"
+        class="mod-field"
+        placeholder="请输入优惠经手人"
+        :rules="[{ required: true, message: '请输入优惠经手人' }]"
+      />
       <van-field
         v-model="houseArea"
         label="*面积"
@@ -136,10 +132,9 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       houseNo: '',
-      handler: [],
+      handler: '',
       chaoto: [],
       houseArea: '',
       oriTotalPrice: '',
@@ -153,7 +148,6 @@ export default {
       id: 0,
       procInstId: 0,
       projectCode: 0,
-      sysOrgCode: 0,
       formData: {}
     }
   },
@@ -194,18 +188,17 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
+        this.projectCode = result.projectCode
         this.houseNo = result.houseNo
-        this.handler = result.handler.split(',')
+        this.handler = result.handler
         this.chaoto = result.chaoto.split(',')
         this.houseArea = result.houseArea
         this.oriTotalPrice = result.oriTotalPrice
         this.disTotalPrice = result.disTotalPrice
         this.description = result.description
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.procInstId = result.procInstId
         this.projectCode = result.projectCode
-        this.sysOrgCode = result.sysOrgCode
       })
     },
     onHidden () {
@@ -217,10 +210,6 @@ export default {
       }
     },
     showChaotoDialog () {
-      this.onHidden()
-      document.querySelectorAll('.el-select-dropdown')[1].style.display = 'block'
-    },
-    showDialog () {
       this.onHidden()
       document.querySelectorAll('.el-select-dropdown')[0].style.display = 'block'
     },
@@ -242,14 +231,14 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.orgCode = item.orgCode
+      this.projectCode = item.orgCode
       this.showPicker = false
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode;
+        this.formData.projectCode = this.projectCode;
         this.formData.houseNo = this.houseNo;
-        this.formData.handler = this.handler.join(',');
+        this.formData.handler = this.handler;
         this.formData.chaoto = this.chaoto.join(',');
         this.formData.houseArea = this.houseArea;
         this.formData.oriSinglePrice = this.oriSinglePrice;
@@ -258,6 +247,7 @@ export default {
         this.formData.disSinglePrice = this.disSinglePrice;
         this.formData.disPrice = Number(this.disPrice);
         this.formData.description = this.description;
+        console.log(this.formData, 'this.formData')
         this.$http.put('/discount/flowPriceDiscount/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
@@ -268,9 +258,9 @@ export default {
         })
       } else {
         this.$http.post('/discount/flowPriceDiscount/add', {
-          projectCode: this.orgCode,
+          projectCode: this.projectCode,
           houseNo: this.houseNo,
-          handler: this.handler.join(','),
+          handler: this.handler,
           chaoto: this.chaoto.join(','),
           houseArea: this.houseArea,
           oriSinglePrice: this.oriSinglePrice,

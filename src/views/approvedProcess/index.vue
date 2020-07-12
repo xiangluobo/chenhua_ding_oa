@@ -109,7 +109,6 @@ Vue.use(Option)
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       title: '',
       handler: '',
@@ -153,20 +152,21 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
         this.projectCode = result.projectCode
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.handler = result.handler
         this.title = result.title
         this.content = result.content
         this.chaoto = result.chaoto.split(',')
-        this.relatedFile = result.relatedFile.split(',')
-        let fileList = this.relatedFile.map(v => {
-          return {
-            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
-          }
-        })
-        this.fileList = fileList
+        if (result.relatedFile) {
+          this.relatedFile = result.relatedFile.split(',')
+          let fileList = this.relatedFile.map(v => {
+            return {
+              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+            }
+          })
+          this.fileList = fileList
+        }
       })
     },
     uploadDelete (item) {
@@ -231,12 +231,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.orgCode = item.orgCode;
+      this.projectCode = item.orgCode;
       this.showPicker = false;
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.title = this.title
         this.formData.content = this.content
         this.formData.handler = this.handler
@@ -257,7 +257,7 @@ export default {
             handler: this.handler,
             content: this.content,
             chaoto: this.chaoto.join(','),
-            projectCode: this.orgCode,
+            projectCode: this.projectCode,
             relatedFile: this.relatedFile.join(',')
           })
           .then(res => {

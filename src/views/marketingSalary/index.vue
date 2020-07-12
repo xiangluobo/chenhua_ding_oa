@@ -94,7 +94,6 @@ Vue.use(Toast);
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       salaryTime: this.ChangeDateFormat(new Date()),
       salaryPersonCount: '',
@@ -134,19 +133,20 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
         this.projectCode = result.projectCode
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.salaryTime = result.salaryTime
         this.salaryPersonCount = result.salaryPersonCount
         this.salaryAmount = result.salaryAmount
-        this.relatedFile = result.relatedFile.split(',')
-        let fileList = this.relatedFile.map(v => {
-          return {
-            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
-          }
-        })
-        this.fileList = fileList
+        if (result.relatedFile) {
+          this.relatedFile = result.relatedFile.split(',')
+          let fileList = this.relatedFile.map(v => {
+            return {
+              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+            }
+          })
+          this.fileList = fileList
+        }
       })
     },
     afterRead(file) {
@@ -200,7 +200,7 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.orgCode = item.orgCode;
+      this.projectCode = item.orgCode;
       this.showPicker = false;
     },
     uploadDelete (item) {
@@ -214,7 +214,7 @@ export default {
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.salaryTime = this.salaryTime
         this.formData.salaryPersonCount = this.salaryPersonCount
         this.formData.salaryAmount = this.salaryAmount
@@ -230,7 +230,7 @@ export default {
       } else {
         this.$http
           .post('/yxsalary/flowYxSalary/add', {
-            projectCode: this.orgCode,
+            projectCode: this.projectCode,
             salaryTime: this.salaryTime,
             salaryPersonCount: this.salaryPersonCount,
             salaryAmount: this.salaryAmount,

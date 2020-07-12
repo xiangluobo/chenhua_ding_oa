@@ -132,7 +132,6 @@ Vue.use(Loading)
 export default {
   data() {
     return {
-      orgCode: '',
       departName: '',
       payAmount: '', // 付款金额
       payAmountTotal: '', // 累计付款
@@ -191,9 +190,8 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
         this.projectCode = result.projectCode
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.payAmount = result.payAmount
         this.payAmountTotal = result.payAmountTotal
         this.contractAmount = result.contractAmount
@@ -204,13 +202,15 @@ export default {
         this.payTypeVal = this.payTypeColumns.find(v => +v.value === this.payType).text
         this.payDesc = result.payDesc
         this.otherRequire = result.otherRequire
-        this.relatedFile = result.relatedFile.split(',')
-        let fileList = this.relatedFile.map(v => {
-          return {
-            url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
-          }
-        })
-        this.fileList = fileList
+        if (result.relatedFile) {
+          this.relatedFile = result.relatedFile.split(',')
+          let fileList = this.relatedFile.map(v => {
+            return {
+              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+            }
+          })
+          this.fileList = fileList
+        }
       })
     },
     getMyProjectList() {
@@ -230,12 +230,12 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName;
-      this.orgCode = item.orgCode;
+      this.projectCode = item.orgCode;
       this.showPicker = false;
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.departName = this.departName
         this.formData.payAmount = this.payAmount
         this.formData.payAmountTotal = this.payAmountTotal
@@ -258,7 +258,7 @@ export default {
         })
       } else {
         this.$http.post('/ggpay/flowGgPay/add', {
-          projectCode: this.orgCode,
+          projectCode: this.projectCode,
           departName: this.departName,
           payAmount: this.payAmount, // 付款金额
           payAmountTotal: this.payAmountTotal, // 累计付款

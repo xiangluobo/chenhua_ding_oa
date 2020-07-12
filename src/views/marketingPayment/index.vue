@@ -132,7 +132,7 @@ Vue.use(Loading)
 export default {
   data() {
     return {
-      orgCode: '',
+      projectCode: '',
       departName: '',
       payAmount: '',
       payAmountTotal: '',
@@ -189,8 +189,8 @@ export default {
         let result = res.result
         this.formData = result;
         this.id = result.id
-        this.orgCode = result.sysOrgCode
-        this.departName = this.columns.find(v => v.orgCode === this.orgCode).departName
+        this.projectCode = result.projectCode
+        this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.payAmount = result.payAmount
         this.payAmountTotal = result.payAmountTotal
         this.contractAmount = result.contractAmount
@@ -233,7 +233,7 @@ export default {
     },
     onConfirm(item) {
       this.departName = item.departName
-      this.orgCode = item.orgCode
+      this.projectCode = item.orgCode
       this.showPicker = false
     },
     afterRead(file) {
@@ -254,7 +254,7 @@ export default {
     },
     onSubmit() {
       if (this.id) {
-        this.formData.projectCode = this.orgCode
+        this.formData.projectCode = this.projectCode
         this.formData.payAmount = this.payAmount
         this.formData.payAmountTotal = this.payAmountTotal
         this.formData.contractAmount = this.contractAmount
@@ -263,6 +263,7 @@ export default {
         this.formData.payeeBank = this.payeeBank
         this.formData.payType = this.payType
         this.formData.payDesc = this.payDesc
+        this.formData.otherRequire = this.otherRequire
         this.formData.relatedFile = this.relatedFile.join(',')
         this.$http.put('/yxpay/flowYxPay/edit', this.formData).then(res => {
           if (res.success) {
@@ -274,7 +275,7 @@ export default {
         })
       } else {
         this.$http.post('/yxpay/flowYxPay/add', {
-          projectCode: this.orgCode,
+          projectCode: this.projectCode,
           payAmount: this.payAmount,
           payAmountTotal: this.payAmountTotal,
           contractAmount: this.contractAmount,
