@@ -50,8 +50,8 @@
       </dd>
     </dl>
     <div style="margin: 10px" v-if="busiId && bpmState != 3 && bpmState != 5">
-      <van-button style="width:40%" type="info" @touchstart="onEdit">编辑</van-button>
-      <van-button style="width:40%; margin-left:10px" type="warning" @touchstart="onInvalid">作废</van-button>
+      <van-button style="width:40%; cursor:pointer" type="info" @touchstart="onEdit">编辑</van-button>
+      <van-button style="width:40%; margin-left:10px; cursor:pointer" type="warning" @touchstart="onInvalid">作废</van-button>
     </div>
     <van-popup v-model="show" position="bottom" :style="{ height: '38%', paddingTop: '10px'}">
       <van-field
@@ -67,7 +67,7 @@
         <div class="btn" @touchstart="onReject">拒绝</div>
       </div>
     </van-popup>
-    <van-button v-if="taskId!='null' && Id" @touchstart="onAudit" style="width:90%; margin-top:30px" type="primary" color="#000" size="normal">去审核</van-button>
+    <van-button v-if="taskId!='null' && Id" @touchstart="onAudit" style="width:90%; margin-top:30px; cursor:pointer" type="primary" color="#000" size="normal">去审核</van-button>
   </section>
 </template>
 
