@@ -25,7 +25,7 @@
         :rules="[{ required: true, message: '请输入房号' }]"
       />
       <van-field
-        v-model="handler"
+        v-model="realname"
         label="*优惠经手人"
         class="mod-field"
         placeholder="请输入优惠经手人"
@@ -135,6 +135,7 @@ export default {
       departName: '',
       houseNo: '',
       handler: '',
+      realname: '',
       chaoto: [],
       houseArea: '',
       oriTotalPrice: '',
@@ -200,6 +201,7 @@ export default {
         this.projectCode = result.projectCode
         this.houseNo = result.houseNo
         this.handler = result.handler
+        this.realname = this.options.find(v => v.username === this.handler).realname
         this.chaoto = result.chaoto.split(',')
         this.houseArea = result.houseArea
         this.oriTotalPrice = result.oriTotalPrice
@@ -244,10 +246,16 @@ export default {
       this.showPicker = false
     },
     onSubmit() {
+      let person = this.options.find(v => v.realname === this.realname)
+      if (!person) {
+        Toast.fail('指定核审人不存在，请重新填写')
+        this.realname = ''
+        return
+      }
       if (this.id) {
         this.formData.projectCode = this.projectCode;
         this.formData.houseNo = this.houseNo;
-        this.formData.handler = this.handler;
+        this.formData.handler = person.username
         this.formData.chaoto = this.chaoto.join(',');
         this.formData.houseArea = this.houseArea;
         this.formData.oriSinglePrice = this.oriSinglePrice;
@@ -256,7 +264,6 @@ export default {
         this.formData.disSinglePrice = this.disSinglePrice;
         this.formData.disPrice = Number(this.disPrice);
         this.formData.description = this.description;
-        console.log(this.formData, 'this.formData')
         this.$http.put('/discount/flowPriceDiscount/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
@@ -269,7 +276,7 @@ export default {
         this.$http.post('/discount/flowPriceDiscount/add', {
           projectCode: this.projectCode,
           houseNo: this.houseNo,
-          handler: this.handler,
+          handler: person.username,
           chaoto: this.chaoto.join(','),
           houseArea: this.houseArea,
           oriSinglePrice: this.oriSinglePrice,

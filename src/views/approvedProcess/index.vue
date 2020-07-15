@@ -25,7 +25,7 @@
         :rules="[{ required: true, message: '请输入申请标题' }]"
       />
       <van-field
-        v-model='handler'
+        v-model='realname'
         label='*指定审核人'
         class='mod-field'
         placeholder='请输入指定审核人'
@@ -112,6 +112,7 @@ export default {
       departName: '',
       title: '',
       handler: '',
+      realname: '',
       chaoto: [],
       content: '',
       relatedFile: [],
@@ -155,6 +156,7 @@ export default {
         this.projectCode = result.projectCode
         this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.handler = result.handler
+        this.realname = this.options.find(v => v.username === this.handler).realname
         this.title = result.title
         this.content = result.content
         this.chaoto = result.chaoto.split(',')
@@ -235,11 +237,17 @@ export default {
       this.showPicker = false;
     },
     onSubmit() {
+      let person = this.options.find(v => v.realname === this.realname)
+      if (!person) {
+        Toast.fail('指定核审人不存在，请重新填写')
+        this.realname = ''
+        return
+      }
       if (this.id) {
         this.formData.projectCode = this.projectCode
         this.formData.title = this.title
         this.formData.content = this.content
-        this.formData.handler = this.handler
+        this.formData.handler = person.username
         this.formData.chaoto = this.chaoto.join(',')
         this.formData.relatedFile = this.relatedFile.join(',')
         this.$http.put('/common/flowGgComm/edit', this.formData).then(res => {
@@ -254,7 +262,7 @@ export default {
         this.$http
           .post('/common/flowGgComm/add', {
             title: this.title,
-            handler: this.handler,
+            handler: person.username,
             content: this.content,
             chaoto: this.chaoto.join(','),
             projectCode: this.projectCode,
