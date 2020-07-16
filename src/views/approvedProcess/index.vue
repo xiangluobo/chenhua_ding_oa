@@ -156,7 +156,13 @@ export default {
         this.projectCode = result.projectCode
         this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.handler = result.handler
-        this.realname = this.options.find(v => v.username === this.handler).realname
+        if (result.handler.indexOf(',') > -1) {
+          this.realname = result.handler.split(',').map(username => {
+            return this.options.find(v => v.username === username).realname
+          }).join('，')
+        } else {
+          this.realname = this.options.find(v => v.username === this.handler).realname
+        }
         this.title = result.title
         this.content = result.content
         this.chaoto = result.chaoto.split(',')
@@ -237,17 +243,26 @@ export default {
       this.showPicker = false;
     },
     onSubmit() {
-      let person = this.options.find(v => v.realname === this.realname)
-      if (!person) {
+      let handler = null
+      if (!this.realname) {
         Toast.fail('指定核审人不存在，请重新填写')
-        this.realname = ''
         return
+      }
+      if (this.realname.indexOf('，') > -1) {
+        let realname = this.realname.replace(/，/, ',')
+        if (realname.split(',').length) {
+          handler = realname.split(',').map(name => {
+            return this.options.find(v => v.realname === name).username
+          }).join(',')
+        }
+      } else {
+        handler = this.options.find(v => v.realname === this.realname).username
       }
       if (this.id) {
         this.formData.projectCode = this.projectCode
         this.formData.title = this.title
         this.formData.content = this.content
-        this.formData.handler = person.username
+        this.formData.handler = handler
         this.formData.chaoto = this.chaoto.join(',')
         this.formData.relatedFile = this.relatedFile.join(',')
         this.$http.put('/common/flowGgComm/edit', this.formData).then(res => {
@@ -262,7 +277,7 @@ export default {
         this.$http
           .post('/common/flowGgComm/add', {
             title: this.title,
-            handler: person.username,
+            handler: handler,
             content: this.content,
             chaoto: this.chaoto.join(','),
             projectCode: this.projectCode,
