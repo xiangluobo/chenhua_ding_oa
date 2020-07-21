@@ -57,6 +57,7 @@
       <van-field
         v-model="payAmountTotal"
         label="*累计付款"
+        type="number"
         class="mod-field"
         placeholder="请输入累计付款"
         :rules="[{ required: true, message: '请输入累计付款' }]"
