@@ -81,8 +81,8 @@ export default {
       columns: [],
       showCalendar: false,
       showCalendar2: false,
-      beginTime: '',
-      endTime: '',
+      beginTime: this.ChangeDateFormat(new Date()),
+      endTime: this.ChangeDateFormat(new Date()),
       list: []
     };
   },
@@ -176,6 +176,11 @@ export default {
     getMyProjectList() {
       this.$http.get('/sys/sysDepart/queryMyProjectList').then(res => {
         this.columns = res.result;
+        if (res.result.length === 1) {
+          this.departName = res.result[0].departName;
+          this.orgCode = res.result[0].orgCode;
+        }
+        this.getSaleData();
       });
     },
     onConfirm3(item) {

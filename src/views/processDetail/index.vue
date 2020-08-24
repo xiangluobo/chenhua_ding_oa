@@ -26,6 +26,30 @@
         </div>
       </dd>
     </dl>
+    <div v-if="flowType_dictText=='费用报销申请' || flowType_dictText=='营销费用报销申请'">
+      <div class="mod-explanation">追加说明</div>
+      <div v-if="list.length">
+        <div class="explanation" v-for="(item, index) in list" :key="index">
+          <div class="title">{{ item.userName }} {{ item.createTime }}</div>
+          <div class="content">
+            {{ item.content }}
+          </div>
+        </div>
+      </div>
+      <div class="mod-input">
+        <van-field
+          v-model="content"
+          clearable
+          label=""
+          placeholder="请输入追加说明"
+        >
+          <template #button>
+            <van-button size="small" @click="onSubmitDesc" color="#000">提交</van-button>
+          </template>
+        </van-field>
+      </div>
+    </div>
+
     <dl class="audit-process">
       <dt>审核过程</dt>
       <dd>
@@ -93,7 +117,9 @@ export default {
       applicationList: [],
       auditList: [],
       image: '',
-      flowType_dictText: ''
+      flowType_dictText: '',
+      list: [],
+      content: ''
     }
   },
   created() {
@@ -105,11 +131,35 @@ export default {
     this.flowType_dictText = this.$route.query.flowType_dictText
     this.busiId = this.$route.query.busiId
     this.resourceName = 'process_img_' + this.procInstId + '.png'
+    this.getMoreDesc()
     this.getProcess()
     this.getHistoryData()
     this.getViewTaskPic()
   },
   methods: {
+    getMoreDesc() {
+      this.$http.get('/flow/flowAddDesc/list', {
+        params: {
+          flowId: this.busiId
+        }
+      }).then(res => {
+        this.list = res.result.records
+      })
+    },
+    onSubmitDesc() {
+      this.$http.post('/flow/flowAddDesc/add', {
+        content: this.content,
+        flowId: this.busiId
+      }).then(res => {
+        this.content = ''
+        if (res.success) {
+          this.getMoreDesc()
+          Toast.success('提交成功')
+        } else {
+          Toast.fail(res.message)
+        }
+      })
+    },
     onInvalid () {
       this.$http.get('/flow/doCancelFlow', {
         params: {
