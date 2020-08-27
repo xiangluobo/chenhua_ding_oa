@@ -10,6 +10,7 @@
       <div class="mod-title">日报管理</div>
       <van-cell title="按揭数据添加" is-link to="/addMortgageData" />
       <van-cell title="销售数据添加" is-link to="/addSalesData" />
+      <van-cell title="通用日报添加" is-link to="/addDayCommData" />
     </div>
     <div class="block">
       <div class="mod-title">日程管理</div>

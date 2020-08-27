@@ -34,6 +34,7 @@ const mySchedule = () => import(/* webpackChunkName: "mySchedule" */ '@/views/my
 const salesStatistics = () => import(/* webpackChunkName: "salesStatistics" */ '@/views/salesStatistics')
 const addMortgageData = () => import(/* webpackChunkName: "addMortgageData" */ '@/views/addMortgageData')
 const addSalesData = () => import(/* webpackChunkName: "report" */ '@/views/addSalesData')
+const addDayCommData = () => import(/* webpackChunkName: "report" */ '@/views/addDayCommData')
 const dailyPaperProcess = () => import(/* webpackChunkName: "dailyPaperProcess" */ '@/views/dailyPaperProcess')
 const taskList = () => import(/* webpackChunkName: "taskList" */ '@/views/taskList')
 const addTask = () => import(/* webpackChunkName: "addTask" */ '@/views/addTask')
@@ -129,6 +130,15 @@ const routes = [
     component: addSalesData,
     meta: {
       title: '销售数据添加',
+      requireAuth: true // 登录权限
+    }
+  },
+  {
+    path: '/addDayCommData',
+    name: 'addDayCommData',
+    component: addDayCommData,
+    meta: {
+      title: '通用日报添加',
       requireAuth: true // 登录权限
     }
   },

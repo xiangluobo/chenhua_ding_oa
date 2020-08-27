@@ -39,6 +39,10 @@ export default {
         {
           name: '销售日报',
           id: 2
+        },
+        {
+          name: '通用日报',
+          id: 3
         }
       ],
       list: [],
@@ -61,8 +65,8 @@ export default {
       projectCode: '',
       todayVisit: '',
       todayCall: '',
-      todayLotDeal: ''
-
+      todayLotDeal: '',
+      item: ''
     };
   },
   methods: {
@@ -78,8 +82,10 @@ export default {
       let url = ''
       if (this.status === 1) {
         url = '/report/anjieData/list'
-      } else {
+      } else if (this.status === 2) {
         url = '/report/xiaoshouData/list'
+      } else {
+        url = '/report/reportCommon/list'
       }
       this.$http.get(url, {
         params: {
@@ -120,10 +126,13 @@ export default {
       }
     },
     onEdit () {
+      var item = this.item
       if (this.status === 1) {
-        this.$router.push(`/addMortgageData?id=${this.id}&projectCode=${this.projectCode}`)
+        this.$router.push(`/addMortgageData?id=${item.id}&projectCode=${item.projectCode}`)
+      } else if (this.status === 2) {
+        this.$router.push(`/addSalesData?id=${item.id}&projectCode=${item.projectCode}&todayVisit=${item.todayVisit}&todayLotDeal=${item.todayLotDeal}&todayCall=${item.todayCall}`)
       } else {
-        this.$router.push(`/addSalesData?id=${this.id}&projectCode=${this.projectCode}&todayVisit=${this.todayVisit}&todayLotDeal=${this.todayLotDeal}&todayCall=${this.todayCall}`)
+        this.$router.push(`/addDayCommData?id=${item.id}&reportTitle=${item.reportTitle}&reportDate=${item.reportDate}&reportContent=${item.reportContent}`)
       }
     },
     onDelete () {
@@ -158,11 +167,12 @@ export default {
       }
     },
     goToDetail(item) {
-      this.todayVisit = item.todayVisit
+      /* this.todayVisit = item.todayVisit
       this.todayCall = item.todayCall
       this.todayLotDeal = item.todayLotDeal
       this.id = item.id
-      this.projectCode = item.projectCode
+      this.projectCode = item.projectCode */
+      this.item = item
       this.show = true
     },
     destroyed() {

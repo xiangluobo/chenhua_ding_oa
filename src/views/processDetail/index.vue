@@ -16,8 +16,10 @@
           </div>
           <div v-else-if="item.name == '相关文件'" class="application-val">
             <span v-for="(image, k) in item.value" :key="k" style="display:block; padding-bottom:10px">
-              <img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">
-              <a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>
+              <a v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">图片附件{{k+1}},点击查看</a>
+              <!--<img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">-->
+              <!--<a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>-->
+              <a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">其他附件{{k+1}},点击下载</a>
             </span>
           </div>
           <div v-else class="application-val">
@@ -147,6 +149,10 @@ export default {
       })
     },
     onSubmitDesc() {
+      if (this.content.trim() == '') {
+        Toast.fail("请输入追加说明!");
+        return;
+      }
       this.$http.post('/flow/flowAddDesc/add', {
         content: this.content,
         flowId: this.busiId
