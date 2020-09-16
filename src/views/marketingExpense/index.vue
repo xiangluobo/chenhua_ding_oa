@@ -63,7 +63,7 @@
       </dd>
     </dl>
     <div style="margin: 16px;">
-      <van-button square block type="info" color="#000" @click="onSubmit">
+      <van-button square block type="info" color="#000" @click="onSubmit" :disabled="isDisable">
         提交
       </van-button>
     </div>
@@ -113,7 +113,8 @@ export default {
       busiId: 0,
       id: 0,
       formData: {},
-      fileList: []
+      fileList: [],
+      isDisable: false
     }
   },
   computed: {
@@ -205,6 +206,7 @@ export default {
         Toast.fail('报销明细填写有问题，请仔细检查')
         return false
       }
+      this.isDisable = true
       if (this.id) {
         this.formData.projectCode = this.projectCode
         this.formData.expenseTotal = this.expenseTotal
@@ -216,6 +218,7 @@ export default {
             this.$router.push('/')
           } else {
             Toast.fail(res.message)
+            this.isDisable = false
           }
         })
       } else {
@@ -232,6 +235,7 @@ export default {
               this.$router.push('/')
             } else {
               Toast.fail(res.message)
+              this.isDisable = false
             }
           })
       }

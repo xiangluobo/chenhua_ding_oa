@@ -33,7 +33,7 @@
         placeholder='请输入日报内容'
         :rules="[{ required: true, message: '请输入日报内容'}]"
       />
-      <div style="margin: 16px;">
+      <div style="margin: 16px;" v-if="isSelf == 1">
         <van-button square block type="info" color="#000" native-type='submit'>提交</van-button>
       </div>
     </van-form>
@@ -52,6 +52,7 @@
   export default {
     data() {
       return {
+        isSelf: 1,
         id: 0,
         reportTitle: '',
         reportDate: this.ChangeDateFormat(new Date()),
@@ -61,8 +62,9 @@
       }
     },
     created() {
-      let { id, reportTitle, reportDate, reportContent } = this.$route.query
+      let { isSelf, id, reportTitle, reportDate, reportContent } = this.$route.query
       if (id) {
+        this.isSelf = isSelf
         this.id = id
         this.reportTitle = reportTitle
         this.reportDate = reportDate

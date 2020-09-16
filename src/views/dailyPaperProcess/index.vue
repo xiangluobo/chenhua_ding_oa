@@ -10,9 +10,10 @@
       </div>
       <van-loading v-if="loading" type="spinner" />
       <div v-if="!loading && tips" class="tips">{{ tips }} </div>
-      <van-popup v-model="show" get-container="body">
-        <div @click="onEdit" class="dialogBtns">编辑</div>
-        <div @click="onDelete" class="dialogBtns">删除</div>
+      <van-popup v-model="show">
+        <div @click="onEdit" class="dialogBtns" v-if="item.createBy == userInfo.username">编辑</div>
+        <div @click="onEdit" class="dialogBtns" v-else>查看</div>
+        <div @click="onDelete" class="dialogBtns" v-if="item.createBy == userInfo.username">删除</div>
       </van-popup>
     </div>
   </section>
@@ -66,7 +67,8 @@ export default {
       todayVisit: '',
       todayCall: '',
       todayLotDeal: '',
-      item: ''
+      item: '',
+      userInfo: JSON.parse(window.localStorage.getItem('userInfo'))
     };
   },
   methods: {
@@ -127,12 +129,17 @@ export default {
     },
     onEdit () {
       var item = this.item
+
+      var isSelf = 0
+      if (item.createBy === this.userInfo.username) {
+        isSelf = 1
+      }
       if (this.status === 1) {
-        this.$router.push(`/addMortgageData?id=${item.id}&projectCode=${item.projectCode}`)
+        this.$router.push(`/addMortgageData?id=${item.id}&projectCode=${item.projectCode}&isSelf=${isSelf}`)
       } else if (this.status === 2) {
-        this.$router.push(`/addSalesData?id=${item.id}&projectCode=${item.projectCode}&todayVisit=${item.todayVisit}&todayLotDeal=${item.todayLotDeal}&todayCall=${item.todayCall}`)
+        this.$router.push(`/addSalesData?id=${item.id}&projectCode=${item.projectCode}&todayVisit=${item.todayVisit}&todayLotDeal=${item.todayLotDeal}&todayCall=${item.todayCall}&isSelf=${isSelf}`)
       } else {
-        this.$router.push(`/addDayCommData?id=${item.id}&reportTitle=${item.reportTitle}&reportDate=${item.reportDate}&reportContent=${item.reportContent}`)
+        this.$router.push(`/addDayCommData?id=${item.id}&reportTitle=${item.reportTitle}&reportDate=${item.reportDate}&reportContent=${item.reportContent}&isSelf=${isSelf}`)
       }
     },
     onDelete () {

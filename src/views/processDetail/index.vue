@@ -19,7 +19,7 @@
               <a v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">图片附件{{k+1}},点击查看</a>
               <!--<img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">-->
               <!--<a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>-->
-              <a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">其他附件{{k+1}},点击下载</a>
+              <a v-else-if="image != ''" :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">其他附件{{k+1}},点击下载</a>
             </span>
           </div>
           <div v-else class="application-val">
@@ -61,11 +61,13 @@
           <div class="th">办理时间</div>
           <div class="th">审批意见</div>
         </div>
-        <div class="header ctn" v-for="(audit, index) in auditList" :key="`audit${index}`">
-          <div class="th">{{audit.actName}}</div>
-          <div class="th">{{audit.assignee}}</div>
-          <div class="th">{{audit.endTime}}</div>
-          <div class="th">{{audit.varText}}</div>
+        <div class="header ctn" v-for="(audit, index) in auditList" :key="`audit${index}`" >
+          <div v-if="audit.actName != null">
+            <div class="th">{{audit.actName}}</div>
+            <div class="th">{{audit.assignee}}</div>
+            <div class="th">{{audit.endTime}}</div>
+            <div class="th">{{audit.varText}}</div>
+          </div>
         </div>
       </dd>
     </dl>
