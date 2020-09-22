@@ -32,7 +32,8 @@
       <div class="mod-explanation">追加说明</div>
       <div v-if="list.length">
         <div class="explanation" v-for="(item, index) in list" :key="index">
-          <div class="title">{{ item.userName }} {{ item.createTime }}</div>
+          <!--<div class="title">{{ item.createBy }} {{ item.createTime }}</div>-->
+          <div class="title">{{ item.createTime }}</div>
           <div class="content">
             {{ item.content }}
           </div>

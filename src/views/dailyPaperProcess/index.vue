@@ -5,8 +5,8 @@
         <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
       </div>
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
-        <div class="name">{{item.createBy }}</div>
-        <div class="time">{{item.createTime }}</div>
+        <div class="name">{{item.createBy_dictText}}</div>
+        <div class="time">{{item.createTime}}</div>
       </div>
       <van-loading v-if="loading" type="spinner" />
       <div v-if="!loading && tips" class="tips">{{ tips }} </div>
