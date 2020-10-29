@@ -118,7 +118,13 @@ export default {
       }
     },
     goToDetail(item) {
-      this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskId}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}&flowType_dictText=${item.flowType_dictText}`)
+      this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskId}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}&flowType_dictText=${item.flowType_dictText}&busiId=${item.busiId}`)
+    }
+  },
+  activated() {
+    if (window.localStorage.getItem('isRefresh') == 'true') {
+      window.localStorage.setItem('isRefresh', false)
+      location.reload();
     }
   },
   created() {

@@ -63,6 +63,12 @@ export default {
       todo: 0
     }
   },
+  activated() {
+    if (window.localStorage.getItem('isRefresh') == 'true') {
+      window.localStorage.setItem('isRefresh', false)
+      location.reload();
+    }
+  },
   created() {
     this.todo = this.$route.query.todo
     this.$nextTick(() => {

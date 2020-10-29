@@ -63,7 +63,7 @@
           <div class="th">审批意见</div>
         </div>
         <div class="header ctn" v-for="(audit, index) in auditList" :key="`audit${index}`" >
-          <div v-if="audit.actName != null">
+          <div v-if="audit.actName != null && audit.assignee != null">
             <div class="th">{{audit.actName}}</div>
             <div class="th">{{audit.assignee}}</div>
             <div class="th">{{audit.endTime}}</div>
@@ -78,8 +78,8 @@
         <img :src="image">
       </dd>
     </dl>
-    <div style="margin: 10px" v-if="busiId && bpmState != 3 && bpmState != 5">
-      <van-button style="width:40%; cursor:pointer" type="info" @touchstart="onEdit">编辑</van-button>
+    <div style="margin: 10px" v-if="taskId == null && bpmState != 3 && bpmState != 5">
+      <van-button style="width:40%; cursor:pointer" type="info" @touchstart="onEdit">编辑{{taskId}}</van-button>
       <van-button style="width:40%; margin-left:10px; cursor:pointer" type="warning" @touchstart="onInvalid">作废</van-button>
     </div>
     <van-popup v-model="show" position="bottom" :style="{ height: '38%', paddingTop: '10px'}">
@@ -130,7 +130,7 @@ export default {
   created() {
     this.procInstId = this.$route.query.procInstId
     this.Id = this.$route.query.id
-    this.taskId = this.$route.query.taskId || ''
+    this.taskId = this.$route.query.taskId
     this.bpmState_dictText = this.$route.query.bpmState_dictText
     this.bpmState = this.$route.query.bpmState
     this.flowType_dictText = this.$route.query.flowType_dictText

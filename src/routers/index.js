@@ -48,6 +48,7 @@ const routes = [
     name: 'index',
     component: home,
     meta: {
+      keepAlive: false,
       title: '辰华OA',
       requireAuth: true // 登录权限
     }
@@ -57,6 +58,7 @@ const routes = [
     name: 'addTask',
     component: addTask,
     meta: {
+      keepAlive: false,
       title: '添加任务',
       requireAuth: true // 登录权限
     }
@@ -66,6 +68,7 @@ const routes = [
     name: 'taskDetail',
     component: taskDetail,
     meta: {
+      keepAlive: false,
       title: '任务详情',
       requireAuth: true // 登录权限
     }
@@ -75,6 +78,7 @@ const routes = [
     name: 'taskList',
     component: taskList,
     meta: {
+      keepAlive: true,
       title: '任务',
       requireAuth: true // 登录权限
     }
@@ -84,6 +88,7 @@ const routes = [
     name: 'createSchedule',
     component: createSchedule,
     meta: {
+      keepAlive: false,
       title: '新建日程',
       requireAuth: true // 登录权限
     }
@@ -93,6 +98,7 @@ const routes = [
     name: 'mySchedule',
     component: mySchedule,
     meta: {
+      keepAlive: false,
       title: '我的日程',
       requireAuth: true // 登录权限
     }
@@ -102,6 +108,7 @@ const routes = [
     name: 'dailyPaperProcess',
     component: dailyPaperProcess,
     meta: {
+      keepAlive: true,
       title: '日报',
       requireAuth: true // 登录权限
     }
@@ -111,6 +118,7 @@ const routes = [
     name: 'salesStatistics',
     component: salesStatistics,
     meta: {
+      keepAlive: false,
       title: '销售统计',
       requireAuth: true // 登录权限
     }
@@ -120,6 +128,7 @@ const routes = [
     name: 'addMortgageData',
     component: addMortgageData,
     meta: {
+      keepAlive: false,
       title: '按揭数据添加',
       requireAuth: true // 登录权限
     }
@@ -129,6 +138,7 @@ const routes = [
     name: 'addSalesData',
     component: addSalesData,
     meta: {
+      keepAlive: false,
       title: '销售数据添加',
       requireAuth: true // 登录权限
     }
@@ -138,6 +148,7 @@ const routes = [
     name: 'addDayCommData',
     component: addDayCommData,
     meta: {
+      keepAlive: false,
       title: '通用日报添加',
       requireAuth: true // 登录权限
     }
@@ -147,6 +158,7 @@ const routes = [
     name: 'report',
     component: report,
     meta: {
+      keepAlive: false,
       title: '报表',
       requireAuth: true // 登录权限
     }
@@ -156,6 +168,7 @@ const routes = [
     name: 'mortgageStatistic',
     component: mortgageStatistic,
     meta: {
+      keepAlive: false,
       title: '按揭统计',
       requireAuth: true // 登录权限
     }
@@ -165,6 +178,7 @@ const routes = [
     name: 'process',
     component: process,
     meta: {
+      keepAlive: true,
       title: '流程列表',
       requireAuth: true // 登录权限
     }
@@ -174,6 +188,7 @@ const routes = [
     name: 'myProcess',
     component: myProcess,
     meta: {
+      keepAlive: true,
       title: '我的流程列表',
       requireAuth: true // 登录权限
     }
@@ -183,6 +198,7 @@ const routes = [
     name: 'create',
     component: create,
     meta: {
+      keepAlive: false,
       title: '快速创建',
       requireAuth: true // 登录权限
     }
@@ -192,6 +208,7 @@ const routes = [
     name: 'processDetail',
     component: processDetail,
     meta: {
+      keepAlive: false,
       title: '流程详情',
       requireAuth: true // 登录权限
     }
@@ -201,6 +218,7 @@ const routes = [
     name: 'expense',
     component: expense,
     meta: {
+      keepAlive: false,
       title: '费用报销申请',
       requireAuth: true // 登录权限
     }
@@ -210,6 +228,7 @@ const routes = [
     name: 'marketingExpense',
     component: marketingExpense,
     meta: {
+      keepAlive: false,
       title: '营销费用报销申请',
       requireAuth: true // 登录权限
     }
@@ -219,6 +238,7 @@ const routes = [
     name: 'paymentApplication',
     component: paymentApplication,
     meta: {
+      keepAlive: false,
       title: '付款申请',
       requireAuth: true // 登录权限
     }
@@ -228,6 +248,7 @@ const routes = [
     name: 'mine',
     component: mine,
     meta: {
+      keepAlive: false,
       title: '我的',
       requireAuth: true // 登录权限
     }
@@ -237,6 +258,7 @@ const routes = [
     name: 'modify',
     component: modify,
     meta: {
+      keepAlive: false,
       title: '修改密码',
       requireAuth: true // 登录权限
     }
@@ -246,6 +268,7 @@ const routes = [
     name: 'announcement',
     component: announcement,
     meta: {
+      keepAlive: false,
       title: '公告',
       requireAuth: true // 登录权限
     }
@@ -255,6 +278,7 @@ const routes = [
     name: 'announcementDetail',
     component: announcementDetail,
     meta: {
+      keepAlive: false,
       title: '公告详情',
       requireAuth: true // 登录权限
     }
@@ -264,6 +288,7 @@ const routes = [
     name: 'priceDiscount',
     component: priceDiscount,
     meta: {
+      keepAlive: false,
       title: '价格优惠申请',
       requireAuth: true // 登录权限
     }
@@ -273,6 +298,7 @@ const routes = [
     name: 'pledgeRefund',
     component: pledgeRefund,
     meta: {
+      keepAlive: false,
       title: '认筹退款申请',
       requireAuth: true // 登录权限
     }
@@ -282,6 +308,7 @@ const routes = [
     name: 'depositRefund',
     component: depositRefund,
     meta: {
+      keepAlive: false,
       title: '定金/房款退款申请',
       requireAuth: true // 登录权限
     }
@@ -291,6 +318,7 @@ const routes = [
     name: 'marketingPayment',
     component: marketingPayment,
     meta: {
+      keepAlive: false,
       title: '营销付款申请',
       requireAuth: true // 登录权限
     }
@@ -300,6 +328,7 @@ const routes = [
     name: 'propertySalary',
     component: propertySalary,
     meta: {
+      keepAlive: false,
       title: '房产工资发放申请',
       requireAuth: true // 登录权限
     }
@@ -309,6 +338,7 @@ const routes = [
     name: 'marketingSalary',
     component: marketingSalary,
     meta: {
+      keepAlive: false,
       title: '营销工资发放申请',
       requireAuth: true // 登录权限
     }
@@ -318,6 +348,7 @@ const routes = [
     name: 'approvedProcess',
     component: approvedProcess,
     meta: {
+      keepAlive: false,
       title: '通用审批流程申请',
       requireAuth: true // 登录权限
     }
@@ -327,6 +358,7 @@ const routes = [
     name: 'approvalProcess',
     component: approvalProcess,
     meta: {
+      keepAlive: true,
       title: '代办审批流程列表',
       requireAuth: true // 登录权限
     }
@@ -336,6 +368,7 @@ const routes = [
     name: 'login',
     component: login,
     meta: {
+      keepAlive: false,
       title: '登录'
     }
   }

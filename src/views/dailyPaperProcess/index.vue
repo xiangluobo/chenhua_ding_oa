@@ -129,7 +129,6 @@ export default {
     },
     onEdit () {
       var item = this.item
-
       var isSelf = 0
       if (item.createBy === this.userInfo.username) {
         isSelf = 1
@@ -185,6 +184,12 @@ export default {
     destroyed() {
       this.scroll.destroy()
       this.scroll = null
+    }
+  },
+  activated() {
+    if (window.localStorage.getItem('isRefresh') == 'true') {
+      window.localStorage.setItem('isRefresh', false)
+      location.reload();
     }
   },
   created() {

@@ -154,6 +154,12 @@ export default {
       this.scroll = null
     }
   },
+  activated() {
+    if (window.localStorage.getItem('isRefresh') == 'true') {
+      window.localStorage.setItem('isRefresh', false)
+      location.reload();
+    }
+  },
   created() {
     this.type = this.$route.query.type
     this.$nextTick(() => {

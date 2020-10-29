@@ -7,7 +7,7 @@ Vue.use(Toast)
 let instance = null
 
 instance = axios.create({
-  baseURL: 'http://101.37.159.72:8080/chenhuaoa'
+  baseURL: 'http://localhost:8080/chenhuaoa'
 })
 
 instance.interceptors.request.use(async config => {

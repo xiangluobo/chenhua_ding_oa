@@ -74,6 +74,10 @@ var echarts = require('echarts')
 export default {
   data() {
     return {
+      title1: '全款',
+      title2: '待借合同',
+      title3: '已放款',
+      title4: '待放款',
       minDate: new Date(2016, 0, 1),
       orgCode: '',
       departName: '',
@@ -112,19 +116,19 @@ export default {
           top: 30,
           data: [
             {
-              name: '全款',
+              name: this.title1,
               icon: 'circle'
             },
             {
-              name: '待借合同',
+              name: this.title2,
               icon: 'circle'
             },
             {
-              name: '已放款',
+              name: this.title3,
               icon: 'circle'
             },
             {
-              name: '待放款',
+              name: this.title4,
               icon: 'circle'
             }
           ]
@@ -161,11 +165,16 @@ export default {
             return
           }
           let { fullPayAmountTotal, releasedAmountTotal, waitBorrowAmountTotal, waitReleaseAmountTotal } = res.result
+          let { fullPayNumTotal, releasedNumTotal, waitBorrowNumTotal, waitReleaseNumTotal } = res.result
+          this.title1 = '全款(' + fullPayNumTotal + ')'
+          this.title2 = '待借合同(' + waitBorrowNumTotal + ')'
+          this.title3 = '已放款(' + releasedNumTotal + ')'
+          this.title4 = '待放款(' + waitReleaseNumTotal + ')'
           this.list = [
-            { value: fullPayAmountTotal, name: '全款' },
-            { value: waitBorrowAmountTotal, name: '待借合同' },
-            { value: releasedAmountTotal, name: '已放款' },
-            { value: waitReleaseAmountTotal, name: '待放款' }
+            { value: fullPayAmountTotal, name: this.title1 },
+            { value: waitBorrowAmountTotal, name: this.title2 },
+            { value: releasedAmountTotal, name: this.title3 },
+            { value: waitReleaseAmountTotal, name: this.title4 }
           ]
           this.renderPie()
         } else {
