@@ -24,13 +24,13 @@
         placeholder='请输入申请标题'
         :rules="[{ required: true, message: '请输入申请标题' }]"
       />
-      <van-field
+      <!--<van-field
         v-model='realname'
         label='*指定审核人'
         class='mod-field'
         placeholder='请输入指定审核人'
         :rules="[{ required: true, message: '请输入指定审核人' }]"
-      />
+      />-->
       <!-- <div class="mod-select">
         <div class="mod-label">*指定审核人</div>
         <el-select @click.native="showDialog" multiple v-model="handler" filterable placeholder="请选择">
@@ -155,14 +155,14 @@ export default {
         this.id = result.id
         this.projectCode = result.projectCode
         this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
-        this.handler = result.handler
+        /* this.handler = result.handler
         if (result.handler.indexOf(',') > -1) {
           this.realname = result.handler.split(',').map(username => {
             return this.options.find(v => v.username === username).realname
           }).join('，')
         } else {
           this.realname = this.options.find(v => v.username === this.handler).realname
-        }
+        } */
         this.title = result.title
         this.content = result.content
         this.chaoto = result.chaoto.split(',')
@@ -244,7 +244,7 @@ export default {
     },
     onSubmit() {
       let handler = null
-      if (!this.realname) {
+      /* if (!this.realname) {
         Toast.fail('指定核审人不存在，请重新填写')
         return
       }
@@ -257,7 +257,7 @@ export default {
         }
       } else {
         handler = this.options.find(v => v.realname === this.realname).username
-      }
+      } */
       if (this.id) {
         this.formData.projectCode = this.projectCode
         this.formData.title = this.title

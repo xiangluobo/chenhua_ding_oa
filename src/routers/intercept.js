@@ -34,9 +34,9 @@ router.beforeEach((to, from, next) => {
         (to.path === '/addMortgageData' && from.path === '/dailyPaperProcess') ||
         (to.path === '/addSalesData' && from.path === '/dailyPaperProcess')) {
         // 让列表页缓存，即不刷新
-        from.meta.keepAlive = true;
-        window.localStorage.setItem('isRefresh', false)
-        console.log(0)
+        // from.meta.keepAlive = true;
+        // window.localStorage.setItem('isRefresh', false)
+        // console.log(0)
       } else if ((to.path === '/approvalProcess' && from.path === '/processDetail') ||
         (to.path === '/process' && from.path === '/processDetail') ||
         (to.path === '/myProcess' && from.path === '/processDetail') ||
@@ -45,9 +45,9 @@ router.beforeEach((to, from, next) => {
         (to.path === '/dailyPaperProcess' && from.path === '/addMortgageData') ||
         (to.path === '/dailyPaperProcess' && from.path === '/addSalesData')) {
         // 让列表页缓存，即不刷新
-        to.meta.keepAlive = true;
-        window.localStorage.setItem('isRefresh', false)
-        console.log(1)
+        // to.meta.keepAlive = true;
+        // window.localStorage.setItem('isRefresh', false)
+        // console.log(1)
       } else if ((to.path === '/approvalProcess' && from.path === '/') ||
         (to.path === '/process' && from.path === '/') ||
         (to.path === '/myProcess' && from.path === '/mine') ||
@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
         // 让列表页缓存，即不刷新
         // to.meta.keepAlive = true;
         // window.localStorage.setItem('isRefresh', true)
-        console.log(2)
+        // console.log(2)
       } else {
         from.meta.keepAlive = false;
         to.meta.keepAlive = false;

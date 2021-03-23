@@ -1,9 +1,9 @@
 <template>
   <section class="mod-taskList" ref="wrapper">
     <div>
-      <div class="mod-tabs" v-if="!todo">
+      <!-- <div class="mod-tabs" v-if="!todo">
         <span v-for="(item, index) in tabs" :key="item.id" :class="{active: index===currentNum}" @click="setActive(index, item)">{{ item.name }}</span>
-      </div>
+      </div> -->
       <div @click="goToDetail(item)" class="mod-unit" v-for="(item, index) in list" :key="index">
         <div class="ctn">
           <div class="title">{{ item.taskName }}</div>
@@ -12,9 +12,9 @@
           </div>
           <div class="audit">创建时间 {{item.createTime}}</div>
         </div>
-        <div class="persontage">
+        <!-- <div class="persontage">
           <van-circle v-model="item.progressRate" :rate="item.progressRate"  layer-color="#ebedf0" color="#f00" :size="50" :speed="100" :text="`${item.progressRate}%`" />
-        </div>
+        </div> -->
       </div>
       <van-loading v-if="loading" type="spinner" />
       <div v-if="!loading && tips" class="tips">{{ tips }} </div>
@@ -60,7 +60,7 @@ export default {
         eventPassthrough: 'horizontal' // 模拟纵向滚动，而横向的滚动还是保留原生滚动
       },
       loading: false,
-      todo: 0
+      todo: 1
     }
   },
   activated() {

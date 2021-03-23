@@ -8,7 +8,7 @@
         <div class="status" v-if="content.progressRate == 100">已完成</div>
         <div class="status" v-else>未完成</div>
       </div>
-      <div class="middle">
+      <div class="middle" style="visibility: hidden">
         <van-circle v-model="content.progressRate" :rate="content.progressRate"  layer-color="#ebedf0" color="#f00" :size="70" :speed="100" :text="`任务进度${content.progressRate}%`" />
       </div>
       <div class="right">

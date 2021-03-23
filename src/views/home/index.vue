@@ -23,21 +23,21 @@
     </div>
     <div class="content">
       <div class="process">
-        <dl @click="goToApproval('',0,'/flow/getMyTodoBussiList')">
+        <dl @click="goToApproval(2,0,'/flow/getMyTodoBussiList')">
           <dt>{{ dataCount.daibanShenpiCount }}</dt>
           <dd>待办审批</dd>
         </dl>
-        <dl @click="goToSchedule">
+        <dl @click="goToApproval(3,0,'/flow/getMyTodoBussiList2')">
           <dt>{{ dataCount.jinriRichengCount }}</dt>
-          <dd>今日日程</dd>
+          <dd>已办审批</dd>
         </dl>
         <dl @click="goToApproval(2,1,'/flow/getMyUnderBussiList')">
           <dt>{{ dataCount.weiwanjieLiuchengCount }}</dt>
           <dd>未完结流程</dd>
         </dl>
-        <dl @click="goToTask">
+        <dl @click="goToTaskList">
           <dt>{{ dataCount.weiwanjieRenwuCount }}</dt>
-          <dd>未完结任务</dd>
+          <dd>相关任务</dd>
         </dl>
       </div>
       <div class="common">

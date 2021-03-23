@@ -62,6 +62,7 @@
         placeholder="请输入结束时间"
         @click="showCalendar1 = true"
       />
+      <!--
       <van-field
         v-model="progressRate"
         label="*进度"
@@ -70,6 +71,7 @@
         type="number"
         :rules="[{ required: true, message: '请输入进度' }]"
       />
+      -->
       <van-field
         readonly
         clickable

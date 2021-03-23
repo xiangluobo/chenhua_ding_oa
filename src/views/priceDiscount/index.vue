@@ -96,6 +96,11 @@
           </el-option>
         </el-select>
       </div>
+      <van-field name='uploader' class='mod-field' label='相关文件'>
+        <template #input>
+          <van-uploader accept=".xlsx,.xls,.docx,.doc,.png,.jpg,.jpeg,.bmp" :before-delete="uploadDelete" :after-read='afterRead' v-model="fileList" />
+        </template>
+      </van-field>
       <div style="margin: 16px;">
         <van-button square block type="info" color="#000" native-type="submit">
           提交
@@ -149,7 +154,8 @@ export default {
       id: 0,
       procInstId: 0,
       projectCode: 0,
-      formData: {}
+      formData: {},
+      fileList: []
     }
   },
   created() {
@@ -202,7 +208,7 @@ export default {
         this.houseNo = result.houseNo
         this.handler = result.handler
         this.realname = this.options.find(v => v.username === this.handler).realname
-        this.chaoto = result.chaoto.split(',')
+        this.chaoto = result.chaoto ? result.chaoto.split(',') : ''
         this.houseArea = result.houseArea
         this.oriTotalPrice = result.oriTotalPrice
         this.disTotalPrice = result.disTotalPrice
@@ -210,7 +216,25 @@ export default {
         this.departName = this.columns.find(v => v.orgCode === this.projectCode).departName
         this.procInstId = result.procInstId
         this.projectCode = result.projectCode
+        if (result.relatedFile) {
+          this.relatedFile = result.relatedFile.split(',')
+          let fileList = this.relatedFile.map(v => {
+            return {
+              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+            }
+          })
+          this.fileList = fileList
+        }
       })
+    },
+    uploadDelete (item) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].url === item.url) {
+          this.fileList.splice(i, 1)
+          break
+        }
+      }
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
     },
     onHidden () {
       let dropdowns = document.querySelectorAll('.el-select-dropdown')
@@ -256,7 +280,7 @@ export default {
         this.formData.projectCode = this.projectCode;
         this.formData.houseNo = this.houseNo;
         this.formData.handler = person.username
-        this.formData.chaoto = this.chaoto.join(',');
+        this.formData.chaoto = this.chaoto ? this.chaoto.join(',') : '';
         this.formData.houseArea = this.houseArea;
         this.formData.oriSinglePrice = this.oriSinglePrice;
         this.formData.oriTotalPrice = this.oriTotalPrice;
@@ -264,6 +288,7 @@ export default {
         this.formData.disSinglePrice = this.disSinglePrice;
         this.formData.disPrice = Number(this.disPrice);
         this.formData.description = this.description;
+        this.formData.relatedFile = this.relatedFile ? this.relatedFile.join(',') : '';
         this.$http.put('/discount/flowPriceDiscount/edit', this.formData).then(res => {
           if (res.success) {
             Toast.success('保存成功')
@@ -277,14 +302,15 @@ export default {
           projectCode: this.projectCode,
           houseNo: this.houseNo,
           handler: person.username,
-          chaoto: this.chaoto.join(','),
+          chaoto: this.chaoto ? this.chaoto.join(',') : '',
           houseArea: this.houseArea,
           oriSinglePrice: this.oriSinglePrice,
           oriTotalPrice: this.oriTotalPrice,
           disTotalPrice: this.disTotalPrice,
           disSinglePrice: this.disSinglePrice,
           disPrice: this.disPrice,
-          description: this.description
+          description: this.description,
+          relatedFile: this.relatedFile ? this.relatedFile.join(',') : ''
         }).then(res => {
           if (res.success) {
             Toast.success('保存成功')
@@ -294,6 +320,26 @@ export default {
           }
         })
       }
+    },
+    afterRead(file) {
+      file.status = 'uploading';
+      file.message = '上传中...';
+      let formData = new FormData();
+      formData.append('file', file.file);
+      formData.append('biz', 'pricedis');
+      this.$http
+        .post('/sys/common/upload', formData)
+        .then(res => {
+          file.status = 'success';
+          file.message = '上传成功';
+          this.relatedFile.push(res.message);
+          // console.log('upfile:' + JSON.stringify(this.relatedFile))
+        })
+        .catch(err => {
+          console.log(err);
+          file.status = 'failed';
+          file.message = '上传失败';
+        });
     }
   }
 };

@@ -118,7 +118,11 @@ export default {
       }
     },
     goToDetail(item) {
-      this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskId}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}&flowType_dictText=${item.flowType_dictText}&busiId=${item.busiId}`)
+      item.taskIddd = item.taskId;
+      if (this.bpmState == 3) {
+        item.taskIddd = null;
+      }
+      this.$router.push(`/processDetail?id=${item.id}&taskId=${item.taskIddd}&procInstId=${item.procInstId}&bpmState_dictText=${item.bpmState_dictText}&flowType_dictText=${item.flowType_dictText}&busiId=${item.busiId}`)
     }
   },
   activated() {
