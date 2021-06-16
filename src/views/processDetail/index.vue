@@ -28,7 +28,8 @@
         </div>
       </dd>
     </dl>
-    <div v-if="flowType_dictText=='费用报销申请' || flowType_dictText=='营销费用报销申请'">
+    <!--<div v-if="flowType_dictText=='费用报销申请' || flowType_dictText=='营销费用报销申请'">-->
+    <div>
       <div class="mod-explanation">追加说明</div>
       <div v-if="list.length">
         <div class="explanation" v-for="(item, index) in list" :key="index">
@@ -153,7 +154,7 @@ export default {
     },
     onSubmitDesc() {
       if (this.content.trim() == '') {
-        Toast.fail("请输入追加说明!");
+        Toast.fail('请输入追加说明!');
         return;
       }
       this.$http.post('/flow/flowAddDesc/add', {
