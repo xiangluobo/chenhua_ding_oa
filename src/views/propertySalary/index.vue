@@ -141,7 +141,7 @@ export default {
           this.relatedFile = result.relatedFile.split(',')
           let fileList = this.relatedFile.map(v => {
             return {
-              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+              url: `http://127.0.0.1:8080/chenhuaoa/sys/common/static/${v}`
             }
           })
           this.fileList = fileList
@@ -155,7 +155,7 @@ export default {
           break
         }
       }
-      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/127.0.0.1:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
     },
     afterRead(file) {
       file.status = 'uploading';

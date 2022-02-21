@@ -16,10 +16,10 @@
           </div>
           <div v-else-if="item.name == '相关文件'" class="application-val">
             <span v-for="(image, k) in item.value" :key="k" style="display:block; padding-bottom:10px">
-              <a v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">图片附件{{k+1}},点击查看</a>
-              <!--<img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`)">-->
-              <!--<a v-else :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>-->
-              <a v-else-if="image != ''" :href="`http://101.37.159.72:8080/chenhuaoa/sys/common/static/${image}`">其他附件{{k+1}},点击下载</a>
+              <a v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " @click="sceneImg(`http://127.0.0.1:8080/chenhuaoa/sys/common/static/${image}`)">图片附件{{k+1}},点击查看</a>
+              <!--<img v-if="image.indexOf('png') > -1 || image.indexOf('jpg') > -1  || image.indexOf('jpeg') > -1  || image.indexOf('bmp') > -1 " :src="`http://127.0.0.1:8080/chenhuaoa/sys/common/static/${image}`" @click="sceneImg(`http://127.0.0.1:8080/chenhuaoa/sys/common/static/${image}`)">-->
+              <!--<a v-else :href="`http://127.0.0.1:8080/chenhuaoa/sys/common/static/${image}`">{{ image.substring(6) }}</a>-->
+              <a v-else-if="image != ''" :href="`http://127.0.0.1:8080/chenhuaoa/sys/common/static/${image}`">其他附件{{k+1}},点击下载</a>
             </span>
           </div>
           <div v-else class="application-val">
@@ -271,7 +271,7 @@ export default {
     },
     getViewTaskPic() {
       this.$http.post(`/flow/viewTaskPic?procInstId=${this.procInstId}&resourceName=${this.resourceName}`).then(res => {
-        this.image = `http://101.37.159.72:8080/chenhuaoa/sys/common/static/flow/task/${this.resourceName}` + '?_t=' + Date.parse(new Date()) / 1000;
+        this.image = `http://127.0.0.1:8080/chenhuaoa/sys/common/static/flow/task/${this.resourceName}` + '?_t=' + Date.parse(new Date()) / 1000;
       })
     },
     onAudit() {

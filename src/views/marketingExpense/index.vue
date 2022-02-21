@@ -57,7 +57,7 @@
               </el-option>
             </el-select>
             <van-field v-model="item.expenseRemark" label="" placeholder="请输入摘要" />
-            <van-field v-model="item.expenseAmount" label="" placeholder="请输入报销金额" />
+            <van-field v-model="item.expenseAmount" label="" placeholder="请输入报销金额" type="number" @keydown="handleInput" />
           </div>
         </div>
       </dd>
@@ -122,7 +122,7 @@ export default {
     expenseTotal() {
       let val = 0
       this.flowYxExpenseItemsList.forEach(v => {
-        val += Number(v.expenseAmount) || 0
+        val = this.accAdd(val, v.expenseAmount)
       })
       return val
     }
@@ -139,6 +139,18 @@ export default {
     }
   },
   methods: {
+    accAdd(arg1, arg2) {
+      var r1, r2, m;
+      try { r1 = arg1.toString().split(".")[1].length; } catch (e) { r1 = 0; }
+      try { r2 = arg2.toString().split(".")[1].length; } catch (e) { r2 = 0; }
+      m = Math.pow(10, Math.max(r1, r2));
+      return (arg1 * m + arg2 * m) / m;
+    },
+    handleInput(e) {
+      // 通过正则过滤小数点后两位
+      e.target.value = (e.target.value.match(/^\d*(\.?\d{0,1})/g)[0]) || null
+
+    },
     getExpenseDetail () {
       this.$http.get('/yxexpense/flowYxExpense/queryFlowYxExpenseItemsByMainId', {
         params: {
@@ -166,7 +178,7 @@ export default {
           this.relatedFile = result.relatedFile.split(',')
           let fileList = this.relatedFile.map(v => {
             return {
-              url: `http://101.37.159.72:8080/chenhuaoa/sys/common/static/${v}`
+              url: `http://127.0.0.1:8080/chenhuaoa/sys/common/static/${v}`
             }
           })
           this.fileList = fileList
@@ -180,7 +192,7 @@ export default {
           break
         }
       }
-      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/101.37.159.72:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
+      this.relatedFile = this.fileList.map(v => v.url.replace(/http:\/\/127.0.0.1:8080\/chenhuaoa\/sys\/common\/static\//g, ''))
     },
     getlist() {
       this.$http.get('/sys/dict/getDictItems/oa_expense_type').then(res => {
